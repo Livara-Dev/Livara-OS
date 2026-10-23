@@ -1,0 +1,6 @@
+type: job
+name: livara
+interface: python
+script: main.py
+weight: 1
+requiredModules: [ users, unpackfs ]

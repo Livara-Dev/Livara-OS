@@ -1,0 +1,25 @@
+name: Livara checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.18.0'
+      - name: Install font build tools
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends python3-fonttools gnupg gpgv libharfbuzz-bin
+      - name: Rebuild editable fonts
+        run: python3 scripts/build-fonts.py
+      - name: Test tools and build scripts
+        run: make check
+      - name: Build desktop package
+        run: make deb
+      - uses: actions/upload-artifact@v4
+        with:
+          name: livara-desktop
+          path: dist/*.deb
+

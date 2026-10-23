@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "environment": {
+    "gtk": "4.14.5",
+    "libadwaita": "1.5.0",
+    "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop."
+  },
+  "native_assertion_count": 26,
+  "native_checks": [
+    "Real Settings headerbar shows custom traffic lights",
+    "Stock title buttons are hidden while custom CSD is active",
+    "Native close button has an accessible semantic label",
+    "Settings diameter scale persisted its value",
+    "Live CSS enlarged actual native button allocation",
+    "Settings hex-color control persisted its value",
+    "Settings symbol switch updated the live controls",
+    "Right-side preference physically moved the native controls",
+    "Physical left-side preference survives an RTL headerbar",
+    "Traffic-light red/yellow/green order remains LTR under RTL",
+    "Native-style preference hides custom buttons",
+    "Native-style preference restores original stock-button visibility",
+    "Green native button entered real window-manager fullscreen",
+    "Green tooltip follows native fullscreen state",
+    "Actual F11 key left fullscreen through the GTK shortcut controller",
+    "Green maximize preference invokes real native maximize",
+    "Green maximize preference restores the native window",
+    "Actual Shift-click green maximizes instead of fullscreen",
+    "Yellow native button minimizes through the window manager",
+    "The minimized native window can be restored",
+    "Settings reduced-motion switch updates the desktop animation preference",
+    "Native Settings transitions stop under reduced motion",
+    "Custom red control respects an application's close-request guard",
+    "Destroying the controlled child releases settings and shortcut bindings",
+    "Generated and live GTK CSS produced zero parsing errors",
+    "Main native close action destroys the window and releases its binding"
+  ],
+  "stdlib_unit_tests": {
+    "suite": "tests/test_native_controls.py",
+    "passed": 6
+  },
+  "gtk4_css_parsing_errors": [],
+  "final_native_button_allocations": [
+    {
+      "phase": 2,
+      "kind": "custom",
+      "style": "traffic-lights",
+      "diameter_preference": 14,
+      "close_width": 14,
+      "close_height": 14
+    },
+    {
+      "phase": 3,
+      "kind": "custom",
+      "style": "traffic-lights",
+      "diameter_preference": 22,
+      "close_width": 22,
+      "close_height": 22
+    },
+    {
+      "phase": 4,
+      "kind": "custom",
+      "style": "traffic-lights",
+      "diameter_preference": 10,
+      "close_width": 10,
+      "close_height": 10
+    }
+  ],
+  "preloaded_managed_css_probe": {
+    "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+    "probe": "Preloaded managed GTK4 user CSS then native/default style",
+    "measurements": [
+      {
+        "phase": 0,
+        "kind": "stock",
+        "style": "traffic-lights",
+        "diameter_preference": 22,
+        "close_width": 22,
+        "close_height": 22
+      },
+      {
+        "phase": 1,
+        "kind": "stock",
+        "style": "default",
+        "diameter_preference": 22,
+        "close_width": 22,
+        "close_height": 22
+      },
+      {
+        "phase": 2,
+        "kind": "custom",
+        "style": "traffic-lights",
+        "diameter_preference": 14,
+        "close_width": 14,
+        "close_height": 14
+      },
+      {
+        "phase": 3,
+        "kind": "custom",
+        "style": "traffic-lights",
+        "diameter_preference": 22,
+        "close_width": 22,
+        "close_height": 22
+      },
+      {
+        "phase": 4,
+        "kind": "custom",
+        "style": "traffic-lights",
+        "diameter_preference": 10,
+        "close_width": 10,
+        "close_height": 10
+      }
+    ],
+    "css_after_default": ""
+  },
+  "known_limitations": [
+    "Changing from traffic lights to native/default restores control visibility and actions immediately, but GTK user CSS loaded at process startup can remain active until that application is reopened.",
+    "These tests exercise GTK native windows and X11 Openbox window-manager state. They do not qualify GNOME Shell opening/closing effects, Wayland, login, installation or a booted Livara image.",
+    "Gallery resource availability and live system metrics describe the small Ubuntu 24.04 test container, not the complete target OS package set."
+  ],
+  "screenshot": "screenshots/native-settings-window-controls.png",
+  "runner": "../scripts/window-controls-smoke.py",
+  "gallery_runner": "../scripts/capture-native-gallery.py",
+  "current_settings_design_regression": {
+    "preferences": 94,
+    "sections": 8,
+    "native_action_assertions_passed": 26,
+    "runner": "../scripts/window-controls-smoke.py",
+    "result": "PASS against SettingsStudio bindings after redesign",
+    "validated_at_utc": "2026-10-22T23:12:09Z"
+  }
+}

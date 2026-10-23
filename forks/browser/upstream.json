@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "name": "Livara Browser",
+  "upstream": "https://github.com/zen-browser/desktop.git",
+  "tag": "1.23.4b",
+  "commit": "541ee55196395ee8082862b83c84c90ab41d9f6d",
+  "license": "MPL-2.0",
+  "surfer": "1.14.9",
+  "node": 22,
+  "rust": "1.95.0",
+  "firefox": {
+    "version": "158.0.1",
+    "source_url": "https://archive.mozilla.org/pub/firefox/releases/158.0.1/source/firefox-158.0.1.source.tar.xz",
+    "sha512": "a5cc16a63f4b43f01bc26e2feb12e54e5281aebdc81775cbc0e8d77dd5ceefa5055e78d2a6ad54895c397d414d1fac13d49ddf28099f534269a6a166dedafa5e"
+  },
+  "patches": ["patches/0001-livara-compiled-brand-and-chrome.patch"],
+  "artifact": "livara-browser-linux-x64.tar.xz",
+  "binary": "livara-browser/livara-browser",
+  "architecture": "x86_64-linux-gnu",
+  "build_docs": "https://docs.zen-browser.app/contribute/desktop/building"
+}

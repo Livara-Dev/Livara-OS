@@ -1,0 +1,301 @@
+{
+  "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+  "generated_at_utc": "2026-10-22T23:08:08Z",
+  "limitations": [
+    "No GNOME Shell desktop, login, installer, boot splash or window effects were captured.",
+    "Native package availability, processes, CPU/RAM/network and graphics results reflect the test container.",
+    "The named gallery look and Studio notes are explicitly marked examples saved through the real apps; the timer is a real running session.",
+    "The uncompiled Gecko source fork and the separate official Tor Browser are outside this native-app capture."
+  ],
+  "screenshots": [
+    {
+      "file": "native-center-overview.png",
+      "title": "Livara Control Center",
+      "detail": "Live container summary and app navigation.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop."
+    },
+    {
+      "file": "native-security-toolbox.png",
+      "title": "Security toolbox",
+      "detail": "Actual native tool availability in the small test image; the full OS package set is not installed here.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop."
+    },
+    {
+      "file": "native-case-workspaces.png",
+      "title": "Case workspaces",
+      "detail": "An empty real workspace, ready to create a case.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop."
+    },
+    {
+      "file": "native-security-shield.png",
+      "title": "Livara Shield",
+      "detail": "Read-only security checks of the test container.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop."
+    },
+    {
+      "file": "native-file-verification.png",
+      "title": "File verification",
+      "detail": "Native SHA-256 verification screen; no file or checksum is fabricated.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop."
+    },
+    {
+      "file": "native-app-launcher.png",
+      "title": "Livara apps",
+      "detail": "Native app catalog with actual launcher controls.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop."
+    },
+    {
+      "file": "native-monitor-overview.png",
+      "title": "Task Manager overview",
+      "detail": "Live CPU, memory, network, disk and uptime observations from the container.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop."
+    },
+    {
+      "file": "native-monitor-processes.png",
+      "title": "Task Manager processes",
+      "detail": "Actual test-container processes; selected manager cannot signal itself.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop."
+    },
+    {
+      "file": "native-graphics-overview.png",
+      "title": "Graphics observations",
+      "detail": "Actual container hardware/driver observations; no GPU pass-through is configured.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop."
+    },
+    {
+      "file": "native-studio-home.png",
+      "title": "Studio · Overview",
+      "detail": "The actual redesigned workspace Home with default favorites and truthful empty activity history.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "studio",
+      "source_sha256": {
+        "src/livara/studio_gui.py": "7ad98a95acd9f11c7876122dda23197f842fdfa94ff21c71cc9faf9858b46ece"
+      },
+      "captured_at_utc": "2026-10-22T23:03:27Z"
+    },
+    {
+      "file": "native-studio-tools.png",
+      "title": "Studio · Workbench",
+      "detail": "The real JSON formatter run on its built-in sample in the redesigned workspace.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "studio",
+      "source_sha256": {
+        "src/livara/studio_gui.py": "7ad98a95acd9f11c7876122dda23197f842fdfa94ff21c71cc9faf9858b46ece"
+      },
+      "captured_at_utc": "2026-10-22T23:03:29Z"
+    },
+    {
+      "file": "native-studio-search.png",
+      "title": "Studio · Search",
+      "detail": "Real tool search for color and the actual Color Prism output.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "studio",
+      "source_sha256": {
+        "src/livara/studio_gui.py": "7ad98a95acd9f11c7876122dda23197f842fdfa94ff21c71cc9faf9858b46ece"
+      },
+      "captured_at_utc": "2026-10-22T23:03:31Z"
+    },
+    {
+      "file": "native-studio-notes.png",
+      "title": "Studio · Notebook",
+      "detail": "An explicitly labeled English/Persian gallery example saved through the redesigned Notebook.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "studio",
+      "source_sha256": {
+        "src/livara/studio_gui.py": "7ad98a95acd9f11c7876122dda23197f842fdfa94ff21c71cc9faf9858b46ece"
+      },
+      "captured_at_utc": "2026-10-22T23:03:32Z"
+    },
+    {
+      "file": "native-studio-focus.png",
+      "title": "Studio · Focus",
+      "detail": "A real running 25-minute local timer; no completed history is invented.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "studio",
+      "source_sha256": {
+        "src/livara/studio_gui.py": "7ad98a95acd9f11c7876122dda23197f842fdfa94ff21c71cc9faf9858b46ece"
+      },
+      "captured_at_utc": "2026-10-22T23:03:34Z"
+    },
+    {
+      "file": "native-settings-window-controls.png",
+      "title": "Settings · Windows",
+      "detail": "The Windows section with native traffic-light controls and motion preferences.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "settings",
+      "source_sha256": {
+        "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+        "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb"
+      },
+      "captured_at_utc": "2026-10-22T23:05:24Z"
+    },
+    {
+      "file": "native-settings-dock.png",
+      "title": "Settings · Dock",
+      "detail": "Real dock options exposed by available schemas; unavailable controls stay disabled in this container.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "settings",
+      "source_sha256": {
+        "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+        "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb"
+      },
+      "captured_at_utc": "2026-10-22T23:05:28Z"
+    },
+    {
+      "file": "native-settings-typography.png",
+      "title": "Settings · Type",
+      "detail": "Actual font controls and a live font preview using the supplied Livara fonts.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "settings",
+      "source_sha256": {
+        "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+        "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb"
+      },
+      "captured_at_utc": "2026-10-22T23:05:30Z"
+    },
+    {
+      "file": "native-settings-spaces.png",
+      "title": "Settings · Spaces",
+      "detail": "Actual workspace, clock, and status-area preferences.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "settings",
+      "source_sha256": {
+        "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+        "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb"
+      },
+      "captured_at_utc": "2026-10-22T23:05:33Z"
+    },
+    {
+      "file": "native-settings-focus.png",
+      "title": "Settings · Focus",
+      "detail": "Actual notifications, recent-history, lock, and session controls.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "settings",
+      "source_sha256": {
+        "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+        "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb"
+      },
+      "captured_at_utc": "2026-10-22T23:05:35Z"
+    },
+    {
+      "file": "native-settings-input.png",
+      "title": "Settings · Input",
+      "detail": "Actual pointer, touchpad, and keyboard controls available to the test session.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "settings",
+      "source_sha256": {
+        "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+        "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb"
+      },
+      "captured_at_utc": "2026-10-22T23:05:37Z"
+    },
+    {
+      "file": "native-settings-display.png",
+      "title": "Settings · Display",
+      "detail": "Actual display and night-light preferences; unavailable device options remain disabled.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "settings",
+      "source_sha256": {
+        "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+        "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb"
+      },
+      "captured_at_utc": "2026-10-22T23:05:39Z"
+    },
+    {
+      "file": "native-settings-search.png",
+      "title": "Settings · Search",
+      "detail": "Real catalog search for font controls, with filtered sections and visible match counts.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "settings",
+      "source_sha256": {
+        "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+        "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb"
+      },
+      "captured_at_utc": "2026-10-22T23:05:41Z"
+    },
+    {
+      "file": "native-settings-real-preview.png",
+      "title": "Settings · Real window preview",
+      "detail": "The app's real native preview window, opened through its existing action.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "settings",
+      "source_sha256": {
+        "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+        "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb"
+      },
+      "captured_at_utc": "2026-10-22T23:05:42Z"
+    },
+    {
+      "file": "native-settings-device.png",
+      "title": "Device and connectivity",
+      "detail": "Device panel launchers; this capture does not open GNOME hardware panels.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "settings",
+      "source_sha256": {
+        "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+        "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb"
+      },
+      "captured_at_utc": "2026-10-22T23:05:44Z"
+    },
+    {
+      "file": "native-studio-appearance.png",
+      "title": "Studio · Customize",
+      "detail": "The actual app-specific accent, density, and editor-size popover.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "studio",
+      "source_sha256": {
+        "src/livara/studio_gui.py": "7ad98a95acd9f11c7876122dda23197f842fdfa94ff21c71cc9faf9858b46ece"
+      },
+      "captured_at_utc": "2026-10-22T23:06:27Z"
+    },
+    {
+      "file": "native-settings-personalize.png",
+      "title": "Settings · Look",
+      "detail": "Redesigned Look section with actual presets, wallpaper preview, and an explicitly labeled gallery preset saved through the real UI.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "settings",
+      "source_sha256": {
+        "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+        "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb"
+      },
+      "captured_at_utc": "2026-10-22T23:07:59Z"
+    },
+    {
+      "file": "native-settings-look-controls.png",
+      "title": "Settings · Look controls",
+      "detail": "Actual wallpaper, glass, and color controls below the Look preview.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "settings",
+      "source_sha256": {
+        "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+        "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb"
+      },
+      "captured_at_utc": "2026-10-22T23:08:01Z"
+    },
+    {
+      "file": "native-settings-window-palette.png",
+      "title": "Settings · Window palette",
+      "detail": "Actual color controls and remaining window preferences below the native window preview.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "settings",
+      "source_sha256": {
+        "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+        "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb"
+      },
+      "captured_at_utc": "2026-10-22T23:08:04Z"
+    },
+    {
+      "file": "native-settings-type-controls.png",
+      "title": "Settings · Type controls",
+      "detail": "Additional font, scale, and rendering controls.",
+      "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+      "app": "settings",
+      "source_sha256": {
+        "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+        "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb"
+      },
+      "captured_at_utc": "2026-10-22T23:08:07Z"
+    }
+  ],
+  "failed_apps": []
+}

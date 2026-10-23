@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Livara Control Center
+Comment=Your desktop. Your workbench.
+Exec=livara-center
+Icon=org.livara.Center
+Terminal=false
+Type=Application
+Categories=System;Settings;Security;
+Keywords=Livara;Kali;Security;Toolbox;Cases;Checksum;
+StartupNotify=true
+

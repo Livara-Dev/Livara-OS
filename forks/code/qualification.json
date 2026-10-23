@@ -1,0 +1,62 @@
+{
+  "product": "Livara Code",
+  "qualified_utc": "2026-10-22T22:14:19.130427+00:00",
+  "upstream_commit": "2d0b7506a36c1d6db9a466440131a8e01eab2289",
+  "full_native_build": {
+    "completed": true,
+    "target": "vscode-linux-x64-min",
+    "electron": "43.7.7",
+    "build_log": ".build-code-local-finish.log",
+    "log_sha256": "bdf3bc35b70d602866fb7dfd29af1bffe5b7a79a326013f87bbb4fa8e32c6a7c",
+    "build_duration_seconds_approximately": 247,
+    "final_source_recompiled_after_runtime_fixes": false
+  },
+  "runtime_qualification": {
+    "passed": true,
+    "method": "Real non-root sandboxed Electron application in Xvfb on Ubuntu 24.04; equivalent compiled compatibility fixes after completed source build.",
+    "sandbox_disabled": false,
+    "checks": [
+      "rendered Livara welcome hub",
+      "AMOLED theme and Livara icon/fonts",
+      "private notes file creation mode0600",
+      "real UUID insertion and save",
+      "Persian Unicode paste and save",
+      "focus timer start/pause/cancel",
+      "real bash terminal using Livara rcfile",
+      "Copilot status entry hidden",
+      "restrictive webview CSP retained",
+      "package integrity checksums regenerated"
+    ]
+  },
+  "source_fix_validation": {
+    "python_tests": 7,
+    "node_integration_tests": 12,
+    "typescript_syntax_errors": 0,
+    "canonical_pinned_source_transform_passed": true,
+    "account_service_guarded": true,
+    "onboarding_injected_service_preserved": true,
+    "inline_script_csp_hash_refreshed": true,
+    "notes_local_userdata_scheme_supported": true
+  },
+  "source_file_sha256": {
+    "forks/code/apply.py": "5a1f59d7616a90794c3972dc92579630e6eec594cef8d651e09c22e513efb212",
+    "forks/code/overlay/core/livara.contribution.ts": "3c4349b5d341e3b61e119b28acb57deddcb52e148cae5db84e6cd4d0bfd4997e",
+    "forks/code/overlay/onboarding/welcomeOnboarding.contribution.ts": "136386e48c61cd01793221c6a5e81db0dffe09b372392a8485fb5895e80d63f0",
+    "forks/code/overlay/extension/features.js": "e5ee3243f6fc0331ee4c932dcd42089be999b1e02600270e4faae38cd85066a1",
+    "tests/test_code_fork.py": "3ffc58de5f75134c75560b9825b66d7867f28cf4240fa8d7e4acda65e8c26466"
+  },
+  "equivalent_runtime_patch_script_sha256": {
+    ".build/code-electron-smoke/fix-bootstrap.py": "9d3cab6a220a76566fef882f3e639eb1f92b4b6c2552c848434cec48d3f315c9",
+    ".build/code-electron-smoke/fix-accounts.py": "01c088cea07596f051e71d6a2963579c5fb57583a863f73fc338c40d61653386",
+    ".build/code-electron-smoke/fix-webview.py": "4d16e0be8cef7b2052518029bac138da0901b3a076cf633136d88b38c09672ba",
+    ".build/code-electron-smoke/hide-ai-status.py": "a63b29e3c66df133154155a562eab46c13f2927b59d3de2f3dd0a5daa7d5b36a"
+  },
+  "compiled_main_before_runtime_fixes_sha256": "b6e53a554eaa0dd5471f70eb7b23d45391b2afb6604a8641f3bd5e26f6000c3f",
+  "compiled_main_after_runtime_fixes_sha256": "ce392726df432b96d2b55b5ead457793f7f5ac031dc9d5adb956ea7eb857aff0",
+  "screenshots": {
+    "docs/livara-code-notes.png": "3cbf9f4ae7690a05db8964afb8d4e2cb0be7239cddf07ca1c384cafa0a551f72",
+    "docs/livara-code-terminal.png": "0cc48db390e1f65db9bb96ba0f1c2a406cb42c99b4851a2134d05ac271f84e4d",
+    "docs/livara-code-before-controls.png": "f9464236a3830e3650d9c7f8f727d065b6bfbbfe9468909e4b741c511195def1"
+  },
+  "scope_note": "Qualification is an editor application test, not a full OS/ISO boot test. Later window-control changes have their own validation."
+}

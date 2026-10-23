@@ -1,0 +1,53 @@
+{
+  "repository": "https://github.com/rastikerdar/vazirmatn",
+  "tag": "v33.003",
+  "tag_object": "f68f7bc5dd1d046bd6a5a2bda355bd6d430e807a",
+  "commit": "83629f877e8f084cc07b47030b5d3a0ff06c76ec",
+  "license": "SIL-OFL-1.1",
+  "files": [
+    {
+      "upstream_path": "OFL.txt",
+      "local_path": "OFL.txt",
+      "url": "https://raw.githubusercontent.com/rastikerdar/vazirmatn/83629f877e8f084cc07b47030b5d3a0ff06c76ec/OFL.txt",
+      "sha256": "17e355067c8284f47743a1ee3b1ef7ff684ff0601eda357f9353b10b3016ab31",
+      "size": 4391
+    },
+    {
+      "upstream_path": "README.md",
+      "local_path": "UPSTREAM-README.md",
+      "url": "https://raw.githubusercontent.com/rastikerdar/vazirmatn/83629f877e8f084cc07b47030b5d3a0ff06c76ec/README.md",
+      "sha256": "c4f36ca3e452b80f6e49415606ca08f64bc63be6b272b5e1755ac73c102296bb",
+      "size": 2339
+    },
+    {
+      "upstream_path": "fonts/variable/Vazirmatn[wght].ttf",
+      "local_path": "Vazirmatn-Variable.ttf",
+      "url": "https://raw.githubusercontent.com/rastikerdar/vazirmatn/83629f877e8f084cc07b47030b5d3a0ff06c76ec/fonts/variable/Vazirmatn%5Bwght%5D.ttf",
+      "sha256": "696249a2c74b39ffdef55de4df2809c5b639d3ff80d618d8160a095d2fd49dca",
+      "size": 241328
+    },
+    {
+      "upstream_path": "sources/Vazirmatn-Thin.sfd",
+      "local_path": "sources/Vazirmatn-Thin.sfd",
+      "url": "https://raw.githubusercontent.com/rastikerdar/vazirmatn/83629f877e8f084cc07b47030b5d3a0ff06c76ec/sources/Vazirmatn-Thin.sfd",
+      "sha256": "14fd364f3a53ea0654eeda35bc3dad17932bbd1d00e3383b44f910012271efa1",
+      "size": 267833
+    },
+    {
+      "upstream_path": "sources/Vazirmatn-Regular.sfd",
+      "local_path": "sources/Vazirmatn-Regular.sfd",
+      "url": "https://raw.githubusercontent.com/rastikerdar/vazirmatn/83629f877e8f084cc07b47030b5d3a0ff06c76ec/sources/Vazirmatn-Regular.sfd",
+      "sha256": "4eb27f1174e24fde85bab08cf8dce44f06a1e317e4aae7db96e48faa71dd71f6",
+      "size": 272096
+    },
+    {
+      "upstream_path": "sources/Vazirmatn-Black.sfd",
+      "local_path": "sources/Vazirmatn-Black.sfd",
+      "url": "https://raw.githubusercontent.com/rastikerdar/vazirmatn/83629f877e8f084cc07b47030b5d3a0ff06c76ec/sources/Vazirmatn-Black.sfd",
+      "sha256": "97fd8f1ac891ee337b123f84362d4d09307b392a6b5463ef67fe5e1d54884207",
+      "size": 270785
+    }
+  ],
+  "derivative_family": "Livara Persian",
+  "upstream_author": "Saber Rastikerdar and Vazirmatn contributors"
+}

@@ -1,0 +1,9 @@
+# Disk installation configuration
+
+The source builder includes Calamares 3.3 from the signed Noble repositories and Livara branding. Start **Install Livara OS** from a built live USB. The wrapper refuses sessions without `boot=casper` and `/cdrom/casper/filesystem.squashfs`. Administrator authentication and the interactive disk summary precede execution.
+
+The configuration offers automatic LUKS2 encryption, ext4 or Btrfs root, a separate unencrypted 4GB `/boot` when encrypting, and an EFI system partition. Automatic swap/hibernation is disabled. EFI/BIOS GRUB binaries are included for offline setup. Root encryption uses a passphrase; the unsafe combination of an embedded root unlock key and an unencrypted `/boot` is avoided. `/boot` and EFI are unencrypted; encryption is not boot integrity protection. The preview boot chain is not qualified for Secure Boot.
+
+The installer creates a password-protected local account (minimum 12 characters), disables automatic login and configures sudo membership. The Livara finalizer operates only inside the target, verifies Livara's release ID and a normal local account, rejects unsafe path links, removes Casper's passwordless sudo grant/live initialization autostarts, allocates nonoverlapping subordinate IDs for rootless containers, and disables unsupported distribution-release upgrades. Signed package/security updates are independent and remain available. It never partitions disks itself or copies an unlocked live-session profile into a user home.
+
+**Qualification:** configuration/module-schema checks, a native installer welcome screen and temporary-directory finalizer tests are not a complete encrypted installation. Disk erase/manual partition flows, passphrase prompt, BIOS/UEFI install, reboot, updates and restore require end-to-end testing in a throwaway VM and then appropriate hardware. They have not yet been qualified. Back up your data and do not treat this preview as a production installer.

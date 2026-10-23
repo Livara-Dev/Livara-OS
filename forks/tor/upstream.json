@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "product": "Official Tor Browser",
+  "version": "15.0.26",
+  "git_tag": "tbb-15.0.26-build1",
+  "platform": "linux-x86_64",
+  "archive_url": "https://dist.torproject.org/torbrowser/15.0.26/tor-browser-linux-x86_64-15.0.26.tar.xz",
+  "signature_url": "https://dist.torproject.org/torbrowser/15.0.26/tor-browser-linux-x86_64-15.0.26.tar.xz.asc",
+  "sha256": "327ac7443724b9eb6d3697506391b110ee159739bdc14bd731caa6fc16ffbf74",
+  "primary_fingerprint": "EF6E286DDA85EA2A4BA7DE684E2C6E8793298290",
+  "metadata_url": "https://aus1.torproject.org/torbrowser/update_3/release/download-linux-x86_64.json",
+  "verification_documentation": "https://support.torproject.org/tor-browser/getting-started/verifying-tor-browser/",
+  "public_key_url": "https://keys.openpgp.org/vks/v1/by-fingerprint/EF6E286DDA85EA2A4BA7DE684E2C6E8793298290",
+  "resolved_at_utc": "2026-10-22T21:44:41.782248+00:00",
+  "archive_root": "tor-browser",
+  "start_script": "Browser/start-tor-browser",
+  "native_binary": "Browser/firefox.real",
+  "assets": {
+    "tor-browser-developers.asc": "7cec103d0be11b608f61850143101e56f0ba45383b61f44835300ff54ef93032",
+    "bundle.sig.asc": "1efdcaf6e94bf35a1c7feb5ee568157f1c1fd97e330c2f7cdc731c12f6499cfa",
+    "download-linux-x86_64.json": "b435a8b64d9d85dc7999c9ef96915e6ff30b16d8ffd34d7c76820ec1651b573a",
+    "sha256sums-signed-build.txt": "c52c31ec97fa134d21c069fbd9819f9f59a8bfe47bfb2715a80e5e5645097aa4",
+    "files.json": "7a288a64144f38e0e34ff591d5eacdc811a0a1b068516a6847af4b8fed29c63e"
+  }
+}

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Livara Terminal
+Comment=Your Livara command line
+Exec=livara-terminal
+Icon=org.livara.Terminal
+Terminal=false
+Categories=System;TerminalEmulator;
+StartupNotify=true
+StartupWMClass=LivaraTerminal
+DBusActivatable=false

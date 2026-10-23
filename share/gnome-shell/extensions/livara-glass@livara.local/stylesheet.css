@@ -1,0 +1,50 @@
+/* Original Livara optical material. SPDX-License-Identifier: GPL-3.0-or-later
+ * GNOME St's two-stop gradients form the fallback material. A bounded cached
+ * seven-stop image supplies layered specular light above real background blur.
+ * No web backdrop-filter, screen clones, or animated full-screen shaders. */
+#panel.livara-panel {
+  background-color: transparent;
+  box-shadow: none;
+}
+.livara-panel-background {
+  background-color: rgba(15, 16, 29, 0.40);
+  background-gradient-direction: vertical;
+  background-gradient-start: rgba(50, 40, 72, 0.32);
+  background-gradient-end: rgba(13, 16, 29, 0.48);
+  border-bottom: 1px solid rgba(229, 218, 255, 0.22);
+}
+.livara-glass .dash-background {
+  background-color: rgba(16, 17, 29, 0.43) !important;
+  background-gradient-direction: vertical;
+  background-gradient-start: rgba(62, 49, 82, 0.38);
+  background-gradient-end: rgba(17, 20, 34, 0.52);
+  border: 1px solid rgba(220, 211, 246, 0.25) !important;
+  border-top-color: rgba(253, 245, 255, 0.51) !important;
+  border-bottom-color: rgba(182, 188, 239, 0.22) !important;
+  border-radius: 28px;
+  box-shadow: 0 7px 20px rgba(0, 0, 0, 0.30);
+}
+.livara-glass .popup-menu-content {
+  color: #f4f1ff;
+  background-color: rgba(17, 18, 30, 0.80);
+  background-gradient-direction: vertical;
+  background-gradient-start: rgba(44, 37, 60, 0.81);
+  background-gradient-end: rgba(17, 20, 32, 0.86);
+  border: 1px solid rgba(223, 212, 250, 0.24);
+  border-top-color: rgba(255, 247, 255, 0.43);
+  border-bottom-color: rgba(172, 185, 230, 0.20);
+  border-radius: 28px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.32);
+}
+.livara-glass .quick-settings { border-radius: 28px; padding: 20px; }
+.livara-glass .quick-toggle {
+  border-radius: 22px;
+  background-color: rgba(238, 227, 255, 0.085);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.09);
+}
+.livara-glass .quick-toggle:hover { background-color: rgba(238, 227, 255, 0.15); }
+.livara-glass .quick-toggle:checked { background-color: #c5a3ff; color: #21112f; }
+.livara-glass .quick-toggle:checked:hover { background-color: #d7bdff; }
+.livara-glass .calendar { border-radius: 22px; }
+.livara-glass .notification-banner { border-radius: 24px; }
+.livara-launcher { icon-shadow: 0 0 7px rgba(184, 132, 255, 0.34); }

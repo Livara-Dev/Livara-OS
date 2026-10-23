@@ -1,0 +1,14 @@
+Window.SetBackgroundTopColor(0.025, 0.018, 0.06);
+Window.SetBackgroundBottomColor(0.055, 0.035, 0.11);
+logo.image = Image("logo.png").Scale(210, 210);
+logo.sprite = Sprite(logo.image);
+logo.sprite.SetX(Window.GetWidth() / 2 - logo.image.GetWidth() / 2);
+logo.sprite.SetY(Window.GetHeight() / 2 - 150);
+title.image = Image.Text("L I V A R A   O S", 0.90, 0.88, 1.0);
+title.sprite = Sprite(title.image);
+title.sprite.SetX(Window.GetWidth() / 2 - title.image.GetWidth() / 2);
+title.sprite.SetY(Window.GetHeight() / 2 + 65);
+status.image = Image.Text("Starting your workspace", 0.55, 0.53, 0.70);
+status.sprite = Sprite(status.image);
+status.sprite.SetX(Window.GetWidth() / 2 - status.image.GetWidth() / 2);
+status.sprite.SetY(Window.GetHeight() / 2 + 105);

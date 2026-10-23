@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "version": "15.0.26",
+  "archive_sha256": "327ac7443724b9eb6d3697506391b110ee159739bdc14bd731caa6fc16ffbf74",
+  "archive_bytes": 137985168,
+  "unchanged_official_archive": true,
+  "signature": {
+    "primary_fingerprint": "EF6E286DDA85EA2A4BA7DE684E2C6E8793298290",
+    "signing_fingerprint": "022DA248432D2A0E0F54E65E316C1FACD62D07D9",
+    "signature_date": "2026-10-21"
+  },
+  "contents": {
+    "members": 246,
+    "expanded_bytes": 348985304,
+    "native_binary": "Browser/firefox.real",
+    "elf_machine": "AMD64"
+  },
+  "qualified_at_utc": "2026-10-22",
+  "official_metadata_url": "https://aus1.torproject.org/torbrowser/update_3/release/download-linux-x86_64.json",
+  "official_key_documentation": "https://support.torproject.org/tor-browser/getting-started/verifying-tor-browser/",
+  "observed_official_defaults": {
+    "archive_file": "Browser/browser/omni.ja",
+    "preference_file": "defaults/preferences/000-tor-browser.js",
+    "resist_fingerprinting": "pref(\"privacy.resistFingerprinting\", true, locked);",
+    "bundled_fonts": "pref(\"gfx.bundled-fonts.activate\", 1);",
+    "fonts_config": "Browser/fonts/fonts.conf lists only <dir prefix=\"cwd\">fonts</dir> and does not include system font configuration"
+  },
+  "not_qualified": [
+    "Live Tor network/circuit connectivity",
+    "A rebuilt Livara ISO boot with the official Tor Browser integration"
+  ],
+  "native_ui": {
+    "qualified": "2026-10-22",
+    "context": "Regular desktop UID1000 in offline nested GNOME46 Wayland compositor under Xvfb",
+    "launcher": "livara-browser --tor -> unchanged Browser/start-tor-browser",
+    "sandbox_disabled": false,
+    "connect_clicked": false,
+    "network_connected": false,
+    "screenshot": "docs/screenshots/tor-official.png",
+    "note": "Initial official Connect UI only; no circuit or network-connectivity qualification"
+  }
+}

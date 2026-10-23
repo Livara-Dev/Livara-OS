@@ -1,0 +1,64 @@
+{
+  "qualified_at_utc": "2026-10-23T08:51:01.497471+00:00",
+  "reported_failure": {
+    "module": "@vscode/deviceid",
+    "version": "0.1.5",
+    "electron": "43.7.7",
+    "stage": "npm ci / node-gyp header installation",
+    "error": "Client network socket disconnected before secure TLS connection was established",
+    "failed_request": "https://electronjs.org/headers/v43.7.7/SHASUMS256.txt"
+  },
+  "fix": "Fetch canonical official HTTPS header archives with bounded curl retries; verify committed SHA-256 pins; prime dedicated node-gyp cache for all checkout and host targets before npm ci. Preserve TLS verification. Add bounded npm registry retries.",
+  "header_pins": [
+    {
+      "version": "43.7.7",
+      "url": "https://artifacts.electronjs.org/headers/dist/v43.7.7/node-v43.7.7-headers.tar.gz",
+      "sha256": "f697ced9453e4366258ed0ff3571122da37ba3ec9d349bd16d91856914e140f0"
+    },
+    {
+      "version": "24.18.0",
+      "url": "https://nodejs.org/dist/v24.18.0/node-v24.18.0-headers.tar.gz",
+      "sha256": "6c7d41d83c3481d2301115b8ce4a44b7d4fbfa52859b1aac14f445d460137887"
+    },
+    {
+      "version": "24.21.0",
+      "url": "https://nodejs.org/dist/v24.21.0/node-v24.21.0-headers.tar.gz",
+      "sha256": "57c6bee2e30bbbee5bd51d6cc343eb992e174b56a2a1d0eab7a7510771c20ea2"
+    },
+    {
+      "version": "22.22.1",
+      "url": "https://nodejs.org/dist/v22.22.1/node-v22.22.1-headers.tar.gz",
+      "sha256": "0f76c31ce76a623a6a3a4038cb62eae281b2e33ad189dcf2d514ec32ae74d9b2"
+    }
+  ],
+  "all_four_real_archives_downloaded_and_verified": true,
+  "gyp": "12.3.0",
+  "host_node": "24.18.0",
+  "offline_docker_network_mode": "none",
+  "minimal_electron_native_addon_npm_ci": "passed; actual build/Release/header_probe.node created",
+  "exact_failing_package_offline_rebuild": "@vscode/deviceid 0.1.5: npm rebuild --offline --foreground-scripts passed; actual native module produced using /proof/node-gyp/43.7.7",
+  "other_node_targets_offline_configure": [
+    "24.18.0",
+    "24.21.0",
+    "22.22.1"
+  ],
+  "regression_tests_passed": 5,
+  "latest_source_check": {
+    "python_tests_run": 211,
+    "expected_skips": 1,
+    "editor_node_tests_passed": 15,
+    "desktop_contract_checks_passed": true,
+    "desktop_deb_built": true
+  },
+  "full_editor_recompiled_for_this_fix": false,
+  "full_browser_built": false,
+  "iso_built": false,
+  "native_windows_tested": false,
+  "source_sha256": {
+    "scripts/prepare-code-headers.py": "28b429993bc73a19f85bfa6a507b59a624b3f0c894b33f1c16f6760a8971d33c",
+    "scripts/build-code.sh": "6bd5e29a14107586a8187d1404228951e8bd1408cfdf73b8d48de12da86379c8",
+    "build/Dockerfile.code": "e668798bc08346e1e1fbbba79472504ad2e7b999fbe4c3f9dc447da903b4d70e",
+    "forks/code/native-headers.json": "238792f806b8f5f4a7097a895fda7a735436d1b47eadd83f1b7e138bf3bdc65a",
+    "tests/test_code_headers.py": "134baf950cc9603c66e908250757ce9dc88c2394bf05d58004bd0578789bde70"
+  }
+}

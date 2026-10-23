@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+if ! grep -qw 'boot=casper' /proc/cmdline || [ ! -f /cdrom/casper/filesystem.squashfs ]; then
+    printf '%s\n' 'Boot a Livara live USB before starting the installer.' >&2
+    exit 2
+fi
+# Stock Calamares policy requires administrator authentication. No disk is
+# touched until the interactive installer reviews and accepts its summary.
+exec pkexec /usr/bin/calamares

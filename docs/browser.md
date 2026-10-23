@@ -1,0 +1,13 @@
+# Livara Browser
+
+Livara Browser is an actual source fork of Zen Browser and its Firefox/Gecko engine. The source kit includes pinned upstream metadata, source patches, browser chrome/dashboard source resources, branding/fonts, Tor runtime, tests and a native Docker build recipe. The local build packages these resources into `browser.jar`. See [browser build notes](../forks/browser/README.md) for the exact revision, prerequisites, steps and validation limits.
+
+The OS builder compiles the native browser locally and installs it under `/opt/livara-browser`. Its launcher never substitutes an upstream binary or the earlier WebKit prototype. The source-fork browser has not been compiled or boot-tested in the authoring environment; earlier WebKit screenshots do not represent its runtime.
+
+The appearance-panel source implements controls for glass, reduced motion, theme, accent color, text size, tab spacing and radius. It provides tab search, sidebar positioning, toolbar customization, browser settings, reader controls and a Tor action. The local start page has DuckDuckGo search, a clock, removable shortcuts, notes, a focus timer and quiet view. Private-window dashboard data stays in memory.
+
+Its Window controls section adds configurable traffic lights: style, physical side, 10–22 px size, symbols, three colors and the green action. Green defaults to fullscreen; Shift-click maximizes/restores, while the existing F11 shortcut toggles fullscreen. Close/minimize use the browser's existing native actions. Standard style restores the stock browser controls. These are browser-specific settings; GTK preferences and the separate official Tor Browser are unaffected. See [window controls](window-controls.md) for the native app behavior and validation limits.
+
+Choose Tor Mode explicitly for onion websites. This opens a separate **official Tor Browser**, preserving its own engine, default security settings, anti-fingerprinting defenses, NoScript, bridges, circuit isolation and updater. Livara's normal engine, glass theme and custom fonts are not applied to it. The local builder verifies the official bundle's signature before installation. Normal Livara windows always refuse onion URLs; there is no generic proxy-mode substitution.
+
+Livara Chat remains a separate WebKitGTK app at `https://chat.livara.org`, with its own profile, current address, sign-in popup support and permission prompts. It requires that website and internet access, and does not provide a local backend or offline AI model.

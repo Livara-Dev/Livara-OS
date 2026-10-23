@@ -1,0 +1,81 @@
+{
+  "status": "passed",
+  "mode": "check",
+  "native_windows_tested": false,
+  "check_scope": {
+    "iso_created": false,
+    "code_or_zen_compiled": false,
+    "tor_bundle_downloaded": false
+  },
+  "python_tests": 174,
+  "python_skips": [
+    "'local pinned source checkout not present'"
+  ],
+  "node_test_runs": [
+    {
+      "scripts": "forks/code/test-features.cjs",
+      "tests": 12,
+      "skipped": 0
+    },
+    {
+      "scripts": "forks/code/test-window-controls.mjs",
+      "tests": 3,
+      "skipped": 0
+    }
+  ],
+  "node_tests_total": 15,
+  "node_skips_total": 0,
+  "desktop_package": "livara-desktop_0.1.0_all.deb",
+  "desktop_package_bytes": 15071212,
+  "package_members": 1154,
+  "source_snapshot_files": 1189,
+  "approved_post_check_source_delta": [],
+  "packaged_source_asset_matches": 1081,
+  "rebuilt_fonts_verified": {
+    "LivaraMono-Regular.ttf": "94fbdbfa922b63c727018463475d4b7fe3ee34b4b86b1e441bf417f581138f57",
+    "LivaraMono-SemiBold.ttf": "b4ebc9b8a71ae785f0cc6ec1bae2dddb97138060cca8f5f49765e21f0624a61a",
+    "LivaraPersian-Regular.ttf": "58d8b49af13f21e389de343e69fdeaba1acc593198d47a7353770e08102e6415",
+    "LivaraPersian-SemiBold.ttf": "8d4b993396cc170d25b856d12dedc89a07d943259dc966b2b01f9b6eae60ad79",
+    "LivaraSans-Regular.ttf": "04b6684d4009d80b1c8f7b78d798e284f47f0791b80b6e082b46360778c65616",
+    "LivaraSans-SemiBold.ttf": "e126305dca4871090fe2b00d7ea93306e108fd8c0d26e38a9adbd2a7b5efdaac"
+  },
+  "fonttools_version": "4.46.0",
+  "node_version": "v24.18.0",
+  "harfbuzz_cli_version": "hb-shape (HarfBuzz) 8.3.0",
+  "wrappers_executable": [
+    "livara",
+    "livara-center",
+    "livara-settings",
+    "livara-monitor",
+    "livara-studio",
+    "livara-browser",
+    "livara-chat",
+    "livara-code",
+    "livara-graphics",
+    "livara-terminal"
+  ],
+  "ownership": "all package/control members root:root",
+  "retired_generic_tor_mode_absent": true,
+  "official_tor_runtime_and_manifest_present": true,
+  "licensed_font_editable_sources_present": true,
+  "nested_docker_helper_executable_and_exercised": true,
+  "new_controls_modules_and_window_engine_packaged": true,
+  "expanded_settings_and_studio_modules_packaged": true,
+  "gdkpixbuf_debian_dependency_present": true,
+  "native_settings_schema_audit": {
+    "rows": 94,
+    "range_check_samples": 224,
+    "status": "passed"
+  },
+  "source_build_output_volumes": "unique Linux named Docker volumes; cleaned after success",
+  "final_freshness": {
+    "status": "passed",
+    "production_source_asset_hashes_matched": 1141,
+    "check_volumes_removed": 3,
+    "iso_created": false,
+    "desktop_package_sha256": "38e599479c87ed3d52f09cf54ef2c7f3d5745aff711dd16561b020612df3fba2",
+    "desktop_package_bytes": 15071212,
+    "controller_image": "sha256:cac596a0f17f87176923a76cae2b197c08c03373c69945adbe5e17b37a0650c2",
+    "scope": "Runtime modules,installed asset sources,font sources/vendor,fork and image recipes. Documentation and gallery-only harness edits after check may differ."
+  }
+}

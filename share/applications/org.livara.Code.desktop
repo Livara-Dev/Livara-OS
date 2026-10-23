@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Livara Code
+Comment=AMOLED black and purple code editor
+Exec=livara-code %F
+Icon=org.livara.Code
+Terminal=false
+Categories=Development;IDE;TextEditor;
+StartupNotify=true
+StartupWMClass=org.livara.Code
+DBusActivatable=false
+MimeType=text/plain;text/x-python;application/json;application/javascript;text/css;text/html;text/x-shellscript;

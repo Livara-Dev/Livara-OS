@@ -1,0 +1,158 @@
+--- a/build/gulpfile.extensions.ts
++++ b/build/gulpfile.extensions.ts
+@@ -286,12 +286,11 @@
+ export const compileNativeExtensionsBuildTask = task.define('compile-native-extensions-build', () => ext.packageNativeLocalExtensionsStream(false).pipe(gulp.dest('.build')));
+ task.task(compileNativeExtensionsBuildTask);
+ 
+-/**
+- * Compiles the built-in copilot extension for the build.
+- * Used by non-CI local builds where copilot is not downloaded as a VSIX.
+- */
+-export const compileCopilotExtensionBuildTask = task.define('compile-copilot-extension-build', () => ext.packageCopilotExtensionStream().pipe(gulp.dest('.build')));
++// Livara ships an independent workbench without the unrelated Copilot extension.
++// Keep the export for server/web task-module imports loaded by Gulp.
++export const compileCopilotExtensionBuildTask = task.define('compile-copilot-extension-build', () => Promise.resolve());
+ task.task(compileCopilotExtensionBuildTask);
++
+ 
+ /**
+  * Compiles the extensions for the build.
+--- a/build/gulpfile.vscode.ts
++++ b/build/gulpfile.vscode.ts
+@@ -24,9 +24,9 @@
+ import { config } from './lib/electron.ts';
+ import { createAsar } from './lib/asar.ts';
+ import minimist from 'minimist';
+-import { compileNonNativeExtensionsBuildTask, compileNativeExtensionsBuildTask, compileAllExtensionsBuildTask, compileExtensionMediaBuildTask, cleanExtensionsBuildTask, compileCopilotExtensionBuildTask } from './gulpfile.extensions.ts';
++import { compileNonNativeExtensionsBuildTask, compileNativeExtensionsBuildTask, compileAllExtensionsBuildTask, compileExtensionMediaBuildTask, cleanExtensionsBuildTask } from './gulpfile.extensions.ts';
+ import { checkApiProposalNamesTask, copyCodiconsTask } from './lib/compilation.ts';
+-import { ensureCopilotPlatformPackage, getCopilotExcludeFilter, getCopilotRuntimePrebuildFiles, getCopilotRuntimeVersion, getCopilotTgrepExcludeFilter, getRipgrepExcludeFilter, prepareBuiltInCopilotRipgrepShim, renderCopilotShimLauncher } from './lib/copilot.ts';
++import { ensureCopilotPlatformPackage, getCopilotExcludeFilter, getCopilotRuntimePrebuildFiles, getCopilotRuntimeVersion, getCopilotTgrepExcludeFilter, getRipgrepExcludeFilter } from './lib/copilot.ts';
+ import { ensureOSProxyResolverPlatformPackage, getOSProxyResolverExcludeFilter, getOSProxyResolverPlatformFiles } from './lib/osProxyResolver.ts';
+ import { readAgentSdkResults } from './agent-sdk/common.ts';
+ import { readDictationRuntimeResults } from './dictation-runtime/common.ts';
+@@ -420,20 +420,6 @@
+ 				.pipe(replace('@@VERSIONFOLDER@@', versionedResourcesFolder ? `${versionedResourcesFolder}\\` : ''))
+ 				.pipe(rename(product.nameShort + '.VisualElementsManifest.xml')));
+ 
+-			// Setup publishes it next to the copilot.exe shim; see build/win32/copilot.iss.
+-			result = es.merge(result, gulp.src('resources/win32/bin/copilot.sh', { base: 'resources/win32' })
+-				.pipe(es.through(function (file) {
+-					file.contents = Buffer.from(renderCopilotShimLauncher(file.contents.toString('utf8'), {
+-						commit: String(commit),
+-						quality: String(quality),
+-						applicationName: product.applicationName,
+-						dataFolderName: product.dataFolderName,
+-						serverDataFolderName: product.serverDataFolderName || '.vscode-remote',
+-					}));
+-					this.emit('data', file);
+-				}))
+-				.pipe(rename(f => { f.dirname = 'bin/copilot-shim'; f.basename = 'copilot'; f.extname = ''; })));
+-
+ 			result = es.merge(result, gulp.src('.build/policies/win32/**', { base: '.build/policies/win32' })
+ 				.pipe(rename(f => f.dirname = `policies/${f.dirname}`)));
+ 
+@@ -545,23 +531,6 @@
+ 	};
+ }
+ 
+-function prepareCopilotRipgrepShimTask(platform: string, arch: string, destinationFolderName: string) {
+-	const outputDir = path.join(path.dirname(root), destinationFolderName);
+-
+-	return async () => {
+-		// On Windows with win32VersionedUpdate, app resources live under a
+-		// commit-hash prefix: {output}/{commitHash}/resources/app/
+-		const versionedResourcesFolder = util.getVersionedResourcesFolder(platform, commit!);
+-		const appBase = platform === 'darwin'
+-			? path.join(outputDir, `${product.nameLong}.app`, 'Contents', 'Resources', 'app')
+-			: path.join(outputDir, versionedResourcesFolder, 'resources', 'app');
+-		const appNodeModulesDir = path.join(appBase, 'node_modules.asar.unpacked');
+-
+-		const builtInCopilotExtensionDir = path.join(appBase, 'extensions', 'copilot');
+-		prepareBuiltInCopilotRipgrepShim(platform, arch, builtInCopilotExtensionDir, appNodeModulesDir);
+-	};
+-}
+-
+ function generateNodeCompileCacheTask(platform: string, destinationFolderName: string) {
+ 	const outputDirectory = path.join(path.dirname(root), destinationFolderName);
+ 
+@@ -598,7 +567,6 @@
+ 			compileNativeExtensionsBuildTask,
+ 			util.rimraf(path.join(buildRoot, destinationFolderName)),
+ 			packageTask(platform, arch, sourceFolderName, destinationFolderName, opts),
+-			prepareCopilotRipgrepShimTask(platform, arch, destinationFolderName)
+ 		];
+ 
+ 		if (platform === 'win32') {
+@@ -625,7 +593,6 @@
+ 			copyCodiconsTask,
+ 			cleanExtensionsBuildTask,
+ 			compileNonNativeExtensionsBuildTask,
+-			compileCopilotExtensionBuildTask,
+ 			compileExtensionMediaBuildTask,
+ 			writeISODate('out-build'),
+ 			esbuildBundleTask,
+--- a/build/lib/builtInExtensions.ts
++++ b/build/lib/builtInExtensions.ts
+@@ -93,8 +93,6 @@
+ 			return es.readArray([]);
+ 		}
+ 		input = ext.fromGithub(extension, { asset, latest: isInsiders() });
+-	} else if (productjson.extensionsGallery?.serviceUrl) {
+-		input = ext.fromMarketplace(productjson.extensionsGallery.serviceUrl, extension);
+ 	} else {
+ 		input = ext.fromGithub(extension, { latest: isInsiders() });
+ 	}
+--- a/build/npm/dirs.ts
++++ b/build/npm/dirs.ts
+@@ -15,7 +15,6 @@
+ 	'build/vite',
+ 	'extensions',
+ 	'extensions/configuration-editing',
+-	'extensions/copilot',
+ 	'extensions/css-language-features',
+ 	'extensions/css-language-features/server',
+ 	'extensions/debug-auto-launch',
+--- a/package.json
++++ b/package.json
+@@ -23,9 +23,8 @@
+     "preinstall": "node build/npm/preinstall.ts",
+     "postinstall": "node build/npm/postinstall.ts",
+     "install-fast": "node build/npm/fast-install.ts",
+-    "compile": "npm-run-all2 -lp compile-client compile-copilot",
++    "compile": "npm run compile-client",
+     "compile-client": "npm run gulp compile",
+-    "compile-copilot": "npm --prefix extensions/copilot run compile",
+     "build-fast": "node build/next/build-fast.ts",
+     "build-fast-extensions": "npm run gulp copy-codicons compile-extensions compile-extension-media",
+     "typecheck-client": "tsc --project ./src/tsconfig.json --noEmit --skipLibCheck",
+@@ -33,8 +32,8 @@
+     "codex:check-protocol": "node build/codex/check-protocol-sync.ts",
+     "agent-host:generate-copilot-meta": "node build/agentHost/generateCopilotMetadata.ts",
+     "agent-host:check-copilot-meta": "node build/agentHost/generateCopilotMetadata.ts --check",
+-    "watch": "npm-run-all2 -lp watch-client-transpile watch-client watch-extensions watch-copilot",
+-    "watch-transpile": "npm-run-all2 -lp watch-client-transpile watch-extensions watch-copilot",
++    "watch": "npm-run-all2 -lp watch-client-transpile watch-client watch-extensions",
++    "watch-transpile": "npm-run-all2 -lp watch-client-transpile watch-extensions",
+     "watchd": "deemon npm run watch",
+     "watch-webd": "deemon npm run watch-web",
+     "kill-watchd": "deemon --kill npm run watch",
+@@ -52,9 +51,6 @@
+     "watch-extensions": "npm run gulp watch-extensions watch-extension-media",
+     "watch-extensionsd": "deemon npm run watch-extensions",
+     "kill-watch-extensionsd": "deemon --kill npm run watch-extensions",
+-    "watch-copilot": "npm --prefix extensions/copilot run watch",
+-    "watch-copilotd": "deemon npm run watch-copilot",
+-    "kill-watch-copilotd": "deemon --kill npm run watch-copilot",
+     "precommit": "node --experimental-strip-types build/hygiene.ts",
+     "gulp": "node --experimental-strip-types --max-old-space-size=8192 ./node_modules/gulp/bin/gulp.js",
+     "electron": "node build/lib/electron.ts",
+@@ -90,8 +86,6 @@
+     "perf:css": "node .github/skills/auto-perf-optimize/scripts/workbench-css-performance.mts",
+     "perf:chat": "node scripts/chat-simulation/test-chat-perf-regression.js",
+     "perf:chat-leak": "node scripts/chat-simulation/test-chat-mem-leaks.js",
+-    "copilot:setup": "npm --prefix extensions/copilot run setup",
+-    "copilot:get_token": "npm --prefix extensions/copilot run get_token",
+     "update-build-ts-version": "npm install -D typescript@npm:@typescript/typescript6@^6.0.2 && npm install -D @typescript/native@npm:typescript@next && (cd build && npm run typecheck)",
+     "install-local-component-explorer": "npm install ../vscode-packages/js-component-explorer/dist/vscode-component-explorer-0.1.0.tgz ../vscode-packages/js-component-explorer/dist/vscode-component-explorer-cli-0.1.0.tgz --no-save && cd build/rspack && npm install ../../../vscode-packages/js-component-explorer/dist/vscode-component-explorer-webpack-plugin-0.1.0.tgz --no-save && cd ../vite && npm install ../../../vscode-packages/js-component-explorer/dist/vscode-component-explorer-vite-plugin-0.1.0.tgz --no-save",
+     "symlink-local-component-explorer": "npm install ../vscode-packages/js-component-explorer/packages/explorer ../vscode-packages/js-component-explorer/packages/cli --no-save && cd build/rspack && npm install ../../../vscode-packages/js-component-explorer/packages/webpack-plugin ../../../vscode-packages/js-component-explorer/packages/explorer --no-save && cd ../vite && npm install ../../../vscode-packages/js-component-explorer/packages/vite-plugin ../../../vscode-packages/js-component-explorer/packages/explorer --no-save",

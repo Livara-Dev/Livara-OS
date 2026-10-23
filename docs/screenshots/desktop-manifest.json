@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "mode": "Actual nested GNOME Shell46 source preview, not an ISO boot",
+  "display": "1440x900 software rendering under Xvfb",
+  "settings": "Isolated Gio memory backend with installed Livara schema/defaults; test-only force_animations for timed motion validation",
+  "files": [
+    {
+      "path": "desktop-shell.png",
+      "sha256": "7e4a6dcdd02e91220f9a3ea52495c7c5ade4f7b3bb5dd5777754a3e87ca56c33",
+      "bytes": 685944
+    },
+    {
+      "path": "desktop-quick-settings.png",
+      "sha256": "b498bd9ff28635c4d85e3e7c2d70cd352e6dd6f3244c4ad175620d0e9c26616d",
+      "bytes": 672788
+    },
+    {
+      "path": "desktop-overview.png",
+      "sha256": "6dca8364393f3944378a9f9a0b6bdda16d978d3c8786406d124251fa19bd93d1",
+      "bytes": 451893
+    },
+    {
+      "path": "desktop-app-grid.png",
+      "sha256": "3627ca34c92ac8d2ef2a3350fe9730ac3668420bbdf535cdb59753994ea61b19",
+      "bytes": 94532
+    },
+    {
+      "path": "tor-official.png",
+      "sha256": "2a0be688a75ea15e0a5cdd8b3f1db71bdbc78283be474364c52cdf19d763058a",
+      "bytes": 178684
+    }
+  ],
+  "limitations": [
+    "Minimal preview container, not the full installed security-tool catalog",
+    "Physical network/audio/power/login services are absent from this nested session",
+    "Current Chat capture unavailable: container rejects bwrap proc mount; its WebKit sandbox was preserved",
+    "Tor Browser shown offline at its unchanged initial Connect UI; no Connect action or circuit/connectivity claim",
+    "Rebuilt Livara ISO and physical hardware remain unqualified"
+  ]
+}

@@ -1,0 +1,385 @@
+{
+  "description": "Genuine captures of Livara Essentials, Settings, Studio, native apps, a branded installer requirements screen, nested GNOME desktop, source-built Code, official Tor initial UI and editable fonts. No newly booted ISO, complete disk installation or physical hardware qualification is shown.",
+  "captures": [
+    {
+      "path": "docs/screenshots/desktop-shell.png",
+      "title": "Livara desktop",
+      "section": "Desktop",
+      "context": "Actual nested GNOME46 compositor with Livara wallpaper, branding and floating glass dock. This is a minimal source preview under software rendering; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/desktop-quick-settings.png",
+      "title": "Desktop · Quick Settings",
+      "section": "Desktop",
+      "context": "Actual Shell surface with Livara glass effects. Network, audio and power hardware/services are absent from this isolated preview."
+    },
+    {
+      "path": "docs/screenshots/desktop-overview.png",
+      "title": "Desktop · Overview",
+      "section": "Desktop",
+      "context": "Actual GNOME Overview in the nested source preview; only the test environment’s applications are installed."
+    },
+    {
+      "path": "docs/screenshots/desktop-app-grid.png",
+      "title": "Desktop · application grid",
+      "section": "Desktop",
+      "context": "Actual app grid and Livara launcher identities in a minimal nested GNOME session; the full security package set is not installed here."
+    },
+    {
+      "path": "docs/screenshots/native-settings-app-icons.png",
+      "title": "Settings · App icons",
+      "section": "Settings",
+      "context": "Actual current GTK icon manager: Livara Settings uses a custom browser-style icon, with per-app change and Restore controls. Captured in an isolated Ubuntu24.04 Xvfb/Openbox test profile; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-center-overview.png",
+      "title": "Livara Control Center",
+      "section": "Native apps",
+      "context": "Live container summary and app navigation. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-security-toolbox.png",
+      "title": "Security toolbox",
+      "section": "Native apps",
+      "context": "Actual native tool availability in the small test image; the full OS package set is not installed here. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-case-workspaces.png",
+      "title": "Case workspaces",
+      "section": "Native apps",
+      "context": "An empty real workspace, ready to create a case. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-security-shield.png",
+      "title": "Livara Shield",
+      "section": "Native apps",
+      "context": "Read-only security checks of the test container. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-file-verification.png",
+      "title": "File verification",
+      "section": "Native apps",
+      "context": "Native SHA-256 verification screen; no file or checksum is fabricated. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-app-launcher.png",
+      "title": "Livara apps",
+      "section": "Native apps",
+      "context": "Native app catalog with actual launcher controls. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-monitor-overview.png",
+      "title": "Task Manager overview",
+      "section": "Native apps",
+      "context": "Live CPU, memory, network, disk and uptime observations from the container. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-monitor-processes.png",
+      "title": "Task Manager processes",
+      "section": "Native apps",
+      "context": "Actual test-container processes; selected manager cannot signal itself. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-graphics-overview.png",
+      "title": "Graphics observations",
+      "section": "Native apps",
+      "context": "Actual container hardware/driver observations; no GPU pass-through is configured. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-studio-home.png",
+      "title": "Studio · Overview",
+      "section": "Studio",
+      "context": "The actual redesigned workspace Home with default favorites and truthful empty activity history. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-studio-tools.png",
+      "title": "Studio · Workbench",
+      "section": "Studio",
+      "context": "The real JSON formatter run on its built-in sample in the redesigned workspace. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-studio-search.png",
+      "title": "Studio · Search",
+      "section": "Studio",
+      "context": "Real tool search for color and the actual Color Prism output. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-studio-notes.png",
+      "title": "Studio · Notebook",
+      "section": "Studio",
+      "context": "An explicitly labeled English/Persian gallery example saved through the redesigned Notebook. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-studio-focus.png",
+      "title": "Studio · Focus",
+      "section": "Studio",
+      "context": "A real running 25-minute local timer; no completed history is invented. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-settings-window-controls.png",
+      "title": "Settings · Windows",
+      "section": "Settings",
+      "context": "The Windows section with native traffic-light controls and motion preferences. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-settings-dock.png",
+      "title": "Settings · Dock",
+      "section": "Settings",
+      "context": "Real dock options exposed by available schemas; unavailable controls stay disabled in this container. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-settings-typography.png",
+      "title": "Settings · Type",
+      "section": "Settings",
+      "context": "Actual font controls and a live font preview using the supplied Livara fonts. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-settings-spaces.png",
+      "title": "Settings · Spaces",
+      "section": "Settings",
+      "context": "Actual workspace, clock, and status-area preferences. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-settings-focus.png",
+      "title": "Settings · Focus",
+      "section": "Settings",
+      "context": "Actual notifications, recent-history, lock, and session controls. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-settings-input.png",
+      "title": "Settings · Input",
+      "section": "Settings",
+      "context": "Actual pointer, touchpad, and keyboard controls available to the test session. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-settings-display.png",
+      "title": "Settings · Display",
+      "section": "Settings",
+      "context": "Actual display and night-light preferences; unavailable device options remain disabled. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-settings-search.png",
+      "title": "Settings · Search",
+      "section": "Settings",
+      "context": "Real catalog search for font controls, with filtered sections and visible match counts. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-settings-real-preview.png",
+      "title": "Settings · Real window preview",
+      "section": "Settings",
+      "context": "The app's real native preview window, opened through its existing action. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-settings-device.png",
+      "title": "Device and connectivity",
+      "section": "Settings",
+      "context": "Device panel launchers; this capture does not open GNOME hardware panels. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-studio-appearance.png",
+      "title": "Studio · Customize",
+      "section": "Studio",
+      "context": "The actual app-specific accent, density, and editor-size popover. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-settings-personalize.png",
+      "title": "Settings · Look",
+      "section": "Settings",
+      "context": "Redesigned Look section with actual presets, wallpaper preview, and an explicitly labeled gallery preset saved through the real UI. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-settings-look-controls.png",
+      "title": "Settings · Look controls",
+      "section": "Settings",
+      "context": "Actual wallpaper, glass, and color controls below the Look preview. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-settings-window-palette.png",
+      "title": "Settings · Window palette",
+      "section": "Settings",
+      "context": "Actual color controls and remaining window preferences below the native window preview. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/screenshots/native-settings-type-controls.png",
+      "title": "Settings · Type controls",
+      "section": "Settings",
+      "context": "Additional font, scale, and rendering controls. Actual GTK app in an isolated Ubuntu24.04 container; no ISO boot."
+    },
+    {
+      "path": "docs/livara-code.png",
+      "title": "Livara Code · welcome",
+      "section": "Code",
+      "context": "Actual Electron application with the current traffic-light controls. Source-built core with validated compatibility updates; no ISO boot."
+    },
+    {
+      "path": "docs/livara-code-controls-custom.png",
+      "title": "Livara Code · custom window controls",
+      "section": "Code",
+      "context": "Actual editor with right-side controls, customized colors, symbols and size."
+    },
+    {
+      "path": "docs/livara-code-notes.png",
+      "title": "Livara Code · editor and Persian text",
+      "section": "Code",
+      "context": "Actual notes, UUID and Persian text workflow; this capture predates the later titlebar customization."
+    },
+    {
+      "path": "docs/livara-code-terminal.png",
+      "title": "Livara Code · terminal",
+      "section": "Code",
+      "context": "Actual bash terminal using Livara’s terminal profile; captured before the later titlebar customization."
+    },
+    {
+      "path": "fonts/specimens/livara-type-specimen.png",
+      "title": "Livara Sans and Mono",
+      "section": "Fonts",
+      "context": "Actual font specimen rendered from the included editable fonts; this is a specimen rather than a desktop screenshot."
+    },
+    {
+      "path": "fonts/specimens/livara-persian-specimen.png",
+      "title": "Livara Persian",
+      "section": "Fonts",
+      "context": "Actual shaped Persian/Arabic specimen using the Vazirmatn-derived Livara Persian fonts, with joining, marks and ZWNJ."
+    },
+    {
+      "path": "docs/livara-chat-native.png",
+      "title": "Livara Chat · earlier native capture",
+      "section": "Chat",
+      "context": "Actual WebKit Chat application capture from before the new window controls. Website availability and online service operation are not established by this screenshot."
+    },
+    {
+      "path": "docs/screenshots/tor-official.png",
+      "title": "Official Tor Browser · initial connection",
+      "section": "Tor",
+      "context": "The unchanged official browser launched as a regular user with sandbox enabled in an offline container. Connect was not selected; this capture establishes no Tor circuit or network connectivity."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-theme.png",
+      "title": "Essentials · Theme Studio",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-profiles.png",
+      "title": "Essentials · Desktop profiles",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-layouts.png",
+      "title": "Essentials · Desktop layouts",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-palette.png",
+      "title": "Essentials · Command palette",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-tiling.png",
+      "title": "Essentials · Window zones",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-clipboard.png",
+      "title": "Essentials · Clipboard history",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-preview.png",
+      "title": "Essentials · Quick Look",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-capture.png",
+      "title": "Essentials · Screen recorder",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-recovery.png",
+      "title": "Essentials · Recovery snapshots",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-permissions.png",
+      "title": "Essentials · Permission dashboard",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-lab.png",
+      "title": "Essentials · Security Lab",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-hardware.png",
+      "title": "Essentials · Hardware assistant",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-connect.png",
+      "title": "Essentials · Livara Connect",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-help.png",
+      "title": "Essentials · Offline documentation",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-install.png",
+      "title": "Essentials · Install Livara",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-accounts.png",
+      "title": "Essentials · Persistent accounts",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-updates.png",
+      "title": "Essentials · Updates & firmware",
+      "section": "Essentials",
+      "context": "Actual current Livara GTK4 feature page in an isolated Ubuntu24.04 Xvfb/Openbox profile. Services and hardware are those of the test container; this is not an ISO boot or proof that a recovery/install operation succeeded."
+    },
+    {
+      "path": "docs/screenshots/native-palette.png",
+      "title": "Livara Palette",
+      "section": "Essentials",
+      "context": "Real native search showing Studio JSON tools; apps/files/settings are indexed locally in the test profile. No result was launched for the screenshot."
+    },
+    {
+      "path": "docs/screenshots/native-installer-welcome.png",
+      "title": "Livara installer · requirements",
+      "section": "Installer",
+      "context": "Actual branded Calamares3.3.5 welcome screen. It correctly refuses installation because the isolated test container has no target partitions or required disk space. No partitioning, encryption, installation or reboot was performed."
+    },
+    {
+      "path": "docs/screenshots/native-essentials-compact.png",
+      "title": "Essentials · compact Security Lab",
+      "section": "Essentials",
+      "context": "Actual native feature app at 800×600 with a generated local test project. Demonstration scope and paths belong to a temporary test profile."
+    }
+  ],
+  "not_captured": [
+    "The normal Livara Browser Gecko engine has not been fully compiled or launched here, so there is no genuine full-browser screenshot.",
+    "Chat is represented by a clearly labeled earlier native capture. Its current preview could not start because the container blocks a required WebKit sandbox mount; the sandbox was preserved.",
+    "These captures cover the major implemented areas, rather than every tool, dialog or customization. Software-rendered nested previews do not establish hardware performance.",
+    "Earlier Settings and Center captures predate the App icons navigation item; the App icons capture shows the current addition. Their earlier qualification records retain the source hashes tested at that time.",
+    "No newly booted ISO, boot splash, login session, completed disk installation, physical RTX card or Core Ultra7 machine was captured. Installer requirements UI is captured; encrypted install and reboot are unqualified.",
+    "Earlier Settings and Center captures predate the Feature hub navigation item. Their previous qualification records describe their capture-time source snapshots. All new Essentials pages are captured from the current source."
+  ]
+}

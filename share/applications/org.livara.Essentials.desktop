@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Livara Essentials
+Comment=Theme Studio, layouts and desktop features
+Exec=livara-essentials
+Icon=org.livara.Essentials
+Terminal=false
+Categories=System;Utility;
+StartupNotify=true

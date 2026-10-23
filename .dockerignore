@@ -1,0 +1,16 @@
+.git
+.build
+.build*.log
+__pycache__
+*.pyc
+dist/*
+!dist/livara-desktop_0.1.0_all.deb
+tests
+docs
+
+
+!dist/forks/
+dist/forks/*
+!dist/forks/livara-code-linux-x64.tar.xz
+!dist/forks/livara-browser-linux-x64.tar.xz
+!dist/forks/livara-tor-browser-linux-x64.tar.xz

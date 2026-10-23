@@ -1,0 +1,104 @@
+{
+  "name": "livara-workbench",
+  "displayName": "Livara Workbench",
+  "description": "Livara AMOLED, original file icons, welcome studio and desktop integration.",
+  "version": "1.0.0",
+  "publisher": "livara",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.143.0"
+  },
+  "main": "./extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "categories": [
+    "Themes",
+    "Other"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Livara AMOLED",
+        "uiTheme": "vs-dark",
+        "path": "./themes/livara-amoled.json"
+      }
+    ],
+    "iconThemes": [
+      {
+        "id": "livara-files",
+        "label": "Livara Files",
+        "path": "./icons/livara-files.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "livara.welcome",
+        "title": "Livara: Welcome studio"
+      },
+      {
+        "command": "livara.chat",
+        "title": "Livara: Open Chat"
+      },
+      {
+        "command": "livara.focus",
+        "title": "Livara: Toggle focus mode"
+      },
+      {
+        "command": "livara.notes",
+        "title": "Livara: Private notes"
+      },
+      {
+        "command": "livara.focusStart",
+        "title": "Livara: Start focus timer"
+      },
+      {
+        "command": "livara.focusPause",
+        "title": "Livara: Pause or resume focus"
+      },
+      {
+        "command": "livara.focusCancel",
+        "title": "Livara: Cancel focus timer"
+      },
+      {
+        "command": "livara.todos",
+        "title": "Livara: Workspace TODO index"
+      },
+      {
+        "command": "livara.hashFile",
+        "title": "Livara: SHA-256 of current file"
+      },
+      {
+        "command": "livara.insertUUID",
+        "title": "Livara: Insert a random UUID"
+      },
+      {
+        "command": "livara.insertPassword",
+        "title": "Livara: Insert a secure random password"
+      },
+      {
+        "command": "livara.formatJSON",
+        "title": "Livara: Sort and format JSON"
+      },
+      {
+        "command": "livara.compareClipboard",
+        "title": "Livara: Compare with clipboard"
+      },
+      {
+        "command": "livara.inventory",
+        "title": "Livara: Workspace checksum inventory"
+      },
+      {
+        "command": "livara.newProject",
+        "title": "Livara: Create a project template"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "livara.welcome",
+        "key": "ctrl+alt+l",
+        "mac": "cmd+alt+l"
+      }
+    ]
+  }
+}

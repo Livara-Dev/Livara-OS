@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Livara Settings
+Comment=Personalize Livara and manage your device
+Exec=livara-settings
+Icon=org.livara.Settings
+Terminal=false
+Categories=Settings;DesktopSettings;
+StartupNotify=true
+StartupWMClass=org.livara.Settings
+DBusActivatable=false

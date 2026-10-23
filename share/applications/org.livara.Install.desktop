@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Install Livara OS
+Comment=Configure disk installation and a persistent account
+Exec=livara-install
+Icon=org.livara.Install
+Terminal=false
+Categories=System;Utility;
+StartupNotify=true

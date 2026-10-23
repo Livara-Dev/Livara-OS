@@ -1,0 +1,59 @@
+[org.gnome.desktop.background]
+picture-uri='file:///usr/share/backgrounds/livara/livara-glass.png'
+picture-uri-dark='file:///usr/share/backgrounds/livara/livara-glass.png'
+picture-options='zoom'
+
+[org.gnome.desktop.screensaver]
+picture-uri='file:///usr/share/backgrounds/livara/livara-glass.png'
+
+[org.gnome.desktop.interface]
+color-scheme='prefer-dark'
+gtk-theme='Yaru-purple-dark'
+icon-theme='Yaru-purple'
+font-name='Livara Sans 11'
+document-font-name='Livara Sans 11'
+monospace-font-name='Livara Mono 11'
+
+[org.livara.desktop]
+blur-radius=18
+
+[org.gnome.shell]
+enabled-extensions=['ubuntu-dock@ubuntu.com', 'ubuntu-appindicators@ubuntu.com', 'ding@rastersoft.com', 'livara-glass@livara.local']
+favorite-apps=['org.livara.Center.desktop', 'org.gnome.Nautilus.desktop', 'org.livara.Browser.desktop', 'org.livara.Terminal.desktop', 'org.livara.Monitor.desktop', 'org.livara.Settings.desktop', 'org.livara.Studio.desktop', 'org.livara.Code.desktop', 'org.livara.Chat.desktop']
+
+[org.gnome.shell:ubuntu]
+enabled-extensions=['ubuntu-dock@ubuntu.com', 'ubuntu-appindicators@ubuntu.com', 'ding@rastersoft.com', 'livara-glass@livara.local']
+favorite-apps=['org.livara.Center.desktop', 'org.gnome.Nautilus.desktop', 'org.livara.Browser.desktop', 'org.livara.Terminal.desktop', 'org.livara.Monitor.desktop', 'org.livara.Settings.desktop', 'org.livara.Studio.desktop', 'org.livara.Code.desktop', 'org.livara.Chat.desktop']
+
+[org.gnome.desktop.interface:ubuntu]
+color-scheme='prefer-dark'
+gtk-theme='Yaru-purple-dark'
+icon-theme='Yaru-purple'
+font-name='Livara Sans 11'
+document-font-name='Livara Sans 11'
+monospace-font-name='Livara Mono 11'
+
+[org.gnome.shell.extensions.dash-to-dock]
+dock-position='BOTTOM'
+dock-fixed=true
+dash-max-icon-size=48
+extend-height=false
+transparency-mode='FIXED'
+background-opacity=0.35
+autohide=false
+intellihide=false
+
+[org.gnome.desktop.wm.preferences]
+button-layout='close,minimize,maximize:'
+titlebar-font='Livara Sans SemiBold 11'
+
+[org.gnome.login-screen]
+logo='/usr/share/livara/logo.png'
+fallback-logo='/usr/share/livara/logo.png'
+
+
+[org.gnome.GPaste]
+track-changes=false
+images-support=true
+max-history-size=uint64 100
+max-memory-usage=uint64 64

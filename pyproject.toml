@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "livara"
+version = "0.1.0"
+description = "Livara OS desktop and security workbench"
+requires-python = ">=3.11"
+license = {text = "GPL-3.0-or-later"}
+
+[project.scripts]
+livara = "livara.cli:main"
+livara-center = "livara.gui:main"
+livara-settings = "livara.gui:settings_main"
+livara-monitor = "livara.monitor_gui:main"
+livara-studio = "livara.studio_gui:main"
+livara-chat = "livara.web_gui:chat_main"
+livara-code = "livara.code_launcher:main"
+livara-essentials = "livara.essentials_gui:main"
+livara-palette = "livara.palette:main"
+livara-graphics = "livara.gpu_gui:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

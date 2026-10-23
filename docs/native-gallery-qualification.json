@@ -1,0 +1,250 @@
+{
+  "schema": 1,
+  "validated_at_utc": "2026-10-22T23:12:09Z",
+  "origin": "Actual Livara GTK4 apps on Ubuntu 24.04 under Xvfb/Openbox; this is not a booted Livara desktop.",
+  "native_manifest_sha256": "2fcb972f6f5110b8872e06499f3f4dad00ac3945713b280925aaef0c66d5f6a6",
+  "native_image_count": 29,
+  "all_images_present": true,
+  "settings_studio_hash_comparisons": 34,
+  "source_hash_checks": [
+    {
+      "file": "native-studio-home.png",
+      "source": "src/livara/studio_gui.py",
+      "source_sha256": "7ad98a95acd9f11c7876122dda23197f842fdfa94ff21c71cc9faf9858b46ece",
+      "matches": true
+    },
+    {
+      "file": "native-studio-tools.png",
+      "source": "src/livara/studio_gui.py",
+      "source_sha256": "7ad98a95acd9f11c7876122dda23197f842fdfa94ff21c71cc9faf9858b46ece",
+      "matches": true
+    },
+    {
+      "file": "native-studio-search.png",
+      "source": "src/livara/studio_gui.py",
+      "source_sha256": "7ad98a95acd9f11c7876122dda23197f842fdfa94ff21c71cc9faf9858b46ece",
+      "matches": true
+    },
+    {
+      "file": "native-studio-notes.png",
+      "source": "src/livara/studio_gui.py",
+      "source_sha256": "7ad98a95acd9f11c7876122dda23197f842fdfa94ff21c71cc9faf9858b46ece",
+      "matches": true
+    },
+    {
+      "file": "native-studio-focus.png",
+      "source": "src/livara/studio_gui.py",
+      "source_sha256": "7ad98a95acd9f11c7876122dda23197f842fdfa94ff21c71cc9faf9858b46ece",
+      "matches": true
+    },
+    {
+      "file": "native-settings-window-controls.png",
+      "source": "src/livara/gui.py",
+      "source_sha256": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+      "matches": true
+    },
+    {
+      "file": "native-settings-window-controls.png",
+      "source": "src/livara/settings_ui.py",
+      "source_sha256": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+      "matches": true
+    },
+    {
+      "file": "native-settings-dock.png",
+      "source": "src/livara/gui.py",
+      "source_sha256": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+      "matches": true
+    },
+    {
+      "file": "native-settings-dock.png",
+      "source": "src/livara/settings_ui.py",
+      "source_sha256": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+      "matches": true
+    },
+    {
+      "file": "native-settings-typography.png",
+      "source": "src/livara/gui.py",
+      "source_sha256": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+      "matches": true
+    },
+    {
+      "file": "native-settings-typography.png",
+      "source": "src/livara/settings_ui.py",
+      "source_sha256": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+      "matches": true
+    },
+    {
+      "file": "native-settings-spaces.png",
+      "source": "src/livara/gui.py",
+      "source_sha256": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+      "matches": true
+    },
+    {
+      "file": "native-settings-spaces.png",
+      "source": "src/livara/settings_ui.py",
+      "source_sha256": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+      "matches": true
+    },
+    {
+      "file": "native-settings-focus.png",
+      "source": "src/livara/gui.py",
+      "source_sha256": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+      "matches": true
+    },
+    {
+      "file": "native-settings-focus.png",
+      "source": "src/livara/settings_ui.py",
+      "source_sha256": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+      "matches": true
+    },
+    {
+      "file": "native-settings-input.png",
+      "source": "src/livara/gui.py",
+      "source_sha256": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+      "matches": true
+    },
+    {
+      "file": "native-settings-input.png",
+      "source": "src/livara/settings_ui.py",
+      "source_sha256": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+      "matches": true
+    },
+    {
+      "file": "native-settings-display.png",
+      "source": "src/livara/gui.py",
+      "source_sha256": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+      "matches": true
+    },
+    {
+      "file": "native-settings-display.png",
+      "source": "src/livara/settings_ui.py",
+      "source_sha256": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+      "matches": true
+    },
+    {
+      "file": "native-settings-search.png",
+      "source": "src/livara/gui.py",
+      "source_sha256": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+      "matches": true
+    },
+    {
+      "file": "native-settings-search.png",
+      "source": "src/livara/settings_ui.py",
+      "source_sha256": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+      "matches": true
+    },
+    {
+      "file": "native-settings-real-preview.png",
+      "source": "src/livara/gui.py",
+      "source_sha256": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+      "matches": true
+    },
+    {
+      "file": "native-settings-real-preview.png",
+      "source": "src/livara/settings_ui.py",
+      "source_sha256": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+      "matches": true
+    },
+    {
+      "file": "native-settings-device.png",
+      "source": "src/livara/gui.py",
+      "source_sha256": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+      "matches": true
+    },
+    {
+      "file": "native-settings-device.png",
+      "source": "src/livara/settings_ui.py",
+      "source_sha256": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+      "matches": true
+    },
+    {
+      "file": "native-studio-appearance.png",
+      "source": "src/livara/studio_gui.py",
+      "source_sha256": "7ad98a95acd9f11c7876122dda23197f842fdfa94ff21c71cc9faf9858b46ece",
+      "matches": true
+    },
+    {
+      "file": "native-settings-personalize.png",
+      "source": "src/livara/gui.py",
+      "source_sha256": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+      "matches": true
+    },
+    {
+      "file": "native-settings-personalize.png",
+      "source": "src/livara/settings_ui.py",
+      "source_sha256": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+      "matches": true
+    },
+    {
+      "file": "native-settings-look-controls.png",
+      "source": "src/livara/gui.py",
+      "source_sha256": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+      "matches": true
+    },
+    {
+      "file": "native-settings-look-controls.png",
+      "source": "src/livara/settings_ui.py",
+      "source_sha256": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+      "matches": true
+    },
+    {
+      "file": "native-settings-window-palette.png",
+      "source": "src/livara/gui.py",
+      "source_sha256": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+      "matches": true
+    },
+    {
+      "file": "native-settings-window-palette.png",
+      "source": "src/livara/settings_ui.py",
+      "source_sha256": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+      "matches": true
+    },
+    {
+      "file": "native-settings-type-controls.png",
+      "source": "src/livara/gui.py",
+      "source_sha256": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+      "matches": true
+    },
+    {
+      "file": "native-settings-type-controls.png",
+      "source": "src/livara/settings_ui.py",
+      "source_sha256": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+      "matches": true
+    }
+  ],
+  "native_png_sha256": {
+    "native-center-overview.png": "07188ff0f7de3d9a8564cd48f3a88783a69a2eb93d85dd7d5b00059561f435aa",
+    "native-security-toolbox.png": "d061292b1e98f75cdaa8b00fb2de777b5af8f4164d465610f710aab05854dca3",
+    "native-case-workspaces.png": "8631694f7359df4a99ec876783da80fa9101c432c5faf34f5961db30414f7ca1",
+    "native-security-shield.png": "25a6f814d60cd1e8ebf99fec8e09b1b0d93dbce8dfb8e10933308300e75e8af8",
+    "native-file-verification.png": "0cb75a4bd4a39b9aa77c707deed0024814bd956f7bef8804fd9d2c0ca687496b",
+    "native-app-launcher.png": "8e844c378e2d9371df794b74e95afc47e79db8fd621501412e76d84691a29553",
+    "native-monitor-overview.png": "5085cc2ccd73dac8b86300e0d5acf634cc282c49b0659547e4ff7e4ee5f872b7",
+    "native-monitor-processes.png": "5d3a463c521e8bd75a7851b5322e3884fa5589042147bfabc68020d8db8a7b0c",
+    "native-graphics-overview.png": "efbba5921a42e66abcf36f92702b7146bc4fbadf5aa0d478444ae22931b480dd",
+    "native-studio-home.png": "6664b2b2322af4fdfd7fd12b33db38e87b6c0721d8e9b1297b93739752efd20c",
+    "native-studio-tools.png": "019f6a0270048b7435db98e3d2d925e215d90f2ee255ef1b84f1ab8780ec57d6",
+    "native-studio-search.png": "5927575c01cd9c19c62b1e7887c83219d61b659fabc52d4382a1daec4c542d53",
+    "native-studio-notes.png": "a46934aa4e05acbd6305e429f1eeafac4858d47a4cb05e6608a306cc4db2beab",
+    "native-studio-focus.png": "8b3ab6430e43b78050643db88461d3e32a6fcab5484104da5a792c7f36669aaa",
+    "native-settings-window-controls.png": "e1ea56c198214a6336246960cdef655668d61d857580da10421cced084a3a7a7",
+    "native-settings-dock.png": "e239f94559daad2eb224ffdafeffcf71dc400aa356700ae0129388e8e0c7560b",
+    "native-settings-typography.png": "f52a7b30b385b2469a2f53d724b7257ae2c01990d96ca901ef6c5e4e963a415c",
+    "native-settings-spaces.png": "aebfcc9c78912644fbf42b84e0f08a5c5aca3c60569a0e5654a7b28500509b5e",
+    "native-settings-focus.png": "b2e591d7e858c4971d7b31d47608e6d51169ae8f781880b0d0a505d6238dea9d",
+    "native-settings-input.png": "3681117180de81df3aaa97fcf2fb8410f1ca17cad7f03bb0c9223c3d0c9a1c45",
+    "native-settings-display.png": "600cd4096eaacce661eea3c419375235a1890b56284b9209c222c717e4aadee5",
+    "native-settings-search.png": "cd882c17684658d34f513573ae57e3d3cea5cd4ae35c8a4b93d931f5055f6032",
+    "native-settings-real-preview.png": "b165eaa25f31784a5ef8e86e4b9868a9bbbee359fa669970b72d3b3e5957aaa7",
+    "native-settings-device.png": "595e2d76d84e18158b1be1bc9ef274c6a26bcfe401bb72d20c89759042aca96f",
+    "native-studio-appearance.png": "7e8a7dec21c11fb4b6576ed5f7484f412409d5113b0f7b84cb28ee020cdc92c9",
+    "native-settings-personalize.png": "292802083425162305c328d1b2b20eb2dce84d3aa09483feea19044d92b11f29",
+    "native-settings-look-controls.png": "433b8cc5e15253ee866a0c02c9b9939e507108987c45e535b53087951e29730b",
+    "native-settings-window-palette.png": "fbc47b222d433dec7e756db3b325a04d8d5d8f96592dd1a60b31ce43727a388b",
+    "native-settings-type-controls.png": "3486fe0e42e6ae05ddc50eb66d4c2157b01460a059db9a2991daacbc4a4d2c42"
+  },
+  "reused_earlier_views": "Unchanged Center, Monitor, and Graphics views retain their original capture metadata; no new capture provenance is invented.",
+  "manifest_mutated_during_final_audit": false,
+  "source_snapshot_scope": "Historical capture-time snapshot. Later Feature hub navigation and application command-line routing change current GUI sources; the original capture hashes remain evidence for that earlier snapshot.",
+  "all_recorded_source_hashes_matched_at_capture": true
+}

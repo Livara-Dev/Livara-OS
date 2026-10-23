@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Livara Chat
+Comment=chat.livara.org in its own app window
+Exec=livara-chat
+Icon=org.livara.Chat
+Terminal=false
+Categories=Network;Chat;
+StartupNotify=true
+StartupWMClass=org.livara.Chat
+DBusActivatable=false

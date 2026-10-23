@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph name="space" format="2">
+  <advance width="650"/>
+  <unicode hex="0020"/>
+  <note>
+Original Livara outline. Edit points directly or regenerate from design.json.
+</note>
+  <outline>
+  </outline>
+</glyph>

@@ -1,0 +1,1274 @@
+{
+  "status": "passed",
+  "catalog_rows": 94,
+  "values_checked": 224,
+  "schema_packages": [
+    "gnome-settings-daemon-common\t46.0-1ubuntu1.24.04.1",
+    "gsettings-desktop-schemas\t46.1-0ubuntu1",
+    "mutter-common\t46.2-1ubuntu0.24.04.18"
+  ],
+  "errors": [],
+  "rows": [
+    {
+      "name": "appearance",
+      "schema": "org.livara.desktop",
+      "key": "appearance",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['dark', 'light']>)",
+      "default": "'dark'",
+      "declared_values_checked": [
+        "dark",
+        "light"
+      ]
+    },
+    {
+      "name": "accent",
+      "schema": "org.livara.desktop",
+      "key": "accent",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['blue', 'purple', 'sage', 'bark', 'orange', 'red', 'olive', 'magenta']>)",
+      "default": "'purple'",
+      "declared_values_checked": [
+        "purple",
+        "blue",
+        "sage",
+        "bark",
+        "orange",
+        "red",
+        "olive",
+        "magenta"
+      ]
+    },
+    {
+      "name": "wallpaper",
+      "schema": "org.livara.desktop",
+      "key": "wallpaper",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['glass', 'aurora', 'dusk', 'verdant']>)",
+      "default": "'glass'",
+      "declared_values_checked": [
+        "glass",
+        "aurora",
+        "dusk",
+        "verdant"
+      ]
+    },
+    {
+      "name": "wallpaper-image",
+      "schema": "org.gnome.desktop.background",
+      "key": "picture-uri",
+      "kind": "image",
+      "type": "s",
+      "native_range": "('type', <@as []>)",
+      "default": "'file:///usr/share/backgrounds/livara/livara-glass.png'",
+      "declared_values_checked": []
+    },
+    {
+      "name": "wallpaper-style",
+      "schema": "org.gnome.desktop.background",
+      "key": "picture-options",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['none', 'wallpaper', 'centered', 'scaled', 'stretched', 'zoom', 'spanned']>)",
+      "default": "'zoom'",
+      "declared_values_checked": [
+        "zoom",
+        "scaled",
+        "stretched",
+        "centered",
+        "spanned",
+        "wallpaper",
+        "none"
+      ]
+    },
+    {
+      "name": "glass-enabled",
+      "schema": "org.livara.desktop",
+      "key": "glass-enabled",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "blur-radius",
+      "schema": "org.livara.desktop",
+      "key": "blur-radius",
+      "kind": "int",
+      "type": "i",
+      "native_range": "('range', <(0, 60)>)",
+      "default": "18",
+      "declared_values_checked": [
+        0,
+        60
+      ]
+    },
+    {
+      "name": "animations",
+      "schema": "org.gnome.desktop.interface",
+      "key": "enable-animations",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "window-button-style",
+      "schema": "org.livara.desktop",
+      "key": "window-button-style",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['traffic-lights', 'default']>)",
+      "default": "'traffic-lights'",
+      "declared_values_checked": [
+        "traffic-lights",
+        "default"
+      ]
+    },
+    {
+      "name": "window-buttons",
+      "schema": "org.gnome.desktop.wm.preferences",
+      "key": "button-layout",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('type', <@as []>)",
+      "default": "'close,minimize,maximize:'",
+      "declared_values_checked": [
+        "close,minimize,maximize:",
+        ":minimize,maximize,close"
+      ]
+    },
+    {
+      "name": "window-button-size",
+      "schema": "org.livara.desktop",
+      "key": "window-button-size",
+      "kind": "int",
+      "type": "i",
+      "native_range": "('range', <(10, 22)>)",
+      "default": "14",
+      "declared_values_checked": [
+        10,
+        22
+      ]
+    },
+    {
+      "name": "window-button-symbols",
+      "schema": "org.livara.desktop",
+      "key": "window-button-symbols",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "window-green-action",
+      "schema": "org.livara.desktop",
+      "key": "window-green-action",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['fullscreen', 'maximize']>)",
+      "default": "'fullscreen'",
+      "declared_values_checked": [
+        "fullscreen",
+        "maximize"
+      ]
+    },
+    {
+      "name": "window-close-color",
+      "schema": "org.livara.desktop",
+      "key": "window-close-color",
+      "kind": "color",
+      "type": "s",
+      "native_range": "('type', <@as []>)",
+      "default": "'#ff5f57'",
+      "declared_values_checked": [
+        "#000000",
+        "#ffffff",
+        "#aBc123"
+      ]
+    },
+    {
+      "name": "window-minimize-color",
+      "schema": "org.livara.desktop",
+      "key": "window-minimize-color",
+      "kind": "color",
+      "type": "s",
+      "native_range": "('type', <@as []>)",
+      "default": "'#febc2e'",
+      "declared_values_checked": [
+        "#000000",
+        "#ffffff",
+        "#aBc123"
+      ]
+    },
+    {
+      "name": "window-maximize-color",
+      "schema": "org.livara.desktop",
+      "key": "window-maximize-color",
+      "kind": "color",
+      "type": "s",
+      "native_range": "('type', <@as []>)",
+      "default": "'#28c840'",
+      "declared_values_checked": [
+        "#000000",
+        "#ffffff",
+        "#aBc123"
+      ]
+    },
+    {
+      "name": "window-animation-style",
+      "schema": "org.livara.desktop",
+      "key": "window-animation-style",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['zoom', 'lift', 'fade', 'off']>)",
+      "default": "'zoom'",
+      "declared_values_checked": [
+        "zoom",
+        "lift",
+        "fade",
+        "off"
+      ]
+    },
+    {
+      "name": "window-animation-duration",
+      "schema": "org.livara.desktop",
+      "key": "window-animation-duration",
+      "kind": "int",
+      "type": "i",
+      "native_range": "('range', <(80, 600)>)",
+      "default": "220",
+      "declared_values_checked": [
+        80,
+        600
+      ]
+    },
+    {
+      "name": "edge-tiling",
+      "schema": "org.gnome.mutter",
+      "key": "edge-tiling",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "hot-corners",
+      "schema": "org.gnome.desktop.interface",
+      "key": "enable-hot-corners",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "center-new-windows",
+      "schema": "org.gnome.mutter",
+      "key": "center-new-windows",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "attach-modal-dialogs",
+      "schema": "org.gnome.mutter",
+      "key": "attach-modal-dialogs",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "focus-mode",
+      "schema": "org.gnome.desktop.wm.preferences",
+      "key": "focus-mode",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['click', 'sloppy', 'mouse']>)",
+      "default": "'click'",
+      "declared_values_checked": [
+        "click",
+        "sloppy",
+        "mouse"
+      ]
+    },
+    {
+      "name": "focus-new-windows",
+      "schema": "org.gnome.desktop.wm.preferences",
+      "key": "focus-new-windows",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['smart', 'strict']>)",
+      "default": "'smart'",
+      "declared_values_checked": [
+        "smart",
+        "strict"
+      ]
+    },
+    {
+      "name": "raise-on-click",
+      "schema": "org.gnome.desktop.wm.preferences",
+      "key": "raise-on-click",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "auto-raise",
+      "schema": "org.gnome.desktop.wm.preferences",
+      "key": "auto-raise",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "auto-raise-delay",
+      "schema": "org.gnome.desktop.wm.preferences",
+      "key": "auto-raise-delay",
+      "kind": "int",
+      "type": "i",
+      "native_range": "('range', <(0, 10000)>)",
+      "default": "500",
+      "declared_values_checked": [
+        0,
+        10000
+      ]
+    },
+    {
+      "name": "resize-with-right-button",
+      "schema": "org.gnome.desktop.wm.preferences",
+      "key": "resize-with-right-button",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "titlebar-double-click",
+      "schema": "org.gnome.desktop.wm.preferences",
+      "key": "action-double-click-titlebar",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['toggle-shade', 'toggle-maximize', 'toggle-maximize-horizontally', 'toggle-maximize-vertically', 'minimize', 'none', 'lower', 'menu']>)",
+      "default": "'toggle-maximize'",
+      "declared_values_checked": [
+        "toggle-maximize",
+        "toggle-maximize-horizontally",
+        "toggle-maximize-vertically",
+        "minimize",
+        "menu",
+        "lower",
+        "none"
+      ]
+    },
+    {
+      "name": "titlebar-middle-click",
+      "schema": "org.gnome.desktop.wm.preferences",
+      "key": "action-middle-click-titlebar",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['toggle-shade', 'toggle-maximize', 'toggle-maximize-horizontally', 'toggle-maximize-vertically', 'minimize', 'none', 'lower', 'menu']>)",
+      "default": "'none'",
+      "declared_values_checked": [
+        "toggle-maximize",
+        "toggle-maximize-horizontally",
+        "toggle-maximize-vertically",
+        "minimize",
+        "menu",
+        "lower",
+        "none"
+      ]
+    },
+    {
+      "name": "titlebar-right-click",
+      "schema": "org.gnome.desktop.wm.preferences",
+      "key": "action-right-click-titlebar",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['toggle-shade', 'toggle-maximize', 'toggle-maximize-horizontally', 'toggle-maximize-vertically', 'minimize', 'none', 'lower', 'menu']>)",
+      "default": "'menu'",
+      "declared_values_checked": [
+        "toggle-maximize",
+        "toggle-maximize-horizontally",
+        "toggle-maximize-vertically",
+        "minimize",
+        "menu",
+        "lower",
+        "none"
+      ]
+    },
+    {
+      "name": "dock-position",
+      "schema": "org.gnome.shell.extensions.dash-to-dock",
+      "key": "dock-position",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['TOP', 'RIGHT', 'BOTTOM', 'LEFT']>)",
+      "default": "'BOTTOM'",
+      "declared_values_checked": [
+        "BOTTOM",
+        "LEFT",
+        "RIGHT",
+        "TOP"
+      ]
+    },
+    {
+      "name": "dock-size",
+      "schema": "org.gnome.shell.extensions.dash-to-dock",
+      "key": "dash-max-icon-size",
+      "kind": "int",
+      "type": "i",
+      "native_range": "('type', <@ai []>)",
+      "default": "48",
+      "declared_values_checked": [
+        16,
+        128
+      ]
+    },
+    {
+      "name": "dock-extended",
+      "schema": "org.gnome.shell.extensions.dash-to-dock",
+      "key": "extend-height",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "dock-autohide",
+      "schema": "org.gnome.shell.extensions.dash-to-dock",
+      "key": "autohide",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "dock-intellihide",
+      "schema": "org.gnome.shell.extensions.dash-to-dock",
+      "key": "intellihide",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "dock-trash",
+      "schema": "org.gnome.shell.extensions.dash-to-dock",
+      "key": "show-trash",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "dock-mounts",
+      "schema": "org.gnome.shell.extensions.dash-to-dock",
+      "key": "show-mounts",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "interface-font",
+      "schema": "org.gnome.desktop.interface",
+      "key": "font-name",
+      "kind": "font",
+      "type": "s",
+      "native_range": "('type', <@as []>)",
+      "default": "'Livara Sans 11'",
+      "declared_values_checked": []
+    },
+    {
+      "name": "document-font",
+      "schema": "org.gnome.desktop.interface",
+      "key": "document-font-name",
+      "kind": "font",
+      "type": "s",
+      "native_range": "('type', <@as []>)",
+      "default": "'Livara Sans 11'",
+      "declared_values_checked": []
+    },
+    {
+      "name": "monospace-font",
+      "schema": "org.gnome.desktop.interface",
+      "key": "monospace-font-name",
+      "kind": "font",
+      "type": "s",
+      "native_range": "('type', <@as []>)",
+      "default": "'Livara Mono 11'",
+      "declared_values_checked": []
+    },
+    {
+      "name": "titlebar-system-font",
+      "schema": "org.gnome.desktop.wm.preferences",
+      "key": "titlebar-uses-system-font",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "titlebar-font",
+      "schema": "org.gnome.desktop.wm.preferences",
+      "key": "titlebar-font",
+      "kind": "font",
+      "type": "s",
+      "native_range": "('type', <@as []>)",
+      "default": "'Livara Sans SemiBold 11'",
+      "declared_values_checked": []
+    },
+    {
+      "name": "text-scale",
+      "schema": "org.gnome.desktop.interface",
+      "key": "text-scaling-factor",
+      "kind": "float",
+      "type": "d",
+      "native_range": "('range', <(0.5, 3.0)>)",
+      "default": "1.0",
+      "declared_values_checked": [
+        0.5,
+        3.0
+      ]
+    },
+    {
+      "name": "font-antialiasing",
+      "schema": "org.gnome.desktop.interface",
+      "key": "font-antialiasing",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['none', 'grayscale', 'rgba']>)",
+      "default": "'grayscale'",
+      "declared_values_checked": [
+        "none",
+        "grayscale",
+        "rgba"
+      ]
+    },
+    {
+      "name": "font-hinting",
+      "schema": "org.gnome.desktop.interface",
+      "key": "font-hinting",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['none', 'slight', 'medium', 'full']>)",
+      "default": "'slight'",
+      "declared_values_checked": [
+        "none",
+        "slight",
+        "medium",
+        "full"
+      ]
+    },
+    {
+      "name": "font-rgba-order",
+      "schema": "org.gnome.desktop.interface",
+      "key": "font-rgba-order",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['rgba', 'rgb', 'bgr', 'vrgb', 'vbgr']>)",
+      "default": "'rgb'",
+      "declared_values_checked": [
+        "rgb",
+        "bgr",
+        "vrgb",
+        "vbgr"
+      ]
+    },
+    {
+      "name": "dynamic-workspaces",
+      "schema": "org.gnome.mutter",
+      "key": "dynamic-workspaces",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "workspace-count",
+      "schema": "org.gnome.desktop.wm.preferences",
+      "key": "num-workspaces",
+      "kind": "int",
+      "type": "i",
+      "native_range": "('range', <(1, 36)>)",
+      "default": "4",
+      "declared_values_checked": [
+        1,
+        36
+      ]
+    },
+    {
+      "name": "workspace-names",
+      "schema": "org.gnome.desktop.wm.preferences",
+      "key": "workspace-names",
+      "kind": "strv",
+      "type": "as",
+      "native_range": "('type', <@aas []>)",
+      "default": "@as []",
+      "declared_values_checked": [
+        [],
+        [
+          "Development",
+          "Security"
+        ]
+      ]
+    },
+    {
+      "name": "workspaces-primary-only",
+      "schema": "org.gnome.mutter",
+      "key": "workspaces-only-on-primary",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "clock-format",
+      "schema": "org.gnome.desktop.interface",
+      "key": "clock-format",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['24h', '12h']>)",
+      "default": "'24h'",
+      "declared_values_checked": [
+        "24h",
+        "12h"
+      ]
+    },
+    {
+      "name": "clock-date",
+      "schema": "org.gnome.desktop.interface",
+      "key": "clock-show-date",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "clock-weekday",
+      "schema": "org.gnome.desktop.interface",
+      "key": "clock-show-weekday",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "clock-seconds",
+      "schema": "org.gnome.desktop.interface",
+      "key": "clock-show-seconds",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "battery-percentage",
+      "schema": "org.gnome.desktop.interface",
+      "key": "show-battery-percentage",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "notification-banners",
+      "schema": "org.gnome.desktop.notifications",
+      "key": "show-banners",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "lockscreen-notifications",
+      "schema": "org.gnome.desktop.notifications",
+      "key": "show-in-lock-screen",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "remember-recent-files",
+      "schema": "org.gnome.desktop.privacy",
+      "key": "remember-recent-files",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "remember-app-usage",
+      "schema": "org.gnome.desktop.privacy",
+      "key": "remember-app-usage",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "screen-lock",
+      "schema": "org.gnome.desktop.screensaver",
+      "key": "lock-enabled",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "idle-delay",
+      "schema": "org.gnome.desktop.session",
+      "key": "idle-delay",
+      "kind": "int",
+      "type": "u",
+      "native_range": "('type', <@au []>)",
+      "default": "uint32 300",
+      "declared_values_checked": [
+        0,
+        86400
+      ]
+    },
+    {
+      "name": "lock-delay",
+      "schema": "org.gnome.desktop.screensaver",
+      "key": "lock-delay",
+      "kind": "int",
+      "type": "u",
+      "native_range": "('type', <@au []>)",
+      "default": "uint32 0",
+      "declared_values_checked": [
+        0,
+        86400
+      ]
+    },
+    {
+      "name": "cursor-theme",
+      "schema": "org.gnome.desktop.interface",
+      "key": "cursor-theme",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('type', <@as []>)",
+      "default": "'Adwaita'",
+      "dynamic_choices": [
+        "Adwaita",
+        "Yaru"
+      ],
+      "declared_values_checked": [
+        "Adwaita",
+        "Yaru"
+      ]
+    },
+    {
+      "name": "cursor-size",
+      "schema": "org.gnome.desktop.interface",
+      "key": "cursor-size",
+      "kind": "int",
+      "type": "i",
+      "native_range": "('type', <@ai []>)",
+      "default": "24",
+      "declared_values_checked": [
+        16,
+        96
+      ]
+    },
+    {
+      "name": "locate-pointer",
+      "schema": "org.gnome.desktop.interface",
+      "key": "locate-pointer",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "cursor-blink",
+      "schema": "org.gnome.desktop.interface",
+      "key": "cursor-blink",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "cursor-blink-time",
+      "schema": "org.gnome.desktop.interface",
+      "key": "cursor-blink-time",
+      "kind": "int",
+      "type": "i",
+      "native_range": "('range', <(100, 2500)>)",
+      "default": "1200",
+      "declared_values_checked": [
+        100,
+        2500
+      ]
+    },
+    {
+      "name": "overlay-scrolling",
+      "schema": "org.gnome.desktop.interface",
+      "key": "overlay-scrolling",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "primary-paste",
+      "schema": "org.gnome.desktop.interface",
+      "key": "gtk-enable-primary-paste",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "keyboard-repeat",
+      "schema": "org.gnome.desktop.peripherals.keyboard",
+      "key": "repeat",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "keyboard-delay",
+      "schema": "org.gnome.desktop.peripherals.keyboard",
+      "key": "delay",
+      "kind": "int",
+      "type": "u",
+      "native_range": "('type', <@au []>)",
+      "default": "uint32 500",
+      "declared_values_checked": [
+        100,
+        2000
+      ]
+    },
+    {
+      "name": "keyboard-interval",
+      "schema": "org.gnome.desktop.peripherals.keyboard",
+      "key": "repeat-interval",
+      "kind": "int",
+      "type": "u",
+      "native_range": "('type', <@au []>)",
+      "default": "uint32 30",
+      "declared_values_checked": [
+        10,
+        500
+      ]
+    },
+    {
+      "name": "mouse-speed",
+      "schema": "org.gnome.desktop.peripherals.mouse",
+      "key": "speed",
+      "kind": "float",
+      "type": "d",
+      "native_range": "('range', <(-1.0, 1.0)>)",
+      "default": "0.0",
+      "declared_values_checked": [
+        -1.0,
+        1.0
+      ]
+    },
+    {
+      "name": "mouse-natural-scroll",
+      "schema": "org.gnome.desktop.peripherals.mouse",
+      "key": "natural-scroll",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "mouse-left-handed",
+      "schema": "org.gnome.desktop.peripherals.mouse",
+      "key": "left-handed",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "mouse-acceleration",
+      "schema": "org.gnome.desktop.peripherals.mouse",
+      "key": "accel-profile",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['default', 'flat', 'adaptive']>)",
+      "default": "'default'",
+      "declared_values_checked": [
+        "default",
+        "flat",
+        "adaptive"
+      ]
+    },
+    {
+      "name": "mouse-double-click",
+      "schema": "org.gnome.desktop.peripherals.mouse",
+      "key": "double-click",
+      "kind": "int",
+      "type": "i",
+      "native_range": "('type', <@ai []>)",
+      "default": "400",
+      "declared_values_checked": [
+        100,
+        1500
+      ]
+    },
+    {
+      "name": "touchpad-speed",
+      "schema": "org.gnome.desktop.peripherals.touchpad",
+      "key": "speed",
+      "kind": "float",
+      "type": "d",
+      "native_range": "('range', <(-1.0, 1.0)>)",
+      "default": "0.0",
+      "declared_values_checked": [
+        -1.0,
+        1.0
+      ]
+    },
+    {
+      "name": "touchpad-tap",
+      "schema": "org.gnome.desktop.peripherals.touchpad",
+      "key": "tap-to-click",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "touchpad-natural-scroll",
+      "schema": "org.gnome.desktop.peripherals.touchpad",
+      "key": "natural-scroll",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "touchpad-disable-typing",
+      "schema": "org.gnome.desktop.peripherals.touchpad",
+      "key": "disable-while-typing",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "touchpad-tap-drag",
+      "schema": "org.gnome.desktop.peripherals.touchpad",
+      "key": "tap-and-drag",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "touchpad-drag-lock",
+      "schema": "org.gnome.desktop.peripherals.touchpad",
+      "key": "tap-and-drag-lock",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "touchpad-two-finger-scroll",
+      "schema": "org.gnome.desktop.peripherals.touchpad",
+      "key": "two-finger-scrolling-enabled",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "touchpad-edge-scroll",
+      "schema": "org.gnome.desktop.peripherals.touchpad",
+      "key": "edge-scrolling-enabled",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "touchpad-click-method",
+      "schema": "org.gnome.desktop.peripherals.touchpad",
+      "key": "click-method",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['default', 'none', 'areas', 'fingers']>)",
+      "default": "'fingers'",
+      "declared_values_checked": [
+        "default",
+        "none",
+        "areas",
+        "fingers"
+      ]
+    },
+    {
+      "name": "touchpad-handedness",
+      "schema": "org.gnome.desktop.peripherals.touchpad",
+      "key": "left-handed",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['right', 'left', 'mouse']>)",
+      "default": "'mouse'",
+      "declared_values_checked": [
+        "mouse",
+        "right",
+        "left"
+      ]
+    },
+    {
+      "name": "touchpad-send-events",
+      "schema": "org.gnome.desktop.peripherals.touchpad",
+      "key": "send-events",
+      "kind": "choice",
+      "type": "s",
+      "native_range": "('enum', <['enabled', 'disabled', 'disabled-on-external-mouse']>)",
+      "default": "'enabled'",
+      "declared_values_checked": [
+        "enabled",
+        "disabled",
+        "disabled-on-external-mouse"
+      ]
+    },
+    {
+      "name": "night-light",
+      "schema": "org.gnome.settings-daemon.plugins.color",
+      "key": "night-light-enabled",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "false",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "night-light-temperature",
+      "schema": "org.gnome.settings-daemon.plugins.color",
+      "key": "night-light-temperature",
+      "kind": "int",
+      "type": "u",
+      "native_range": "('type', <@au []>)",
+      "default": "uint32 2700",
+      "declared_values_checked": [
+        1000,
+        10000
+      ]
+    },
+    {
+      "name": "night-light-automatic",
+      "schema": "org.gnome.settings-daemon.plugins.color",
+      "key": "night-light-schedule-automatic",
+      "kind": "bool",
+      "type": "b",
+      "native_range": "('type', <@ab []>)",
+      "default": "true",
+      "declared_values_checked": [
+        false,
+        true
+      ]
+    },
+    {
+      "name": "night-light-from",
+      "schema": "org.gnome.settings-daemon.plugins.color",
+      "key": "night-light-schedule-from",
+      "kind": "float",
+      "type": "d",
+      "native_range": "('type', <@ad []>)",
+      "default": "20.0",
+      "declared_values_checked": [
+        0.0,
+        24.0
+      ]
+    },
+    {
+      "name": "night-light-to",
+      "schema": "org.gnome.settings-daemon.plugins.color",
+      "key": "night-light-schedule-to",
+      "kind": "float",
+      "type": "d",
+      "native_range": "('type', <@ad []>)",
+      "default": "6.0",
+      "declared_values_checked": [
+        0.0,
+        24.0
+      ]
+    }
+  ],
+  "catalog_source_sha256": "3bf086b67986f2b402ae7644639bffa93abed2b01398e84acc2934741bde3ca5"
+}

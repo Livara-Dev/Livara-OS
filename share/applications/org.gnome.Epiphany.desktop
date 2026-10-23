@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Livara Browser
+Comment=Browse the web with Livara
+Exec=livara-browser %U
+Icon=org.livara.Browser
+Terminal=false
+NoDisplay=true
+DBusActivatable=false
+Categories=Network;WebBrowser;

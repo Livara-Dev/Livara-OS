@@ -1,0 +1,15 @@
+[Unit]
+Description=Livara live image integration checks
+ConditionKernelCommandLine=livara.selftest
+After=multi-user.target display-manager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/livara/live-selftest
+TimeoutStartSec=600
+StandardOutput=journal+console
+StandardError=journal+console
+
+[Install]
+WantedBy=graphical.target
+

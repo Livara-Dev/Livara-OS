@@ -1,0 +1,118 @@
+{
+  "qualified_at_utc": "2026-10-23T08:34:15.432362+00:00",
+  "feature_areas": 17,
+  "backend_tests_passed": 18,
+  "native_workflow": {
+    "checks": [
+      "Real Theme Studio GSettings applied",
+      "Managed GTK stylesheet written",
+      "Saved theme reloads into live preview",
+      "Original style restored",
+      "Rendered feature: theme",
+      "Rendered feature: profiles",
+      "Rendered feature: layouts",
+      "Rendered feature: palette",
+      "Rendered feature: tiling",
+      "Rendered feature: clipboard",
+      "Rendered feature: preview",
+      "Rendered feature: capture",
+      "Rendered feature: recovery",
+      "Rendered feature: permissions",
+      "Rendered feature: lab",
+      "Rendered feature: hardware",
+      "Rendered feature: connect",
+      "Rendered feature: help",
+      "Rendered feature: install",
+      "Rendered feature: accounts",
+      "Rendered feature: updates",
+      "Zones persist to the actual Shell settings",
+      "Battery profile disables animations",
+      "Security Lab creates real scope notes",
+      "Native feature UI fits 800px window"
+    ],
+    "errors": [],
+    "exit_code": 0,
+    "context": "Real GTK in Xvfb test container; no ISO boot, disk install or device qualification"
+  },
+  "palette_native_workflow": {
+    "checks": [
+      "Studio tools and settings appear in actual native search",
+      "Bounded Documents file scan returns real local fixture"
+    ],
+    "errors": [],
+    "exit_code": 0
+  },
+  "installer_schema_checks": {
+    "checks": [
+      "bootloader.conf: upstream schema passed",
+      "displaymanager.conf: upstream schema passed",
+      "finished.conf: YAML parsed; this packaged module has no schema",
+      "fstab.conf: upstream schema passed",
+      "grubcfg.conf: upstream schema passed",
+      "initramfs.conf: YAML parsed; this packaged module has no schema",
+      "keyboard.conf: YAML parsed; this packaged module has no schema",
+      "livara.conf: YAML parsed; this packaged module has no schema",
+      "locale.conf: YAML parsed; this packaged module has no schema",
+      "machineid.conf: YAML parsed; this packaged module has no schema",
+      "mount.conf: upstream schema passed",
+      "partition.conf: YAML parsed; this packaged module has no schema",
+      "umount.conf: YAML parsed; this packaged module has no schema",
+      "unpackfs.conf: upstream schema passed",
+      "users.conf: YAML parsed; this packaged module has no schema",
+      "welcome.conf: YAML parsed; this packaged module has no schema",
+      "Real module inventory and safe finalizer/encryption order checked"
+    ],
+    "errors": [],
+    "end_to_end_disk_install_qualified": false
+  },
+  "installer_native_ui": "Actual Calamares3.3.5 loads Livara branding/configuration/modules and refuses unavailable target storage. No execution-stage action was invoked.",
+  "gpaste_actual_service": [
+    {
+      "daemon": {
+        "exit_code": 0,
+        "output": "45\n"
+      }
+    },
+    {
+      "paused_history": {
+        "exit_code": 0,
+        "output": ""
+      }
+    },
+    {
+      "resumed_history": {
+        "exit_code": 0,
+        "output": ""
+      }
+    },
+    {
+      "allowed_history": {
+        "exit_code": 0,
+        "output": "40836b35-6e41-45be-b931-eb37a89e8be2: LIVARA_ALLOWED_TEST\n"
+      }
+    }
+  ],
+  "gpaste_schema_defaults": "Validated real installed schema: tracking off, images on, 100 entries, 64MB",
+  "shell_contract_tests": "11 shortcuts; focused-app exclusions/unknown/lock filters; multi-monitor zones; validated placements; missing apps; bounded workspace creation; cleanup",
+  "actual_gjs_gsettings_api_checked": true,
+  "new_shell_features_in_real_gnome_session_tested": false,
+  "new_shell_features_test_scope": "Contract/state tests and actual GJS GSettings properties. No new compositor session qualification is inferred from earlier window-effect captures.",
+  "package_dependency_simulation": "Complete build/packages.txt resolves against signed Ubuntu Noble metadata; 954 packages added to the minimal test container, 0 removals. No simulated packages were installed by this check.",
+  "native_command_line_routes": [
+    "Livara Settings --page essentials",
+    "Livara Studio --tool json"
+  ],
+  "end_to_end_encrypted_install_reboot_tested": false,
+  "snapshot_restore_tested": false,
+  "phone_pairing_tested": false,
+  "physical_hardware_tested": false,
+  "source_sha256": {
+    "src/livara/essentials.py": "275fb54ec7f263792c005cce7404bb17be081d2448ecc6118c63763c17e8eb37",
+    "src/livara/essentials_gui.py": "a005c923ef14c8a4268ad4c29dbcb513bfe8f199cdadc216fa1a9996e2cff16a",
+    "src/livara/theme.py": "f64a73b97b3fbc63f7cd9e00303d6e43ffc8f6df2483ce7fa7d06392e3b677c5",
+    "src/livara/palette.py": "bdba76df548855f3743d86f6c407bd1955fc24b31b5f54273a5dfe2f00ab85e9",
+    "src/livara/install_config.py": "b31ed9eae1eabff5aa72b698c035b4268008d76008e8796868b866d635082c1c",
+    "share/gnome-shell/extensions/livara-glass@livara.local/desktopTools.js": "47a23af6c2f5997a3927abcc29e3ade49ca3a8f84b7440614a06e8045abc4290"
+  },
+  "screenshots": 20
+}

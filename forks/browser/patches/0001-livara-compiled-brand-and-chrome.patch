@@ -1,0 +1,140 @@
+diff --git a/configs/common/mozconfig b/configs/common/mozconfig
+index bf9a206..1de0161 100644
+--- a/configs/common/mozconfig
++++ b/configs/common/mozconfig
+@@ -4,16 +4,16 @@
+ 
+ # Browser branding
+ ac_add_options --with-app-name=${binName}
+-ac_add_options --with-app-basename=Zen
++ac_add_options --with-app-basename=Livara
+ 
+ # Localization (Must be an absolute path)
+ ac_add_options --with-l10n-base="${topsrcdir}/browser/locales"
+ 
+-export MOZ_APP_BASENAME=Zen
++export MOZ_APP_BASENAME=Livara
+ export MOZ_BRANDING_DIRECTORY=${brandingDir}
+ export MOZ_OFFICIAL_BRANDING_DIRECTORY=${brandingDir}
+ 
+-ac_add_options --with-distribution-id=app.zen-browser
++ac_add_options --with-distribution-id=org.livara
+ 
+ # Uncomment if builds are too resource hungry
+ # mk_add_options MOZ_MAKE_FLAGS="-j4"
+diff --git a/prefs/zen/welcome.yaml b/prefs/zen/welcome.yaml
+index ec44edc..5211f48 100644
+--- a/prefs/zen/welcome.yaml
++++ b/prefs/zen/welcome.yaml
+@@ -3,6 +3,5 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ - name: zen.welcome-screen.seen
+-  value: "@cond"
++  value: true
+   sticky: true
+-  condition: "!defined(MOZILLA_OFFICIAL)"
+diff --git a/prefs/zen/zen-urlbar.yaml b/prefs/zen/zen-urlbar.yaml
+index 10daa12..8398f52 100644
+--- a/prefs/zen/zen-urlbar.yaml
++++ b/prefs/zen/zen-urlbar.yaml
+@@ -3,7 +3,7 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ - name: zen.urlbar.replace-newtab
+-  value: true
++  value: false
+ 
+ - name: zen.urlbar.show-protections-icon
+   value: false
+diff --git a/src/browser/base/content/zen-assets.inc.xhtml b/src/browser/base/content/zen-assets.inc.xhtml
+index f674260..b00ab2b 100644
+--- a/src/browser/base/content/zen-assets.inc.xhtml
++++ b/src/browser/base/content/zen-assets.inc.xhtml
+@@ -28,6 +28,7 @@
+ <link rel="stylesheet" type="text/css" href="chrome://browser/content/zen-styles/zen-welcome.css" />
+ <link rel="stylesheet" type="text/css" href="chrome://browser/content/zen-styles/zen-media-controls.css" />
+ <link rel="stylesheet" type="text/css" href="chrome://browser/content/zen-styles/zen-download-box-animation.css" />
++<link rel="stylesheet" type="text/css" href="chrome://browser/content/livara/livara-glass.css" />
+ </linkset>
+ 
+ # Startup "preloaded" scripts that requre globals such as gBrowser and gURLBar
+@@ -39,3 +40,6 @@
+ # file so that ESLint works correctly:
+ # tools/lint/eslint/eslint-plugin-mozilla/lib/environments/browser-window.js
+ <script type="text/javascript" src="chrome://browser/content/ZenPreloadedScripts.js"></script>
++
++<script src="chrome://browser/content/livara/LivaraWindowControls.js"></script>
++<script src="chrome://browser/content/livara/LivaraUI.js"></script>
+diff --git a/src/browser/base/content/zen-assets.jar.inc.mn b/src/browser/base/content/zen-assets.jar.inc.mn
+index c7d7325..42cea9b 100644
+--- a/src/browser/base/content/zen-assets.jar.inc.mn
++++ b/src/browser/base/content/zen-assets.jar.inc.mn
+@@ -22,3 +22,5 @@
+ #include ../../../zen/space-routing/jar.inc.mn
+ #include ../../../zen/share/jar.inc.mn
+ #include ../../../zen/library/jar.inc.mn
++
++#include ../../../livara/jar.inc.mn
+diff --git a/surfer.json b/surfer.json
+index cf4cbfb..30de66e 100644
+--- a/surfer.json
++++ b/surfer.json
+@@ -1,8 +1,8 @@
+ {
+-  "name": "Zen Browser",
+-  "vendor": "Zen OSS Team",
+-  "appId": "zen",
+-  "binaryName": "zen",
++  "name": "Livara Browser",
++  "vendor": "Livara Project",
++  "appId": "org.livara.Browser",
++  "binaryName": "livara-browser",
+   "version": {
+     "product": "firefox",
+     "version": "158.0.1",
+@@ -15,32 +15,12 @@
+   "addons": {},
+   "brands": {
+     "release": {
+-      "backgroundColor": "#282A33",
+-      "brandShorterName": "Zen",
+-      "brandShortName": "Zen",
+-      "brandFullName": "Zen Browser",
++      "backgroundColor": "#151020",
++      "brandShorterName": "Livara",
++      "brandShortName": "Livara",
++      "brandFullName": "Livara Browser",
+       "release": {
+         "displayVersion": "1.23.4b",
+-        "github": {
+-          "repo": "zen-browser/desktop"
+-        },
+-        "archives": {
+-          "windows": "windows.mar",
+-          "macos-aarch64": "macos-aarch64.mar",
+-          "linux": "linux.mar",
+-          "macos-x64": "macos-x64.mar",
+-          "windows-arm64": "windows-arm64.mar",
+-          "linux-aarch64": "linux-aarch64.mar"
+-        }
+-      }
+-    },
+-    "twilight": {
+-      "backgroundColor": "#282A33",
+-      "brandShorterName": "Zen",
+-      "brandShortName": "Twilight",
+-      "brandFullName": "Zen Twilight",
+-      "release": {
+-        "displayVersion": "1.24t",
+         "github": {
+           "repo": "zen-browser/desktop"
+         }
+@@ -53,5 +33,5 @@
+     ],
+     "licenseType": "MPL-2.0"
+   },
+-  "updateHostname": "updates.zen-browser.app"
++  "updateHostname": "127.0.0.1.invalid"
+ }
+\ No newline at end of file

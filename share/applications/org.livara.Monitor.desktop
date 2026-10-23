@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Livara Task Manager
+Comment=Live system charts and process management
+Exec=livara-monitor
+Icon=org.livara.Monitor
+Terminal=false
+Categories=System;Monitor;
+StartupNotify=true
+StartupWMClass=org.livara.Monitor
+DBusActivatable=false

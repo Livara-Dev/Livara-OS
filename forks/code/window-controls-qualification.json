@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "defaults": {
+    "order": [
+      "window-icon window-close codicon codicon-chrome-close",
+      "window-icon window-minimize codicon codicon-chrome-minimize",
+      "window-icon window-max-restore codicon codicon-chrome-maximize"
+    ],
+    "size": "14px",
+    "color": "rgb(255, 95, 87)",
+    "width": 28,
+    "height": 34,
+    "aria": "Close window",
+    "green": "Toggle full screen"
+  },
+  "checks": [
+    "actual native full screen via green",
+    "F11 exit",
+    "live size/color/position/symbols preferences",
+    "real maximize/restore preference",
+    "Shift native maximize/restore",
+    "keyboard full screen",
+    "real minimize",
+    "real close"
+  ],
+  "source_integration": "TypeScript-emitted full Livara contribution/controller integrated into previously source-built Electron bundle; no complete second workbench compilation.",
+  "qualified_utc": "2026-10-22T22:32:27.750661+00:00",
+  "upstream_commit": "2d0b7506a36c1d6db9a466440131a8e01eab2289",
+  "node_preference_tests": 3,
+  "strict_controller_typecheck_errors": 0,
+  "source_syntax_diagnostics": 0,
+  "sandbox_disabled": false,
+  "window_manager": "Openbox on Xvfb, Ubuntu24.04",
+  "full_workbench_recompiled": false,
+  "source_files_sha256": {
+    "forks/code/overlay/core/livara.contribution.ts": "0bc7d09d8351162f8667552bba012598a53d970e1d6f7f4cf164c761e6badb2c",
+    "forks/code/overlay/core/windowControls.ts": "66a0694da21180330b0f2a357669c310f01ffcbcc18d36ceee73ae36ac52ee56",
+    "forks/code/overlay/core/livara.css": "83daad56742cdfca9fe92446c288f4b5f708c9f084c05b27290a4ca6269ebe34",
+    "forks/code/test-window-controls.mjs": "e949addd7402e4cc08a856ba64dbe9fe0c8c5d59162bc7b846a99289bc2e6846",
+    "scripts/build-code.sh": "14514720350626fc81acc10735a99f03833a52318c90996bbdbcd506960722c0"
+  },
+  "qualification_payload_sha256": "2d26d764691c63ffc63c834414389743adf0836da0cc1681d80f58cf4ff99e3a",
+  "compiled_main_before_controls_sha256": "ce392726df432b96d2b55b5ead457793f7f5ac031dc9d5adb956ea7eb857aff0",
+  "compiled_main_after_controls_sha256": "c7d16e98123b21f1dd13286e9827912158d25c448f046b0fe228e8260ea16c7a",
+  "screenshots_sha256": {
+    "docs/livara-code.png": "5392b1cf5085b6249c9bb72b4893ad504def0bbe0883c05dbe483f704f96e2ea",
+    "docs/livara-code-controls-custom.png": "8553b57da379d2dd5c275ed2db853b3eb83a20bacde90e95912933d341667c06"
+  }
+}

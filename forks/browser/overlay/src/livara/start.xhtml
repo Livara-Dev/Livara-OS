@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src chrome:; style-src chrome:; font-src chrome:; img-src chrome: data:; connect-src 'none'; form-action https://duckduckgo.com; base-uri 'none'; object-src 'none'" />
+  <title>Livara · Start</title>
+  <link rel="stylesheet" href="chrome://browser/content/livara/start.css" />
+  <script defer="defer" src="chrome://browser/content/livara/start.js"></script>
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="wordmark" href="chrome://browser/content/livara/start.xhtml" aria-label="Livara start">
+      <img src="chrome://browser/content/livara/livara-browser.png" width="34" height="34" alt="" />
+      <span>LIVARA<span class="wordmark-dot">.</span></span>
+    </a>
+    <div class="topbar-end">
+      <span id="network-mode" class="mode-badge">Local start page</span>
+      <button id="focus-view" type="button" aria-pressed="false">Quiet view</button>
+    </div>
+  </header>
+  <main>
+    <section class="welcome" aria-labelledby="welcome-title">
+      <div class="clock-row"><time id="clock">--:--</time><span id="date"></span></div>
+      <p class="eyebrow">A LITTLE SPACE FOR A BIG IDEA</p>
+      <h1 id="welcome-title">Follow your curiosity<span>.</span></h1>
+      <p class="welcome-copy">A calmer place to start. A browser that feels like you.</p>
+      <form id="search-form" action="https://duckduckgo.com/" method="get" role="search">
+        <label class="sr-only" for="search">Search the web with DuckDuckGo</label>
+        <span class="search-symbol" aria-hidden="true">⌕</span>
+        <input id="search" dir="auto" name="q" type="search" placeholder="Search with DuckDuckGo" autocomplete="off" maxlength="2048" required="required" />
+        <button type="submit" aria-label="Search with DuckDuckGo">↗</button>
+      </form>
+      <p class="search-caption">No requests until you search or open a link.</p>
+    </section>
+    <section class="dashboard" id="dashboard" aria-label="Your local dashboard">
+      <article class="glass-card pins-card">
+        <div class="card-header"><h2>Your spaces</h2><button type="button" id="add-pin" aria-expanded="false" aria-controls="pin-form">+ Add</button></div>
+        <p class="card-copy">Keep your next destination close.</p>
+        <nav id="pins" aria-label="Saved shortcuts"></nav>
+        <form id="pin-form" hidden="hidden">
+          <label for="pin-label">Name<input id="pin-label" dir="auto" type="text" maxlength="40" required="required" placeholder="My workspace" /></label>
+          <label for="pin-url">Web address<input id="pin-url" type="url" required="required" maxlength="2048" placeholder="https://example.org" /></label>
+          <div class="inline-actions"><button type="submit">Save shortcut</button><button id="cancel-pin" type="button">Cancel</button></div>
+        </form>
+      </article>
+      <article class="glass-card timer-card">
+        <div class="card-header"><h2>A moment to focus</h2><span class="small-badge">OFFLINE</span></div>
+        <div id="timer" role="timer" aria-label="Focus time remaining">25:00</div>
+        <label class="timer-length" for="focus-minutes">Minutes<input id="focus-minutes" type="number" min="1" max="180" value="25" /></label>
+        <div class="inline-actions"><button id="timer-toggle" type="button">Start focus</button><button id="timer-reset" type="button">Reset</button></div>
+        <p id="timer-status" class="card-copy" role="status">One thing at a time.</p>
+      </article>
+      <article class="glass-card notes-card">
+        <div class="card-header"><h2>Leave yourself a thought</h2><span id="notes-state" class="small-badge">LOCAL</span></div>
+        <label class="sr-only" for="notes">Notes saved in this browser profile</label>
+        <textarea id="notes" dir="auto" maxlength="20000" placeholder="An idea, a reminder, a line worth keeping…"></textarea>
+        <div class="notes-footer"><span id="notes-count">0 / 20000</span><button id="clear-notes" type="button">Clear notes</button></div>
+        <p class="card-copy">Stored in this browser profile. Notes are not encrypted; private windows keep them in memory only.</p>
+      </article>
+    </section>
+    <p id="dashboard-status" role="status" aria-live="polite"></p>
+  </main>
+  <footer><span>YOUR DESKTOP. YOUR WORKBENCH.</span><span>Made for Livara OS</span></footer>
+</body>
+</html>

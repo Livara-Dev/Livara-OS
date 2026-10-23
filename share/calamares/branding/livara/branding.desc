@@ -1,0 +1,24 @@
+componentName: livara
+windowExpanding: normal
+windowPlacement: center
+windowSize: 1000px,680px
+sidebar: widget,left
+navigation: widget,bottom
+strings:
+  productName: Livara OS
+  shortProductName: Livara
+  version: "0.1 Preview"
+  shortVersion: "0.1"
+  versionedName: Livara OS 0.1 Preview
+  shortVersionedName: Livara 0.1
+  bootloaderEntryName: Livara OS
+images:
+  productLogo: logo.png
+  productIcon: logo.png
+  productWelcome: logo.png
+slideshow: show.qml
+slideshowAPI: 1
+style:
+  SidebarBackground: "#11091d"
+  SidebarText: "#cab9de"
+  SidebarTextCurrent: "#e7d5ff"

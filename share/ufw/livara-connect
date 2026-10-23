@@ -1,0 +1,4 @@
+[Livara Connect]
+title=Livara Connect (KDE Connect)
+description=Phone pairing and sharing on a trusted LAN; enable a scoped rule manually.
+ports=1714:1764/tcp|1714:1764/udp

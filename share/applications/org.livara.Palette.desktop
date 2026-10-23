@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Livara Palette
+Comment=Search apps, files, settings and tools
+Exec=livara-palette
+Icon=org.livara.Palette
+Terminal=false
+Categories=System;Utility;
+StartupNotify=true

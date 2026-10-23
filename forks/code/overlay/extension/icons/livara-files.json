@@ -1,0 +1,64 @@
+{
+  "iconDefinitions": {
+    "file": {
+      "iconPath": "file.svg"
+    },
+    "folder": {
+      "iconPath": "folder.svg"
+    },
+    "code": {
+      "iconPath": "code.svg"
+    },
+    "image": {
+      "iconPath": "image.svg"
+    },
+    "config": {
+      "iconPath": "config.svg"
+    },
+    "data": {
+      "iconPath": "data.svg"
+    }
+  },
+  "file": "file",
+  "folder": "folder",
+  "folderExpanded": "folder",
+  "rootFolder": "folder",
+  "rootFolderExpanded": "folder",
+  "fileExtensions": {
+    "py": "code",
+    "js": "code",
+    "ts": "code",
+    "tsx": "code",
+    "jsx": "code",
+    "html": "code",
+    "css": "code",
+    "sh": "code",
+    "c": "code",
+    "cpp": "code",
+    "h": "code",
+    "rs": "code",
+    "go": "code",
+    "java": "code",
+    "php": "code",
+    "rb": "code",
+    "vue": "code",
+    "svelte": "code",
+    "png": "image",
+    "svg": "image",
+    "jpg": "image",
+    "jpeg": "image",
+    "webp": "image",
+    "json": "data",
+    "yaml": "data",
+    "yml": "data",
+    "toml": "data",
+    "xml": "data",
+    "csv": "data"
+  },
+  "fileNames": {
+    "package.json": "config",
+    "Makefile": "config",
+    "Dockerfile": "config",
+    ".gitignore": "config"
+  }
+}

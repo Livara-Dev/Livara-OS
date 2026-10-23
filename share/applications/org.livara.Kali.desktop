@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Livara Kali Toolbox
+Comment=Open the isolated Kali Linux workbench
+Exec=gnome-terminal -- livara toolbox run -- bash
+Icon=utilities-terminal
+Terminal=false
+Type=Application
+Categories=System;Security;
+

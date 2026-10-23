@@ -1,0 +1,40 @@
+{
+  "result": "passed",
+  "checks": [
+    "Actual native chooser, background apply, Gio icon readback and unchanged system launcher/command",
+    "Actual app search and customized-only filter",
+    "Native Restore returns default app to its untouched installed launcher",
+    "Actual PNG, JPEG, WebP, ICO and Livara SVG decoding into owned PNGs",
+    "Actual icon page fits an 800x600 X11 window request"
+  ],
+  "context": "Actual GTK4/Xvfb/Openbox in a temporary XDG profile; not an ISO boot",
+  "source_sha256": {
+    "src/livara/app_icons.py": "fe3b00cab25a49c38c40775ebbd9a431da0cc135d747b3bcf9e9b82ed9be39e2",
+    "src/livara/app_icons_ui.py": "321ffbe32751fc3bcb78e7b86da93c1496b932d7dc408fb88201bb4f1b115ac1",
+    "src/livara/gui.py": "8d7df8f90046f4625ce437eba115e6c6c5c0998fc74aaa19c95c6658e4a67d70"
+  },
+  "backend_tests_passed": 14,
+  "native_windows_tested": false,
+  "iso_built": false,
+  "image": "screenshots/native-settings-app-icons.png",
+  "image_sha256": "0e0998e346b53ab5c7bc25bfcda6070146b68c49752735e71145c3819f5b5081",
+  "qualified_at_utc": "2026-10-23",
+  "source_check": {
+    "python_tests_run": 188,
+    "expected_skips": 1,
+    "node_tests_passed": 15,
+    "workflow": "Pinned Linux controller image; rebuild editable fonts with its FontTools, make check, build desktop integration package",
+    "native_windows_tested": false
+  },
+  "package": {
+    "bytes": 15069584,
+    "sha256": "22677a2b6382fe235f6286aebd62992e3e11d873ed658b432f8dde460ab66065",
+    "all_data_members_root_owned": true,
+    "new_module_bytes_matched": {
+      "app_icons.py": "fe3b00cab25a49c38c40775ebbd9a431da0cc135d747b3bcf9e9b82ed9be39e2",
+      "app_icons_ui.py": "321ffbe32751fc3bcb78e7b86da93c1496b932d7dc408fb88201bb4f1b115ac1",
+      "gui.py": "8d7df8f90046f4625ce437eba115e6c6c5c0998fc74aaa19c95c6658e4a67d70"
+    },
+    "svg_and_webp_dependencies_present": true
+  }
+}

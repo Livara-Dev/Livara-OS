@@ -1,0 +1,18 @@
+{
+  "application": "Livara Studio",
+  "environment": "Actual GTK4/libadwaita in an isolated Ubuntu24.04 Xvfb/Openbox container; no ISO boot",
+  "local_tools": 30,
+  "backend_tests_passed": 30,
+  "native_workflows_passed": [
+    "Overview renders real saved-note and completed-session totals",
+    "JSON background worker produces output and metadata-only recent history",
+    "Session-only input drafts survive switching tools",
+    "Catalog search presents an actual empty state",
+    "Catalog search filters tool names and descriptions",
+    "Notebook template saves through the actual local note store",
+    "Archive browsing is read-only and restore returns the saved page",
+    "Focus presets, pause/resume and reset preserve honest completion history",
+    "Appearance preferences persist and native CSS reloads"
+  ],
+  "capture_notes": "Gallery examples are labeled; no hardware performance benchmark or newly booted OS is established."
+}

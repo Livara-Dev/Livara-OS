@@ -1,0 +1,40 @@
+# syntax=docker/dockerfile:1
+FROM ubuntu:24.04@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac AS toolchain
+RUN --mount=type=secret,id=proxy_ca \
+    set -eux; \
+    if [ -s /run/secrets/proxy_ca ]; then printf 'Acquire::https::CaInfo "/run/secrets/proxy_ca";\n' > /etc/apt/apt.conf.d/99livara-build-ca; fi; \
+    apt-get update; apt-get install -y --no-install-recommends \
+      ca-certificates curl git python3 make g++ pkg-config patch xz-utils \
+      libx11-dev libx11-xcb-dev libxkbfile-dev libsecret-1-dev libkrb5-dev \
+      libnotify-bin libgtk-3-0t64 libnss3 libasound2t64 libgbm1 libxss1 libxtst6; \
+    apt-get clean; rm -rf /var/lib/apt/lists/*; rm -f /etc/apt/apt.conf.d/99livara-build-ca
+COPY forks/code/upstream.json /tmp/livara-code-upstream.json
+RUN --mount=type=secret,id=proxy_ca \
+    set -eux; \
+    node_url="$(python3 -c 'import json; print(json.load(open("/tmp/livara-code-upstream.json"))["node_url"])')"; \
+    node_sha="$(python3 -c 'import json; print(json.load(open("/tmp/livara-code-upstream.json"))["node_sha256"])')"; \
+    if [ -s /run/secrets/proxy_ca ]; then export CURL_CA_BUNDLE=/run/secrets/proxy_ca; fi; \
+    curl --fail --location --retry 3 --output /tmp/node.tar.xz "$node_url"; \
+    printf '%s  /tmp/node.tar.xz\n' "$node_sha" | sha256sum --check -; \
+    tar -xJf /tmp/node.tar.xz -C /usr/local --strip-components=1; rm /tmp/node.tar.xz
+FROM toolchain AS dependencies
+ARG LIVARA_BUILD_JOBS=2
+ENV LIVARA_BUILD_JOBS=$LIVARA_BUILD_JOBS
+COPY forks/code/upstream.json forks/code/native-headers.json forks/code/patches/0002-standalone-build.patch scripts/build-code.sh scripts/prepare-code-headers.py /recipe-input/
+RUN --mount=type=secret,id=proxy_ca \
+    set -eux; \
+    if [ -s /run/secrets/proxy_ca ]; then export NODE_EXTRA_CA_CERTS=/run/secrets/proxy_ca CURL_CA_BUNDLE=/run/secrets/proxy_ca SSL_CERT_FILE=/run/secrets/proxy_ca; fi; \
+    mkdir -p /recipe/forks/code/patches /recipe/scripts; \
+    cp /recipe-input/upstream.json /recipe-input/native-headers.json /recipe/forks/code/; \
+    cp /recipe-input/0002-standalone-build.patch /recipe/forks/code/patches/; \
+    cp /recipe-input/build-code.sh /recipe-input/prepare-code-headers.py /recipe/scripts/; \
+    bash /recipe/scripts/build-code.sh --dependencies /recipe /work /artifacts
+FROM dependencies AS compile
+COPY . /livara
+RUN --mount=type=secret,id=proxy_ca \
+    set -eux; \
+    if [ -s /run/secrets/proxy_ca ]; then export NODE_EXTRA_CA_CERTS=/run/secrets/proxy_ca CURL_CA_BUNDLE=/run/secrets/proxy_ca SSL_CERT_FILE=/run/secrets/proxy_ca; fi; \
+    bash /livara/scripts/build-code.sh --assemble /livara /work /artifacts; \
+    rm -rf /work /root/.npm /root/.cache /root/.electron-gyp
+FROM scratch AS artifact
+COPY --from=compile /artifacts/ /artifacts/

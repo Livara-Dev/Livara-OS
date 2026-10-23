@@ -1,0 +1,128 @@
+/* SPDX-License-Identifier: MIT — compiled Livara workbench chrome. */
+.monaco-workbench {
+    font-family: 'Livara Sans', 'Livara Persian', 'Noto Sans', 'DejaVu Sans', sans-serif;
+    --livara-violet: #bd83ff;
+}
+.monaco-workbench .part.titlebar {
+    border-bottom: 1px solid #2c143c;
+    background-image: linear-gradient(110deg, #07010d 0%, #160820 50%, #07010d 100%);
+}
+.monaco-workbench .part.titlebar .window-title {
+    letter-spacing: .35px;
+    font-weight: 600;
+}
+.monaco-workbench .part.activitybar {
+    border-right: 1px solid #291236;
+}
+.monaco-workbench .activitybar .action-label {
+    border-radius: 13px;
+    margin: 5px;
+}
+.monaco-workbench .activitybar .action-item:hover .action-label {
+    background-color: #29103d;
+}
+.monaco-workbench .activitybar .action-item.checked .action-label {
+    background-color: #301047;
+}
+.monaco-workbench .activitybar .active-item-indicator:before {
+    border-color: #c595ff !important;
+    border-radius: 4px;
+}
+.monaco-workbench .part.sidebar .title-label h2,
+.monaco-workbench .part.auxiliarybar .title-label h2 {
+    letter-spacing: 1px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #c69de7;
+}
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab {
+    border-radius: 11px 11px 0 0;
+}
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.active {
+    box-shadow: inset 0 2px #ba7dff;
+}
+.monaco-workbench .monaco-list-row.selected {
+    border-radius: 7px;
+}
+.monaco-workbench .quick-input-widget {
+    border-radius: 16px;
+    border: 1px solid #67328b;
+    box-shadow: 0 14px 44px #000a;
+    overflow: hidden;
+}
+.monaco-workbench .context-view .monaco-menu .monaco-action-bar.vertical {
+    border-radius: 12px;
+    border: 1px solid #3b1a52;
+    padding: 6px;
+}
+.monaco-workbench .notifications-toasts .notification-toast {
+    border-radius: 14px;
+    border: 1px solid #4b2267;
+    overflow: hidden;
+}
+.monaco-workbench .part.statusbar > .items-container > .statusbar-item[id="livara.workbench.brand"] {
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+@media (prefers-reduced-motion: no-preference) {
+    .monaco-workbench .activitybar .action-label,
+    .monaco-workbench .monaco-list-row {
+        transition: background-color 120ms ease, color 120ms ease;
+    }
+}
+/* Preserve extension compatibility IDs while replacing their first-party glyph. */
+.monaco-workbench .codicon-vscode::before,
+.monaco-workbench .codicon-vscode-insiders::before {
+    content: '' !important;
+    display: inline-block;
+    width: 1.1em;
+    height: 1.1em;
+    background: url('@@LIVARA_ICON_DATA@@') center / contain no-repeat;
+}
+
+/* These are the existing Electron custom controls, with their native-host actions. */
+html.livara-traffic-lights .monaco-workbench .part.titlebar .window-controls-container:not(.wco-enabled) {
+    width: auto !important;
+    padding: 0 5px;
+    align-items: center;
+}
+html.livara-traffic-lights .monaco-workbench .part.titlebar .window-controls-container:not(.wco-enabled) > .window-icon {
+    position: relative;
+    width: max(28px, calc(var(--livara-control-size, 14px) + 12px));
+    min-height: 28px;
+    height: 100%;
+    flex: none;
+    color: #271b18 !important;
+    background: transparent !important;
+    border-radius: 6px;
+    cursor: default;
+}
+html.livara-traffic-lights .monaco-workbench .part.titlebar .window-controls-container:not(.wco-enabled) > .window-icon::after {
+    content: '';
+    position: absolute;
+    width: var(--livara-control-size, 14px);
+    height: var(--livara-control-size, 14px);
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px #0002;
+}
+html.livara-traffic-lights .monaco-workbench .part.titlebar .window-icon.window-close::after { background: var(--livara-control-close, #ff5f57); }
+html.livara-traffic-lights .monaco-workbench .part.titlebar .window-icon.window-minimize::after { background: var(--livara-control-minimize, #febc2e); }
+html.livara-traffic-lights .monaco-workbench .part.titlebar .window-icon.window-max-restore::after { background: var(--livara-control-maximize, #28c840); }
+html.livara-traffic-lights .monaco-workbench .part.titlebar .window-controls-container:not(.wco-enabled) > .window-icon::before {
+    position: relative;
+    z-index: 1;
+    width: var(--livara-control-size, 14px);
+    height: var(--livara-control-size, 14px);
+    line-height: var(--livara-control-size, 14px);
+    font-size: calc(var(--livara-control-size, 14px) * .72);
+    font-weight: 600;
+    opacity: 0;
+}
+html.livara-traffic-lights[data-livara-control-symbols="always"] .monaco-workbench .part.titlebar .window-controls-container > .window-icon::before,
+html.livara-traffic-lights .monaco-workbench .part.titlebar .window-controls-container:hover > .window-icon::before,
+html.livara-traffic-lights .monaco-workbench .part.titlebar .window-controls-container > .window-icon:focus-visible::before { opacity: 1; }
+html.livara-traffic-lights .monaco-workbench .part.titlebar .window-controls-container > .window-icon:focus-visible { outline: 2px solid #bd83ff; outline-offset: -2px; }
+html.livara-traffic-lights .monaco-workbench .part.titlebar .window-controls-container > .window-icon:hover::after { filter: brightness(1.12); }
+@media (prefers-reduced-motion: no-preference) {
+    html.livara-traffic-lights .monaco-workbench .part.titlebar .window-controls-container > .window-icon::after { transition: filter 120ms ease; }
+}

@@ -1,0 +1,184 @@
+{
+  "revision": "Livara OS 0.1.0 with Essentials, palette and configured installer",
+  "qualified_at_utc": "2026-10-23",
+  "delivery": "source ZIP with Windows BAT/PowerShell ISO builder",
+  "new_iso_built": false,
+  "new_iso_boot_tested": false,
+  "native_windows_tested": false,
+  "physical_rtx_tested": false,
+  "exact_apple_renderer": false,
+  "code": {
+    "actual_source_compiled": true,
+    "upstream_version": "1.143.0",
+    "native_gui": "passed real sandboxed non-root Electron workflows with equivalent compiled compatibility fixes",
+    "final_source_recompiled_after_runtime_fixes": false,
+    "source_typescript_syntax_errors": 0,
+    "source_fork_python_tests": 7,
+    "command_node_tests": 12,
+    "record": "../forks/code/qualification.json",
+    "window_control_record": "../forks/code/window-controls-qualification.json"
+  },
+  "browser": {
+    "upstream_version": "1.23.4b",
+    "gecko_version": "158.0.1",
+    "actual_mozilla_archive_hash_verified": true,
+    "upstream_patches_applied": 263,
+    "original_files_extracted": 283,
+    "gecko_compiled": false,
+    "native_gui_tested": false,
+    "record": "../forks/browser/validation.json"
+  },
+  "tor": {
+    "official_unmodified_version": "15.0.26",
+    "actual_archive_sha256_verified": true,
+    "actual_openpgp_signature_verified": true,
+    "original_members_verified": 246,
+    "root_owned_extraction_regular_file_bytes_verified": 220,
+    "native_architecture": "ELF64 AMD64",
+    "original_locked_fingerprinting_and_bundled_fonts_observed": true,
+    "apparmor_policy_parsed_with_ubuntu_24_04_parser": true,
+    "offline_tests_passed": 11,
+    "live_tor_network_tested": false,
+    "record": "../forks/tor/qualification.json",
+    "native_initial_ui_tested": true,
+    "native_initial_ui_context": "Unchanged official browser, regular user, sandbox enabled, offline container; Connect not selected"
+  },
+  "fonts": {
+    "families": [
+      "Livara Sans",
+      "Livara Mono",
+      "Livara Persian"
+    ],
+    "faces": 6,
+    "editable_sources": [
+      "UFO/GLIF",
+      "TTX",
+      "SVG/design model",
+      "original licensed Vazirmatn SFD/variable TTF"
+    ],
+    "actual_harfbuzz_persian_shaping_tested": true,
+    "font_tests_passed": 9,
+    "noto_package_dependency_resolution": "passed; packages downloaded by full local build"
+  },
+  "native_app_interaction_tested": [
+    "Center",
+    "Settings",
+    "Task Manager",
+    "Studio",
+    "Graphics",
+    "Chat offline/profile/error handling"
+  ],
+  "driver_dependency_resolution": "Ubuntu24.04 HWE + matching precompiled NVIDIA580 open + userspace; no DKMS selected",
+  "controller_check": {
+    "python_tests": 174,
+    "python_expected_skips": 1,
+    "node_tests": 15,
+    "result": "passed final fresh Linux-controller check and exported Debian/source/font/ownership inspection",
+    "fonttools": "4.46.0",
+    "harfbuzz_cli": "8.3.0",
+    "native_windows_executed": false,
+    "iso_created": false,
+    "node_version": "24.18.0",
+    "record": "windows-controller-qualification.json",
+    "revision_note": "Earlier complete Windows-controller check before App icons; latest app-icon source/package checks are recorded separately"
+  },
+  "source_archive": "livara-os-source-builder.zip; checksum supplied alongside archive",
+  "qualification_limits": "See validation.md, graphics.md, browser.md, tor-mode.md and windows-build.md",
+  "packaging_checks": {
+    "source_snapshot_files": 1189,
+    "packaged_source_assets_byte_matched": 1081,
+    "rebuilt_fonts_verified": 6,
+    "executable_launchers": 10,
+    "ownership": "all package/control members root:root",
+    "retired_generic_tor_mode_absent": true,
+    "desktop_package_bytes": 15071212,
+    "desktop_package_members": 1154,
+    "expanded_settings_and_studio_modules_packaged": true,
+    "gdkpixbuf_dependency_present": true,
+    "current_production_hashes_matched": 1141,
+    "freshness_scope": "Runtime modules,installed asset sources,font sources/vendor,fork and image recipes. Documentation and gallery-only harness edits after check may differ.",
+    "revision_note": "Historical package/freshness metrics before App icons; see app-icons-qualification.json for current module/package checks"
+  },
+  "window_controls": {
+    "gtk_native_assertions_passed": 26,
+    "stdlib_action_tests": 6,
+    "gtk3_and_gtk4_css_errors": 0,
+    "measured_pixel_sizes": [
+      [
+        10,
+        10
+      ],
+      [
+        14,
+        14
+      ],
+      [
+        22,
+        22
+      ]
+    ],
+    "fullscreen_f11_shift_minimize_close_rtl_tested": true,
+    "code_node_control_tests": 3,
+    "code_actual_window_manager_tested": true,
+    "browser_source_vm_tested": true,
+    "browser_native_tested": false,
+    "stock_gtk_style_restore_may_require_reopen": true,
+    "record": "window-controls-qualification.json"
+  },
+  "window_animations": {
+    "state_machine_python_tests": 9,
+    "actual_gjs_api_checks_passed": true,
+    "actual_compositor_tested": true,
+    "documentation": "window-effects.md",
+    "actual_compositor_context": "Nested GNOME46 real map/destroy transitions; software-rendering timed checks used an isolated test-only force-animation override",
+    "record": "window-effects-qualification.json"
+  },
+  "settings_redesign": {
+    "preferences": 94,
+    "sections": 8,
+    "actual_gnome46_schema_mappings_checked": 94,
+    "actual_gnome46_declared_values_checked": 224,
+    "schema_audit_result": "passed",
+    "search_tests": 5,
+    "presets": "private validated values; visual snapshots preserve reduced motion",
+    "documentation": "customization.md",
+    "schema_audit_record": "preferences-schema-audit.json",
+    "unit_tests_passed": 25,
+    "native_workflow": "passed real GTK controls, search, wallpaper, saved looks, Undo, scoped reset and fullscreen",
+    "all_eight_sections_rendered_in_800x600": true,
+    "record": "settings-redesign-qualification.json"
+  },
+  "studio_redesign": {
+    "tools": 30,
+    "notebook_and_focus": true,
+    "backend_tests_passed": 30,
+    "native_workflows_passed": 9,
+    "record": "studio-redesign-qualification.json",
+    "tool_content_automatically_stored_in_history": false
+  },
+  "app_icon_customization": {
+    "backend_tests_passed": 14,
+    "native_workflow": "passed chooser, apply, Gio icon readback, search/filter, restore, five image formats and 800x600 layout",
+    "record": "app-icons-qualification.json"
+  },
+  "latest_source_check": {
+    "python_tests_run": 211,
+    "expected_skips": 1,
+    "node_tests_passed": 15,
+    "workflow": "Pinned Linux controller image; rebuild editable fonts with its FontTools, make check, build desktop integration package",
+    "native_windows_tested": false,
+    "desktop_shell_contract_checks_passed": true
+  },
+  "essentials": {
+    "feature_areas": 17,
+    "native_pages_rendered": 17,
+    "record": "essentials-qualification.json",
+    "installer_end_to_end_tested": false,
+    "new_iso_built": false
+  },
+  "code_header_download_fix": {
+    "record": "code-headers-qualification.json",
+    "real_offline_failing_package_rebuild_passed": true,
+    "full_windows_build_qualified": false
+  }
+}

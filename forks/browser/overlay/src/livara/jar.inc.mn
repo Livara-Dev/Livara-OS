@@ -1,0 +1,12 @@
+# Livara browser chrome, compiled resources (included from browser/base/jar.mn).
+        content/browser/livara/LivaraUI.js                    (../../livara/LivaraUI.js)
+        content/browser/livara/LivaraWindowControls.js        (../../livara/LivaraWindowControls.js)
+        content/browser/livara/livara-glass.css               (../../livara/livara-glass.css)
+        content/browser/livara/start.xhtml                    (../../livara/start.xhtml)
+        content/browser/livara/start.css                      (../../livara/start.css)
+        content/browser/livara/start.js                       (../../livara/start.js)
+        content/browser/livara/livara-browser.png             (../../livara/livara-browser.png)
+        content/browser/livara/fonts/LivaraSans-Regular.ttf   (../../livara/fonts/LivaraSans-Regular.ttf)
+        content/browser/livara/fonts/LivaraSans-SemiBold.ttf  (../../livara/fonts/LivaraSans-SemiBold.ttf)
+        content/browser/livara/fonts/LivaraPersian-Regular.ttf  (../../livara/fonts/LivaraPersian-Regular.ttf)
+        content/browser/livara/fonts/LivaraPersian-SemiBold.ttf (../../livara/fonts/LivaraPersian-SemiBold.ttf)

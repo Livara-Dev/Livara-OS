@@ -1,0 +1,71 @@
+{
+  "qualified_at_utc": "2026-10-22T23:05:52.492268+00:00",
+  "revision": "Livara OS 0.1.0 source builder: Settings Design Studio revision",
+  "result": "pass",
+  "settings_catalog_count": 94,
+  "sections": [
+    "appearance",
+    "windows",
+    "dock",
+    "typography",
+    "workspaces",
+    "privacy",
+    "input",
+    "display"
+  ],
+  "unit_tests": {
+    "command": "PYTHONPATH=src python3 -m unittest tests/test_settings_ui.py tests/test_desktop.py tests/test_preferences.py -v",
+    "passed": 25,
+    "result": "pass"
+  },
+  "native_test": {
+    "script": "scripts/settings-ui-smoke.py",
+    "platform": "Ubuntu 24.04 GTK4/libadwaita under Xvfb, isolated D-Bus and Openbox",
+    "settings_backend": "memory",
+    "configuration": "Temporary directory for presets and managed GTK CSS; no real user preferences changed",
+    "result": "pass",
+    "checks": [
+      "94 controls / 8 categories; search + empty state + CtrlF; actual font/numeric/color/wallpaper chooser; safe saved-look save/rename/apply/delete; scoped reset PASS",
+      "Real preview window native fullscreen enter / exit PASS",
+      "Actual Openbox window 800x600: all eight responsive categories rendered after layout PASS"
+    ],
+    "additional_verified_actions": [
+      "Native color chooser and invalid hex rejection",
+      "Native local wallpaper chooser after asynchronous selection completes",
+      "Custom wallpaper remains selected when accent changes",
+      "Saved look delete Undo restores the stored values",
+      "Scoped Typography reset leaves window colors and disabled global motion unchanged",
+      "Applying a saved look preserves disabled global motion",
+      "Unavailable and managed controls are disabled"
+    ],
+    "requested_window_size": [
+      800,
+      600
+    ],
+    "actual_client_size": [
+      790,
+      590
+    ],
+    "narrow_categories_rendered_after_layout": 8,
+    "source_result_artifact": ".build/settings-redesign/result.json",
+    "source_log_artifact": ".build/settings-redesign/interaction.log"
+  },
+  "source_sha256": {
+    "src/livara/gui.py": "7e655e0be4f21b29fa8c75d83549dbc7a37088a2f0708c3ebc743901851c3087",
+    "src/livara/settings_ui.py": "c1c75a14b6b703dffb563c190df1ad717a27bf9685f4a826903d172b136f34eb",
+    "src/livara/desktop.py": "4e84d8c45ed21a07a9325baf9ad731322232ec7245270fe364903ed546809362",
+    "src/livara/preferences.py": "3bf086b67986f2b402ae7644639bffa93abed2b01398e84acc2934741bde3ca5",
+    "src/livara/window_style.py": "6cc03091217b4f1b9f0735bb041a5abf229e9dd9c536610ae63df95097626e58",
+    "src/livara/native_controls.py": "4b850f9b6afd1de490be27af5a3d8586d2a3349690d1501ea442ece17edd7db7",
+    "share/livara/org.livara.desktop.gschema.xml": "2de40277b3569bb268793dc8d6396eb26863e342167393acddba26cd57460cd0",
+    "scripts/settings-ui-smoke.py": "aaf67c2f213536832464bc11f6cc5952e6a9cb9d68d20ad4883f8b507d4b6b03",
+    "tests/test_settings_ui.py": "2e79fcec0cda0bffdede39fb4c6977012e0df8b213972305a716f3675ff7aab8",
+    "tests/test_desktop.py": "37db19417f1118829e796a4088b6e25c6da1967cb7477831bb4977e7b04bcc2f",
+    "tests/test_preferences.py": "41615ee01ab4550f8b5c497ff27386fea0f0de5da656cc072d3beef6f23f8866"
+  },
+  "limits": [
+    "This qualifies the native Settings application and its workflows, not a newly booted ISO.",
+    "Openbox window-state checks do not qualify GNOME Shell compositor effects or real GPU performance.",
+    "Optional device controls require their corresponding desktop schemas and compatible hardware."
+  ]
+}

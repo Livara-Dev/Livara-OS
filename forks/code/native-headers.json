@@ -1,0 +1,22 @@
+[
+  {
+    "version": "43.7.7",
+    "url": "https://artifacts.electronjs.org/headers/dist/v43.7.7/node-v43.7.7-headers.tar.gz",
+    "sha256": "f697ced9453e4366258ed0ff3571122da37ba3ec9d349bd16d91856914e140f0"
+  },
+  {
+    "version": "24.18.0",
+    "url": "https://nodejs.org/dist/v24.18.0/node-v24.18.0-headers.tar.gz",
+    "sha256": "6c7d41d83c3481d2301115b8ce4a44b7d4fbfa52859b1aac14f445d460137887"
+  },
+  {
+    "version": "24.21.0",
+    "url": "https://nodejs.org/dist/v24.21.0/node-v24.21.0-headers.tar.gz",
+    "sha256": "57c6bee2e30bbbee5bd51d6cc343eb992e174b56a2a1d0eab7a7510771c20ea2"
+  },
+  {
+    "version": "22.22.1",
+    "url": "https://nodejs.org/dist/v22.22.1/node-v22.22.1-headers.tar.gz",
+    "sha256": "0f76c31ce76a623a6a3a4038cb62eae281b2e33ad189dcf2d514ec32ae74d9b2"
+  }
+]

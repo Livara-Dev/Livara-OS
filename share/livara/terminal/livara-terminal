@@ -1,0 +1,22 @@
+#!/usr/bin/python3
+"""Launch the dedicated Livara terminal profile; never interpolate user arguments."""
+import os
+import shutil
+import sys
+
+from livara.desktop import configure_terminal
+
+def main():
+    terminal = shutil.which("gnome-terminal")
+    if terminal is None:
+        print("Livara Terminal requires gnome-terminal.", file=sys.stderr)
+        return 2
+    try:
+        profile = configure_terminal()
+    except (ValueError, ImportError) as error:
+        print(f"Livara Terminal: {error}", file=sys.stderr)
+        return 2
+    os.execv(terminal, [terminal, f"--profile={profile}", "--title=Livara Terminal", "--class=LivaraTerminal", *sys.argv[1:]])
+
+if __name__ == "__main__":
+    raise SystemExit(main())

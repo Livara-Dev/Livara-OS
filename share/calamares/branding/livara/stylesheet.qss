@@ -1,0 +1,17 @@
+QWidget { background-color:#09060f; color:#eee4fc; font-family:"Livara Sans"; font-size:14px; }
+QLabel { background:transparent; }
+QPushButton { background:#271737; border:1px solid #51316e; border-radius:10px; padding:10px 22px; }
+QPushButton:hover { background:#3c2354; border-color:#be83ff; }
+QPushButton:default { background:#be83ff; color:#160b23; border-color:#be83ff; }
+QPushButton:disabled { color:#857790; border-color:#2b2134; }
+QLineEdit,QComboBox,QSpinBox,QTextEdit,QListView,QTreeView { background:#140d20; border:1px solid #49305e; border-radius:8px; padding:6px; selection-background-color:#60378a; }
+QProgressBar { border:1px solid #49305e; border-radius:8px; background:#140d20; text-align:center; }
+QProgressBar::chunk { background:#be83ff; border-radius:7px; }
+QScrollBar:vertical { background:#100a18; width:10px; }
+QScrollBar::handle:vertical { background:#53326c; border-radius:5px; min-height:24px; }
+QAbstractItemView { color:#eee4fc; alternate-background-color:#251437; }
+QAbstractItemView::item { color:#eee4fc; background:#1c1029; padding:6px; }
+QAbstractItemView::item:selected { color:#ffffff; background:#51316e; }
+/* Calamares 3.3's requirement delegate paints text in literal black. Keep this
+   alert surface light so failure details remain readable in the dark theme. */
+QWidget#requirementsChecker QListView { background-color:#eee4fc; color:#13091d; }

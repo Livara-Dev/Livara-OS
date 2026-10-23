@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Livara Graphics
+Comment=NVIDIA RTX hardware observations and driver setup
+Exec=livara-graphics
+Icon=org.livara.Graphics
+Terminal=false
+Categories=Settings;HardwareSettings;System;
+StartupNotify=true
+StartupWMClass=org.livara.Graphics
+DBusActivatable=false

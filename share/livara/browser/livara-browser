@@ -1,0 +1,10 @@
+#!/usr/bin/python3
+"""The launcher for Livara's compiled browser; never substitutes stock binaries."""
+from pathlib import Path
+import sys
+
+installed = Path("/usr/share/livara/browser")
+sys.path.insert(0, str(installed if installed.is_dir() else Path(__file__).resolve().parent))
+from runtime import main
+
+raise SystemExit(main())

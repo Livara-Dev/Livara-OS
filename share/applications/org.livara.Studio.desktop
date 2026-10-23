@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Livara Studio
+Comment=27 practical creative and developer utilities
+Exec=livara-studio
+Icon=org.livara.Studio
+Terminal=false
+Categories=Utility;Development;
+StartupNotify=true
+StartupWMClass=org.livara.Studio
+DBusActivatable=false

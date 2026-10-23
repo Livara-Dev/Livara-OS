@@ -1,0 +1,107 @@
+{
+  "glass": {
+    "radius": 18,
+    "material": true,
+    "surfaces": 10,
+    "blurEffects": 2,
+    "rims": 2,
+    "watched": 622
+  },
+  "version": "GNOME Shell 46.0",
+  "mode": "nested Wayland compositor under Xvfb; software rendering with isolated memory settings backend and explicit test-only force_animations; not an ISO boot",
+  "checks": [
+    "zoom: real map/destroy transitions and exactly one native completion",
+    "lift: real map/destroy transitions and exactly one native completion",
+    "fade: real map/destroy transitions and exactly one native completion",
+    "Reduced motion: real windows open/close with no Livara transitions",
+    "Disable mid-map: pending completion drains, native handlers unblock, later windows still map/destroy"
+  ],
+  "events": {
+    "starts": [
+      {
+        "kind": "map",
+        "title": "Livara Window Transition 1",
+        "style": "zoom"
+      },
+      {
+        "kind": "destroy",
+        "title": "Livara Window Transition 1",
+        "style": "zoom"
+      },
+      {
+        "kind": "map",
+        "title": "Livara Window Transition 2",
+        "style": "lift"
+      },
+      {
+        "kind": "destroy",
+        "title": "Livara Window Transition 2",
+        "style": "lift"
+      },
+      {
+        "kind": "map",
+        "title": "Livara Window Transition 3",
+        "style": "fade"
+      },
+      {
+        "kind": "destroy",
+        "title": "Livara Window Transition 3",
+        "style": "fade"
+      },
+      {
+        "kind": "map",
+        "title": "Livara Window Transition 5",
+        "style": "fade"
+      }
+    ],
+    "completions": [
+      {
+        "kind": "map",
+        "title": "Livara Window Transition 1"
+      },
+      {
+        "kind": "destroy",
+        "title": "Livara Window Transition 1"
+      },
+      {
+        "kind": "map",
+        "title": "Livara Window Transition 2"
+      },
+      {
+        "kind": "destroy",
+        "title": "Livara Window Transition 2"
+      },
+      {
+        "kind": "map",
+        "title": "Livara Window Transition 3"
+      },
+      {
+        "kind": "destroy",
+        "title": "Livara Window Transition 3"
+      },
+      {
+        "kind": "map",
+        "title": "Livara Window Transition 5"
+      }
+    ],
+    "nativeMap": [
+      "Livara Window Transition 1",
+      "Livara Window Transition 2",
+      "Livara Window Transition 3",
+      "Livara Window Transition 4",
+      "Livara Window Transition 5",
+      "Livara Window Transition 6"
+    ],
+    "nativeDestroy": [
+      "Livara Window Transition 1",
+      "Livara Window Transition 2",
+      "Livara Window Transition 3",
+      "Livara Window Transition 4",
+      "Livara Window Transition 5",
+      "Livara Window Transition 6"
+    ],
+    "active": 0,
+    "blocked": 0,
+    "enabled": false
+  }
+}

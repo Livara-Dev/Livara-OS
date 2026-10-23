@@ -1,0 +1,31 @@
+ARG KALI_BASE=docker.io/kalilinux/kali-rolling:latest@sha256:4be87f78671419c13dcf4f207ead1cfc0de178ea281b3f69c0f49b69ba4e79b1
+FROM ${KALI_BASE}
+ARG LIVARA_PROFILE=core
+ENV DEBIAN_FRONTEND=noninteractive
+# Separate distribution: never add Kali repositories to the Ubuntu host.
+RUN set -eux; \
+    case "$LIVARA_PROFILE" in \
+      core) extra='' ;; \
+      web) extra='kali-tools-web' ;; \
+      forensics) extra='kali-tools-forensics' ;; \
+      wireless) extra='kali-tools-wireless' ;; \
+      passwords) extra='kali-tools-passwords' ;; \
+      reverse) extra='kali-tools-reverse-engineering' ;; \
+      osint) extra='kali-tools-information-gathering' ;; \
+      vulnerability) extra='kali-tools-vulnerability' ;; \
+      full) extra='kali-linux-everything' ;; \
+      *) exit 2 ;; \
+    esac; \
+    printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d; chmod +x /usr/sbin/policy-rc.d; \
+    apt-get update; \
+    recommends=--no-install-recommends; \
+    if [ "$LIVARA_PROFILE" = full ]; then recommends=--install-recommends; fi; \
+    apt-get install -y "$recommends" \
+      bash ca-certificates nmap dnsutils whois tshark tcpdump iproute2 \
+      iputils-ping netcat-openbsd openssl python3 curl git jq file less nano libcap2-bin $extra; \
+    getcap -r /usr 2>/dev/null | while read -r executable capabilities; do setcap -r "$executable"; done; \
+    apt-get clean; rm -rf /var/lib/apt/lists/*; rm -f /usr/sbin/policy-rc.d; \
+    printf 'Livara Kali Toolbox · %s\n' "$LIVARA_PROFILE" > /etc/motd
+WORKDIR /work
+CMD ["/bin/bash"]
+
