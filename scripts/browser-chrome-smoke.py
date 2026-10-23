@@ -78,7 +78,7 @@ def main():
                 client.call('WebDriver:NewSession',{'capabilities':{'alwaysMatch':{}}});client.context('chrome')
                 deadline=time.monotonic()+45
                 while True:
-                    chrome=client.script('return {ui:typeof window.LivaraUI, button:!!document.getElementById("livara-style-button"), controls:document.querySelectorAll("#livara-window-controls button").length, glass:document.documentElement.getAttribute("livara-glass")};')
+                    chrome=client.script('return {ui:typeof (window.wrappedJSObject || window).LivaraUI, button:!!document.getElementById("livara-style-button"), controls:document.querySelectorAll("#livara-window-controls button").length, glass:document.documentElement.getAttribute("livara-glass")};')
                     if chrome.get('ui')=='object' and chrome.get('button') and chrome.get('controls')==3:break
                     if time.monotonic()>deadline:raise RuntimeError('Livara chrome did not initialize: '+json.dumps(chrome))
                     time.sleep(1)
@@ -89,12 +89,37 @@ def main():
                 time.sleep(.3)
                 checks['appearance_readback']=client.script('return {radius:document.documentElement.style.getPropertyValue("--livara-radius"),motion:document.documentElement.getAttribute("livara-reduced-motion")};')
                 if checks['appearance_readback']!={'radius':'26px','motion':'true'}:raise RuntimeError('Appearance controls did not apply: '+json.dumps(checks['appearance_readback']))
-                client.context('content');client.call('WebDriver:Navigate',{'url':'about:newtab'});time.sleep(2)
-                checks['new_tab']=client.script('return {title:document.title,uri:document.documentURI,text:document.body.textContent.includes("Livara")};')
-                if not checks['new_tab']['text']:raise RuntimeError('Livara new-tab dashboard did not render')
+                # Exercise the actual New Tab action, which uses AboutNewTab's
+                # configured replacement; typing about:newtab is a different path.
+                handles=client.call('WebDriver:GetWindowHandles')
+                before=set(handles.get('value',handles) if isinstance(handles,dict) else handles)
+                client.script('(window.wrappedJSObject || window).BrowserOpenTab(); return true;')
+                deadline=time.monotonic()+20
+                while True:
+                    handles=client.call('WebDriver:GetWindowHandles')
+                    values=handles.get('value',handles) if isinstance(handles,dict) else handles
+                    created=set(values)-before
+                    if created:break
+                    if time.monotonic()>deadline:raise RuntimeError('New Tab action did not create a tab')
+                    time.sleep(.2)
+                client.call('WebDriver:SwitchToWindow',{'handle':created.pop()})
+                client.context('content');time.sleep(2)
+                checks['new_tab']=client.script('return {title:document.title,uri:document.documentURI,dashboard:!!document.getElementById("dashboard"),notes:!!document.getElementById("notes")};')
+                if checks['new_tab']['title']!='Livara · Start' or not checks['new_tab']['dashboard'] or not checks['new_tab']['notes']:raise RuntimeError('Livara new-tab dashboard did not render: '+json.dumps(checks['new_tab']))
+                client.script('const note=document.getElementById("notes"); note.value="سلام لیوارا — native test"; note.dispatchEvent(new window.Event("input",{bubbles:true})); return true;')
+                time.sleep(1)
+                checks['notes_saved']=client.script('return document.getElementById("notes-state").textContent;')
+                if checks['notes_saved']!='SAVED LOCALLY':raise RuntimeError('Normal-profile notes were not saved: '+checks['notes_saved'])
+                client.call('WebDriver:Refresh');time.sleep(1)
+                checks['notes_persisted']=client.script('return document.getElementById("notes").value;')
+                if checks['notes_persisted']!='سلام لیوارا — native test':raise RuntimeError('Dashboard notes did not persist after reload')
+                client.script('document.getElementById("timer-toggle").click(); return true;');time.sleep(.3)
+                checks['focus_started']=client.script('return document.getElementById("timer-toggle").textContent;')
+                if checks['focus_started']!='Pause focus':raise RuntimeError('Focus timer did not start')
+                client.script('document.getElementById("timer-toggle").click(); return true;')
                 from PIL import ImageGrab
                 ImageGrab.grab(xdisplay=':96').save(out/'livara-browser-dashboard.png')
-                client.context('chrome');client.script('window.LivaraUI.openPanel(); return true;');time.sleep(1)
+                client.context('chrome');client.script('(window.wrappedJSObject || window).LivaraUI.openPanel(); return true;');time.sleep(1)
                 checks['appearance_panel']=client.script('return !!document.querySelector(".livara-panel") && !!document.querySelector(".livara-tor-launch");')
                 if not checks['appearance_panel']:raise RuntimeError('Livara appearance/Tor control panel did not render')
                 ImageGrab.grab(xdisplay=':96').save(out/'livara-browser-appearance.png')
