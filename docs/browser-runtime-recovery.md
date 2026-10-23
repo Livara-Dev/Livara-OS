@@ -11,3 +11,9 @@ That run also exposed a missing Livara toolbar button. Firefox's CustomizableUI.
 These are application runtime tests under Xvfb/Openbox. They do not qualify a booted ISO, physical graphics hardware, Secure Boot or encrypted installation. Historical failed runs remain visible; a separate successful qualification run is required for the release pipeline.
 
 The corrected tab-context test reached the real dashboard and exposed an XHTML startup error in `start.js`: `addEventListener` was called before the form element existed. The browser console confirmed this error; the clock remained at its initial placeholder. Dashboard initialization now waits for DOMContentLoaded when the document is still loading. Resource packaging updates both maintained Livara scripts, verifies all native hashes remain unchanged, and records each resource hash. Notes persistence and focus actions must pass the real browser test after this correction.
+
+## Successful application qualification
+
+[Run 39964210008](https://github.com/Livara-Dev/Livara-OS/actions/runs/39964210008) completed successfully after these corrections. The real packaged browser passed DOM/JavaScript/storage/canvas checks, toolbar and window controls, live appearance preferences, locked onion DNS policy, the actual New Tab action, persisted Persian notes across reload, the focus timer and appearance/Tor control-panel rendering. Its native executable and Gecko engine were retained from the original complete source build; updated Livara resource hashes are recorded in the package. [Original screenshots and the qualification report](https://github.com/Livara-Dev/Livara-OS/tree/build-proof/proof/39964210008) are retained separately.
+
+[ISO run 39964539904](https://github.com/Livara-Dev/Livara-OS/actions/runs/39964539904) started automatically using this qualified browser and the qualified editor build. This record establishes application qualification, not ISO boot success or publication.

@@ -4,7 +4,7 @@ Livara is a **64-bit x86-64 (`amd64`)** live Linux desktop for Intel and AMD pro
 
 [Hosted builds](https://github.com/Livara-Dev/Livara-OS/actions) · [ISO releases](https://github.com/Livara-Dev/Livara-OS/releases) · [Dependency policy](docs/dependency-updates.md)
 
-ISO publication requires compiled application runtime checks and BIOS/UEFI QEMU boot tests. Both application engines have compiled from source. Browser UI qualification is in progress; no completed ISO release is claimed until those jobs succeed.
+ISO publication requires compiled application runtime checks and BIOS/UEFI QEMU boot tests. Both application engines have compiled from source and passed their runtime checks. ISO assembly and boot qualification are in progress; no completed ISO release is claimed until those jobs succeed.
 
 **To build locally, extract the whole source ZIP and run `Build-Livara.bat`.** Start Docker Desktop in **Linux amd64 container mode** first. The BAT compiles the customized applications and builds an ISO on your computer. The lightweight source ZIP excludes ISO images, prebuilt application bundles and build caches. Published ISO files belong in GitHub Releases, with verified parts/joiners if larger than the release-file limit.
 
