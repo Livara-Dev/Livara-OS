@@ -27,7 +27,7 @@ grub_config=/usr/local/share/livara-build/grub.cfg
 [[ ! -f /project/build/grub.cfg ]] || grub_config=/project/build/grub.cfg
 install -m 0644 "$grub_config" "$iso_dir/boot/grub/grub.cfg"
 (cd "$iso_dir" && find . -type f ! -name md5sum.txt -print0 | sort -z | xargs -0 md5sum > md5sum.txt)
-grub-mkrescue -o "$output" -volid LIVARA_OS "$iso_dir"
+grub-mkrescue -o "$output" -volid LIVARA_OS -iso-level 3 "$iso_dir"
 cd /output
 sha256sum livara-os-0.1.0-amd64.iso > livara-os-0.1.0-amd64.iso.sha256
 printf '\nCreated %s\n' "$output"
