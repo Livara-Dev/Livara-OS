@@ -75,11 +75,19 @@ jobs:
           run-id: ${{ inputs.code_run || env.LIVARA_CODE_RUN }}
           name: livara-code-linux-x64
           path: dist/forks
-      - name: Build ISO and boot BIOS / UEFI virtual machines
+      - name: Build live filesystem and ISO
         run: |
           set -euo pipefail
           mkdir -p dist/logs
-          bash scripts/assemble-ci-iso.sh 2>&1 | tee dist/logs/iso-build-and-boot.log
+          bash scripts/assemble-ci-iso.sh --assemble-only 2>&1 | tee dist/logs/iso-build.log
+      - name: Boot ISO and run BIOS live-system checks
+        run: |
+          set -euo pipefail
+          bash scripts/boot-ci-iso.sh bios 2>&1 | tee dist/logs/boot-bios.log
+      - name: Boot ISO and run UEFI live-system checks
+        run: |
+          set -euo pipefail
+          bash scripts/boot-ci-iso.sh uefi 2>&1 | tee dist/logs/boot-uefi.log
       - name: Prepare verified release download
         run: python3 scripts/package-iso-release.py dist/livara-os-0.1.0-amd64.iso dist/release
       - name: Publish boot-tested preview release

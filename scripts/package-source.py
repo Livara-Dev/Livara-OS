@@ -33,6 +33,7 @@ REQUIRED_FILES = (
     "build/Dockerfile", "build/windows-builder.Dockerfile", "build/assemble.sh", "build/install-forks.py",
     "build/configure-rootfs.sh", "build/verify-graphics-kernel.sh", "build/packages.txt", "build/grub.cfg",
     "packaging/build-deb.sh", "scripts/windows-build.sh", "scripts/package-source.py",
+    "scripts/assemble-ci-iso.sh", "scripts/boot-ci-iso.sh",
     "scripts/capture-native-gallery.py", "scripts/settings-ui-smoke.py", "scripts/app-icons-smoke.py",
     "scripts/prepare-code-headers.py", "forks/code/native-headers.json",
     "docs/app-icons.md", "docs/essentials.md", "docs/installation.md",

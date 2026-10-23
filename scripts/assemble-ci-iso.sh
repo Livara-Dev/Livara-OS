@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 # Assemble an ISO from already compiled and checksum-verified CI applications.
 set -euo pipefail
+case "${1:-}" in
+  '') assemble_only=false ;;
+  --assemble-only) assemble_only=true ;;
+  *) echo 'Usage: assemble-ci-iso.sh [--assemble-only]' >&2; exit 2 ;;
+esac
 project_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 cd "$project_dir"
 docker_cmd=("$project_dir/scripts/docker-local.sh")
@@ -33,8 +38,7 @@ test -z "$(ls -A .build/rootfs)" || { echo 'CI rootfs destination must be empty'
   --mount "type=bind,src=$project_dir/dist,dst=/output" \
   -e "LIVARA_BUILD_JOBS=${LIVARA_BUILD_JOBS:-2}" livara-assembler:0.1.0
 (cd dist && sha256sum --check livara-os-0.1.0-amd64.iso.sha256)
+if "$assemble_only"; then exit 0; fi
 for firmware in bios uefi; do
-  "${docker_cmd[@]}" run --rm --entrypoint python3 \
-    --mount "type=bind,src=$project_dir,dst=/project" \
-    livara-assembler:0.1.0 /project/scripts/boot-smoke.py --firmware "$firmware" --timeout 1800 --capture-menus
- done
+  bash "$project_dir/scripts/boot-ci-iso.sh" "$firmware"
+done
