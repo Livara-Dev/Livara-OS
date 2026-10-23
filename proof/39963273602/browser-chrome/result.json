@@ -1,0 +1,23 @@
+{
+  "passed": false,
+  "checks_completed": {
+    "compiled_chrome_initialized": {
+      "ui": "object",
+      "button": true,
+      "controls": 3,
+      "glass": "true"
+    },
+    "onion_dns_locked": true,
+    "appearance_readback": {
+      "radius": "26px",
+      "motion": "true"
+    },
+    "new_tab": {
+      "title": "Livara \u00b7 Start",
+      "uri": "chrome://browser/content/livara/start.xhtml",
+      "dashboard": true,
+      "notes": true
+    },
+    "notes_saved": "LOCAL"
+  }
+}
