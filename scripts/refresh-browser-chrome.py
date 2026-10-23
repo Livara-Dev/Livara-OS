@@ -23,7 +23,8 @@ def digest(path):
 
 
 def update_jar(path,resource):
-    suffix='/livara/LivaraUI.js'
+    if resource.name not in ('LivaraUI.js','start.js'):raise ValueError('Only maintained Livara UI scripts may be refreshed')
+    suffix='/livara/'+resource.name
     with zipfile.ZipFile(path) as source:
         matches=[n for n in source.namelist() if n.endswith(suffix)]
         if not matches:return None
@@ -56,12 +57,16 @@ def refresh(archive):
         identity=json.loads((app/'livara-build.json').read_text());pin=json.loads((ROOT/'forks/browser/upstream.json').read_text())
         if identity['upstream']['commit']!=pin['commit'] or identity['binary_sha256']!=digest(binary):raise ValueError('Browser candidate identity does not match the pinned source build')
         native={path.name:digest(path) for path in (binary,engine)}
-        changes=[];resource=ROOT/'forks/browser/overlay/src/livara/LivaraUI.js'
-        for jar in (app/'browser/omni.ja',app/'omni.ja'):
-            if jar.is_file():
-                change=update_jar(jar,resource)
-                if change:changes.append(change)
-        if len(changes)!=1:raise ValueError('Expected exactly one source-built Livara chrome resource')
+        changes=[]
+        for name in ('LivaraUI.js','start.js'):
+            resource=ROOT/'forks/browser/overlay/src/livara'/name
+            found=[]
+            for jar in (app/'browser/omni.ja',app/'omni.ja'):
+                if jar.is_file():
+                    change=update_jar(jar,resource)
+                    if change:found.append(change)
+            if len(found)!=1:raise ValueError('Expected exactly one source-built Livara resource: '+name)
+            changes.extend(found)
         if {path.name:digest(path) for path in (binary,engine)}!=native:raise ValueError('Native engine changed during resource packaging')
         commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
         report={'input_archive_sha256':before,'chrome_source_commit':commit,'resources':changes,'native_hashes_unchanged':native,'scope':'Livara JS resource update of an existing full source build; native engine/executable unchanged.'}
