@@ -11,6 +11,9 @@ RUN --mount=type=secret,id=proxy_ca \
     printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d; chmod +x /usr/sbin/policy-rc.d; \
     printf 'APT refresh: %s\n' "$LIVARA_APT_REFRESH"; \
     apt-get update; apt-get dist-upgrade -y; \
+    # NVIDIA's postinst calls update-initramfs immediately, before deferred triggers.
+    # Seed a configured image kernel first so it cannot fall back to host uname.
+    apt-get install -y --no-install-recommends initramfs-tools linux-generic-hwe-24.04; \
     xargs -r apt-get install -y --no-install-recommends < /tmp/livara-packages.txt; \
     apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/*; \
     rm -f /etc/apt/apt.conf.d/99livara-build-ca /usr/sbin/policy-rc.d

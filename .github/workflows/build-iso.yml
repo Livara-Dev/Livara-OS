@@ -57,8 +57,9 @@ jobs:
           set -euo pipefail
           test "$RUNNER_ENVIRONMENT" = github-hosted
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends python3-fonttools libharfbuzz-bin gnupg gpgv
+          sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list.d/ubuntu.sources
+          sudo apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 update
+          sudo apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20 install -y --no-install-recommends python3-fonttools libharfbuzz-bin gnupg gpgv
           df -h
           available=$(df --output=avail -B1 /var/lib/docker | tail -1)
           test "$available" -ge 53687091200 || { echo 'At least 50 GiB free required for assembly and boot tests.' >&2; exit 1; }
