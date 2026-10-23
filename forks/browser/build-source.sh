@@ -20,7 +20,7 @@ import json,sys
 m=json.load(open(sys.argv[1]));print(m['upstream']);print(m['commit']);print(m['tag']);print(m['firefox']['source_url']);print(m['firefox']['sha512'])
 PY
 )
-checkout=$work_dir/zen
+checkout=$work_dir/zen-verified-v2
 if [[ ! -d "$checkout/.git" ]]; then
     git clone --depth=1 --branch "${pinned[2]}" --filter=blob:none "${pinned[0]}" "$checkout"
 fi
@@ -35,12 +35,15 @@ export ZEN_RELEASE=1 ZEN_GA_DISABLE_PGO=1 ZEN_DISABLE_LTO=1 SURFER_COMPAT=x86_64
 export MOZ_NOSPAM=1 MOZBUILD_STATE_PATH=${MOZBUILD_STATE_PATH:-/home/builder/.mozbuild}
 npm ci --no-audit --no-fund
 npm run surfer -- ci --brand release --display-version 1.23.4b
-# Surfer reuses this verified archive, rather than fetching unchecked source.
+# Patch the pinned downloader before fetching source: upstream otherwise
+# overwrites a pre-existing verified archive with another network download.
+python3 "$fork_dir/prepare-surfer-cache.py" "$checkout"
+# Surfer now reuses this verified archive.
 source_name=${pinned[3]##*/}
 mkdir -p .surfer/engine
 source_path=$checkout/.surfer/engine/$source_name
 if [[ ! -f "$source_path" ]]; then
-    curl --fail --location --retry 3 --connect-timeout 30 "${pinned[3]}" --output "$source_path.part"
+    curl --fail --location --retry 5 --retry-all-errors --connect-timeout 30 --max-time 1800 --retry-max-time 3600 "${pinned[3]}" --output "$source_path.part"
     mv -- "$source_path.part" "$source_path"
 fi
 if ! printf '%s  %s\n' "${pinned[4]}" "$source_path" | sha512sum --check --status; then

@@ -42,6 +42,15 @@ jobs:
           set -euo pipefail
           mkdir -p dist/forks dist/logs
           bash scripts/build-browser.sh dist/forks
+      - name: Preserve compiled candidate before runtime testing
+        uses: actions/upload-artifact@v4
+        with:
+          name: livara-browser-compiled-candidate
+          path: |
+            dist/forks/livara-browser-linux-x64.tar.xz
+            dist/forks/livara-browser-linux-x64.tar.xz.sha256
+          compression-level: 0
+          retention-days: 30
       - name: Launch compiled browser and test a local page
         shell: bash
         run: |

@@ -40,6 +40,15 @@ jobs:
           set -euo pipefail
           mkdir -p dist/logs dist/forks
           bash scripts/build-code.sh dist/forks 2>&1 | tee dist/logs/code-build.log
+      - name: Preserve compiled candidate before runtime testing
+        uses: actions/upload-artifact@v4
+        with:
+          name: livara-code-compiled-candidate
+          path: |
+            dist/forks/livara-code-linux-x64.tar.xz
+            dist/forks/livara-code-linux-x64.tar.xz.sha256
+          compression-level: 0
+          retention-days: 30
       - name: Test packaged CLI and native window
         run: |
           set -euo pipefail
