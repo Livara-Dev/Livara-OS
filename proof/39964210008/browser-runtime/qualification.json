@@ -1,0 +1,11 @@
+{
+  "version": "Mozilla Livara 1.23.4b",
+  "checks": {
+    "dom": true,
+    "js": true,
+    "storage": true,
+    "canvas": true
+  },
+  "archive_sha256": "a97ccef3cf3f35d582197e8cc887f4a278a634504329d602e300f063c6d3f68f",
+  "context": "Actual packaged browser under Xvfb, private profile, loopback-only test page; sandbox not disabled."
+}
