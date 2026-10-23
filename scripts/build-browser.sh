@@ -23,8 +23,17 @@ done
 if [[ -n ${LIVARA_BUILD_CA:-} ]]; then
     [[ -f $LIVARA_BUILD_CA ]] || { echo 'LIVARA_BUILD_CA must name an existing certificate file' >&2; exit 2; }
     arguments+=(--secret "id=livara_build_ca,src=$LIVARA_BUILD_CA")
+elif [[ -n ${CODEX_PROXY_CERT:-} && -s /etc/ssl/certs/ca-certificates.crt ]]; then
+    arguments+=(--secret id=livara_build_ca,src=/etc/ssl/certs/ca-certificates.crt)
 fi
-"$docker_cmd" "${arguments[@]}" "$project_dir"
+log_dir=${LIVARA_BROWSER_LOG_DIR:-$output_dir/logs}
+mkdir -p "$log_dir"
+log_path="$log_dir/browser-build-$(date -u +%Y%m%dT%H%M%SZ)-$$.log"
+printf 'Compiling the full browser; persistent log: %s\n' "$log_path"
+if ! "$docker_cmd" "${arguments[@]}" "$project_dir" 2>&1 | tee "$log_path"; then
+    printf 'Browser compilation failed. Full log retained at %s. Existing compiler caches were preserved.\n' "$log_path" >&2
+    exit 1
+fi
 container=$("$docker_cmd" create --label "org.livara.build=$build_id" "$image" /not-executed)
 cleanup() { "$docker_cmd" rm -f "$container" >/dev/null 2>&1 || true; }
 trap cleanup EXIT

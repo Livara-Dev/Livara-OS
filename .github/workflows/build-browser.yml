@@ -14,6 +14,7 @@ jobs:
       LIVARA_BUILD_JOBS: '2'
       DOCKER_BUILDKIT: '1'
       BUILDKIT_PROGRESS: plain
+      LIVARA_BROWSER_LOG_DIR: ${{ github.workspace }}/dist/logs
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,7 +41,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p dist/forks dist/logs
-          bash scripts/build-browser.sh dist/forks 2>&1 | tee dist/logs/browser-build.log
+          bash scripts/build-browser.sh dist/forks
       - name: Launch compiled browser and test a local page
         shell: bash
         run: |
