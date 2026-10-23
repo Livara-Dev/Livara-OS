@@ -1,9 +1,9 @@
 {
   "repository": "https://github.com/microsoft/vscode",
-  "version": "1.143.0",
-  "commit": "2d0b7506a36c1d6db9a466440131a8e01eab2289",
-  "source_url": "https://codeload.github.com/microsoft/vscode/tar.gz/2d0b7506a36c1d6db9a466440131a8e01eab2289",
-  "source_sha256": "d8eb1f10ec081e29e3a5450a14f31d6a11f8f6e600c209bb415059690f5acc48",
+  "version": "1.143.1",
+  "commit": "e646868227c3e3a9e3f24277c8c7220be42c0be7",
+  "source_url": "https://codeload.github.com/microsoft/vscode/tar.gz/e646868227c3e3a9e3f24277c8c7220be42c0be7",
+  "source_sha256": "648542ab2eabca0f6bab9cb4b86f0167322d4c5df1a72d07210cad883d598bed",
   "node_version": "24.18.0",
   "node_url": "https://nodejs.org/dist/v24.18.0/node-v24.18.0-linux-x64.tar.xz",
   "node_sha256": "55aa7153f9d88f28d765fcdad5ae6945b5c0f98a36881703817e4c450fa76742",
@@ -11,5 +11,5 @@
   "artifact": "livara-code-linux-x64.tar.xz",
   "license": "MIT",
   "architecture": "x86_64",
-  "commit_date": "2026-10-20T21:31:47Z"
+  "commit_date": "2026-10-22T17:23:22Z"
 }

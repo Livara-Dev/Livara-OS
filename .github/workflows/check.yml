@@ -11,7 +11,7 @@ jobs:
         with:
           node-version: '24.18.0'
       - name: Install font build tools
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends python3-fonttools gnupg gpgv libharfbuzz-bin
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends python3-fonttools gnupg gpgv libharfbuzz-bin python3-gi gir1.2-gdkpixbuf-2.0 librsvg2-common webp-pixbuf-loader
       - name: Rebuild editable fonts
         run: python3 scripts/build-fonts.py
       - name: Test tools and build scripts

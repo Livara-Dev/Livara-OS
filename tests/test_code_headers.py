@@ -16,7 +16,7 @@ class HeaderTests(unittest.TestCase):
             path=root/folder/'.npmrc';path.parent.mkdir(parents=True,exist_ok=True);path.write_text(f'target="{version}"\n')
     def test_all_actual_pinned_targets_and_official_https(self):
         manifest=json.loads((ROOT/'forks/code/native-headers.json').read_text());headers.validate_manifest(manifest)
-        self.assertEqual({e['version'] for e in manifest},{'43.7.7','24.18.0','24.21.0','22.22.1'})
+        self.assertEqual({e['version'] for e in manifest},{'43.7.7','24.18.0','24.22.1','22.22.1'})
         for item in [{**self.entry(),'url':'http://nodejs.org/test'}, {**self.entry(),'url':'https://evil.invalid/a'}, {**self.entry(),'sha256':'bad'}]:
             with self.assertRaises(ValueError):headers.validate_manifest([item])
     def test_changed_checkout_target_fails_before_network(self):

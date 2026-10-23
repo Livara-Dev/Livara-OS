@@ -10,9 +10,9 @@
     "sha256": "6c7d41d83c3481d2301115b8ce4a44b7d4fbfa52859b1aac14f445d460137887"
   },
   {
-    "version": "24.21.0",
-    "url": "https://nodejs.org/dist/v24.21.0/node-v24.21.0-headers.tar.gz",
-    "sha256": "57c6bee2e30bbbee5bd51d6cc343eb992e174b56a2a1d0eab7a7510771c20ea2"
+    "version": "24.22.1",
+    "url": "https://nodejs.org/dist/v24.22.1/node-v24.22.1-headers.tar.gz",
+    "sha256": "322e0a27db9088093ab8347bdc8c7e0aaa21dc9ed548390bf06b394494c09267"
   },
   {
     "version": "22.22.1",

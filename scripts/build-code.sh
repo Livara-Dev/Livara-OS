@@ -133,7 +133,8 @@ for name in HTTP_PROXY HTTPS_PROXY NO_PROXY ALL_PROXY http_proxy https_proxy no_
 done
 build_id="${LIVARA_BUILD_ID:-local}"
 [[ "$build_id" =~ ^[a-zA-Z0-9_.-]+$ ]] || { echo 'Invalid LIVARA_BUILD_ID.' >&2; exit 2; }
-image="livara-code-artifact:1.143.0-$build_id"
+code_version="$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["version"])' "$project_dir/forks/code/upstream.json")"
+image="livara-code-artifact:$code_version-$build_id"
 "${docker_cmd[@]}" build "${build_args[@]}" --target artifact --label "org.livara.build=$build_id" -f "$project_dir/build/Dockerfile.code" -t "$image" "$project_dir"
 container_id="$("${docker_cmd[@]}" create --label "org.livara.build=$build_id" "$image" /unused)"
 cleanup() { "${docker_cmd[@]}" rm -f "$container_id" >/dev/null 2>&1 || true; }

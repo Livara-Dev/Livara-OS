@@ -1,0 +1,66 @@
+name: Build and test Livara Code
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: livara-code-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  code:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    env:
+      LIVARA_BUILD_JOBS: '2'
+      LIVARA_BUILD_ID: github-code-${{ github.run_id }}
+      DOCKER_BUILDKIT: '1'
+      BUILDKIT_PROGRESS: plain
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Prepare ephemeral runner
+        run: |
+          set -euo pipefail
+          test "$RUNNER_ENVIRONMENT" = github-hosted
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache
+          if ! swapon --show | grep -q .; then
+            sudo fallocate -l 8G /swapfile
+            sudo chmod 600 /swapfile
+            sudo mkswap /swapfile
+            sudo swapon /swapfile
+          fi
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python3-fonttools libharfbuzz-bin libgtk-3-0t64 libnss3 libasound2t64 libxss1 libgbm1 xvfb xauth xdotool python3-pil
+          python3 scripts/build-fonts.py
+          df -h
+          free -h
+      - name: Compile actual pinned Code source
+        run: |
+          set -euo pipefail
+          mkdir -p dist/logs dist/forks
+          bash scripts/build-code.sh dist/forks 2>&1 | tee dist/logs/code-build.log
+      - name: Test packaged CLI and native window
+        run: |
+          set -euo pipefail
+          python3 scripts/code-runtime-smoke.py dist/forks/livara-code-linux-x64.tar.xz dist/code-test
+      - name: Preserve logs and test proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-build-logs-${{ github.run_attempt }}
+          path: |
+            dist/logs/
+            dist/code-test/
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Upload compiled editor
+        uses: actions/upload-artifact@v4
+        with:
+          name: livara-code-linux-x64
+          path: |
+            dist/forks/livara-code-linux-x64.tar.xz
+            dist/forks/livara-code-linux-x64.tar.xz.sha256
+            dist/forks/livara-code-build.json
+          compression-level: 0
+          retention-days: 30
