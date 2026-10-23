@@ -61,7 +61,11 @@ def main():
         version=subprocess.check_output([str(binary),'--version'],text=True,timeout=30).strip()
         if 'Livara' not in version or 'Zen' in version:raise RuntimeError('Compiled branding failed: '+version)
         probe=socket.socket();probe.bind(('127.0.0.1',0));port=probe.getsockname()[1];probe.close()
-        profile=root/'profile';profile.mkdir();(profile/'user.js').write_text(f'user_pref("marionette.port", {port});\nuser_pref("browser.shell.checkDefaultBrowser", false);\n')
+        profile=root/'profile';profile.mkdir();(profile/'user.js').write_text(f'user_pref("marionette.port", {port});\nuser_pref("browser.shell.checkDefaultBrowser", false);\nuser_pref("zen.welcome-screen.seen", true);\n')
+        if Path('/etc/apparmor.d').is_dir() and Path('/sys/module/apparmor').exists():
+            policy=root/'livara-ci-browser'
+            policy.write_text('abi <abi/4.0>,\ninclude <tunables/global>\nprofile livara-ci-browser '+str(binary)+'{,-bin} flags=(unconfined) {\n  userns,\n}\n')
+            subprocess.run(['sudo','apparmor_parser','-r',str(policy)],check=True)
         with (out/'browser-chrome.log').open('w') as log:
             try:
                 display=subprocess.Popen(['Xvfb',':96','-screen','0','1280x900x24','-nolisten','tcp'],stdout=log,stderr=subprocess.STDOUT);time.sleep(1)
@@ -125,6 +129,13 @@ def main():
                 ImageGrab.grab(xdisplay=':96').save(out/'livara-browser-appearance.png')
                 report={'version':version,'checks':checks,'sandbox_disabled':False,'automation':'Marionette enabled only in this private test profile','context':'Actual compiled native browser with Openbox/Xvfb. No Tor circuit or physical hardware claim.'}
                 (out/'qualification.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
+            except Exception:
+                try:
+                    from PIL import ImageGrab
+                    ImageGrab.grab(xdisplay=':96').save(out/'failure-screen.png')
+                    (out/'result.json').write_text(json.dumps({'passed':False,'checks_completed':checks},indent=2)+'\n')
+                except Exception:pass
+                raise
             finally:
                 if client:client.close()
                 if browser:

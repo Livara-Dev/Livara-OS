@@ -45,10 +45,19 @@ def main():
         if not binary.is_file() or binary.read_bytes()[:4]!=b'\x7fELF' or not (binary.parent/'libxul.so').is_file():raise RuntimeError('Missing actual compiled browser/engine')
         version=subprocess.check_output([str(binary),'--version'],text=True).strip()
         if 'Livara' not in version or 'Zen' in version:raise RuntimeError('Unexpected product identity: '+version)
+        # Firefox requires an existing directory for an explicit --profile.
+        profile=root/'profile';profile.mkdir()
+        (profile/'user.js').write_text('user_pref("zen.welcome-screen.seen", true);\nuser_pref("browser.shell.checkDefaultBrowser", false);\n')
+        # Ubuntu hosted runners restrict user namespaces for unknown binaries.
+        # Allow this private test executable; retain the browser's own sandbox.
+        if Path('/etc/apparmor.d').is_dir() and Path('/sys/module/apparmor').exists():
+            policy=root/'livara-ci-browser'
+            policy.write_text('abi <abi/4.0>,\ninclude <tunables/global>\nprofile livara-ci-browser '+str(binary)+'{,-bin} flags=(unconfined) {\n  userns,\n}\n')
+            subprocess.run(['sudo','apparmor_parser','-r',str(policy)],check=True)
         server=http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler);threading.Thread(target=server.serve_forever,daemon=True).start()
         try:
             with (output/'runtime.log').open('w') as log:
-                process=subprocess.Popen(['xvfb-run','-a','-s','-screen 0 1280x900x24',str(binary),'--no-remote','--profile',str(root/'profile'),f'http://127.0.0.1:{server.server_port}/'],stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+                process=subprocess.Popen(['xvfb-run','-a','-s','-screen 0 1280x900x24',str(binary),'--no-remote','--profile',str(profile),f'http://127.0.0.1:{server.server_port}/'],stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
                 try:
                     deadline=time.monotonic()+120
                     while not received.wait(1):
