@@ -16,7 +16,7 @@ jobs:
       BUILDKIT_PROGRESS: plain
       LIVARA_BROWSER_LOG_DIR: ${{ github.workspace }}/dist/logs
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Prepare ephemeral runner disk and swap
@@ -43,7 +43,7 @@ jobs:
           mkdir -p dist/forks dist/logs
           bash scripts/build-browser.sh dist/forks
       - name: Preserve compiled candidate before runtime testing
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: livara-browser-compiled-candidate
           path: |
@@ -60,7 +60,7 @@ jobs:
           python3 scripts/browser-runtime-smoke.py dist/forks/livara-browser-linux-x64.tar.xz dist/browser-test
       - name: Preserve complete build log and qualification
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: browser-build-logs-${{ github.run_attempt }}
           path: |
@@ -69,7 +69,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
       - name: Upload compiled browser
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: livara-browser-linux-x64
           path: |

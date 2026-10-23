@@ -12,6 +12,29 @@ import tempfile
 import time
 
 
+def stop_profile_processes(root):
+    """Stop only this test's processes, including detached Electron children."""
+    import psutil
+    prefix = str(root) + '/'
+    for attempt in range(3):
+        owned = []
+        for process in psutil.process_iter(['pid', 'cmdline', 'uids']):
+            try:
+                if process.info['uids'].real != os.getuid(): continue
+                if any(arg.startswith(prefix) for arg in (process.info['cmdline'] or [])):
+                    owned.append(process)
+            except (psutil.NoSuchProcess, psutil.AccessDenied): continue
+        if not owned: return
+        for process in owned:
+            try: process.terminate()
+            except psutil.NoSuchProcess: pass
+        _, alive = psutil.wait_procs(owned, timeout=5)
+        for process in alive:
+            try: process.kill()
+            except psutil.NoSuchProcess: pass
+        psutil.wait_procs(alive, timeout=5)
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('archive',type=Path);parser.add_argument('output',type=Path);args=parser.parse_args()
     args.output.mkdir(parents=True,exist_ok=True);out=args.output.resolve()
@@ -56,6 +79,7 @@ def main():
                         try:os.killpg(process.pid,signal.SIGKILL)
                         except ProcessLookupError:pass
                         process.wait()
+                stop_profile_processes(root)
                 xvfb.terminate();xvfb.wait(timeout=10)
     return 0
 if __name__=='__main__':raise SystemExit(main())

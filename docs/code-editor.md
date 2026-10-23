@@ -2,7 +2,7 @@
 
 Livara Code is an actual source fork of the MIT-licensed open-source editor workbench. The local builder downloads an immutable source commit, verifies its SHA-256, applies Livara's changes, compiles the workbench and built-in extensions, and packages the Electron desktop application. It does not relabel a downloaded editor binary.
 
-The pinned source is release **1.143.0**, commit `2d0b7506a36c1d6db9a466440131a8e01eab2289`, with Node24.18.0 and Electron43.7.7. Pins and checksums live in `forks/code/upstream.json`. The full source and build dependencies are downloaded during the local build so they do not inflate the source ZIP.
+The pinned source is release **1.143.1**, commit `e646868227c3e3a9e3f24277c8c7220be42c0be7`, with Node24.18.0 and Electron43.7.7. Pins and checksums live in `forks/code/upstream.json`. The full source and build dependencies are downloaded during the local build so they do not inflate the source ZIP.
 
 ## What Livara changes
 

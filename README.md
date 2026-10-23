@@ -2,7 +2,11 @@
 
 Livara is a **64-bit x86-64 (`amd64`)** live Linux desktop for Intel and AMD processors, including Intel Core Ultra 7. It combines an Ubuntu 24.04 GNOME base, original Livara glass styling, Livara applications, security tools, and a separate Kali workbench. The supplied purple glass **L** is the OS identity; Browser and Code have their own derivatives.
 
-**Download the source kit, extract the whole ZIP, and run `Build-Livara.bat`.** Start Docker Desktop in **Linux amd64 container mode** first. The BAT compiles the customized applications and builds an ISO on your computer. This delivery contains no ISO, prebuilt browser/editor bundle, Kali image, or build cache.
+[Hosted builds](https://github.com/Livara-Dev/Livara-OS/actions) · [ISO releases](https://github.com/Livara-Dev/Livara-OS/releases) · [Dependency policy](docs/dependency-updates.md)
+
+ISO publication requires compiled application runtime checks and BIOS/UEFI QEMU boot tests. The hosted full-build qualification is in progress; no completed ISO release is claimed until those jobs succeed.
+
+**To build locally, extract the whole source ZIP and run `Build-Livara.bat`.** Start Docker Desktop in **Linux amd64 container mode** first. The BAT compiles the customized applications and builds an ISO on your computer. The lightweight source ZIP excludes ISO images, prebuilt application bundles and build caches. Published ISO files belong in GitHub Releases, with verified parts/joiners if larger than the release-file limit.
 
 Full source compilation is substantial: allocate **16GiB RAM to Docker Desktop** (24GiB recommended), at least **100GiB free in its Linux disk** (150GiB recommended), and allow many GB of downloads and a long build. Core Ultra 7 identifies the CPU/architecture; it does not establish your machine's RAM or disk capacity. See [Windows instructions](docs/windows-build.md).
 
@@ -103,8 +107,8 @@ make iso
 
 ## Preview limits and licenses
 
-This is an experimental **live preview without an installer or persistence wizard**. Save work to a mounted disk before shutdown. The live session automatically signs in as `livara` with passwordless sudo. The GRUB chain is unsigned; this preview requires Secure Boot disabled.
+This is an experimental live preview with a configured Calamares installer whose encrypted installation/reboot path remains unqualified. Live-session persistence is not configured by a wizard. Save work to a mounted disk before shutdown. The live session automatically signs in as `livara` with passwordless sudo. The GRUB chain is unsigned; this preview requires Secure Boot disabled.
 
-No new ISO was created for this source delivery, as requested. Native apps and the compositor were tested in isolated Linux sessions; the full assembled image, HWE/NVIDIA integration and physical hardware require a fresh boot test after local build. Start with a BIOS VM, 4GB RAM and2 CPUs; UEFI graphics remain unqualified.
+Native apps and the compositor have earlier isolated-session qualification records. Current hosted application builds and ISO boot tests are tracked in Actions; only a successful publishing run establishes that its particular ISO passed the documented VM checks. Physical hardware, Secure Boot, encrypted installation and recovery remain separate qualification work. Start with a VM before using physical media.
 
 Original OS tooling is GPL-3.0-or-later. Code-fork modifications use MIT. Browser upstream files retain MPL2.0; new Livara browser sources use GPL-3.0-or-later as marked. Fonts use SIL OFL1.1, and other upstream components retain their own licenses. NVIDIA userspace/firmware have NVIDIA licenses. The supplied mark retains its original rights. [Artwork](artwork/README.md) · [Upstreams](docs/upstreams.md).

@@ -16,7 +16,7 @@ jobs:
       DOCKER_BUILDKIT: '1'
       BUILDKIT_PROGRESS: plain
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Prepare ephemeral runner
@@ -31,7 +31,7 @@ jobs:
             sudo swapon /swapfile
           fi
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends python3-fonttools libharfbuzz-bin libgtk-3-0t64 libnss3 libasound2t64 libxss1 libgbm1 xvfb xauth xdotool python3-pil
+          sudo apt-get install -y --no-install-recommends python3-fonttools libharfbuzz-bin libgtk-3-0t64 libnss3 libasound2t64 libxss1 libgbm1 xvfb xauth xdotool python3-pil python3-psutil
           python3 scripts/build-fonts.py
           df -h
           free -h
@@ -41,7 +41,7 @@ jobs:
           mkdir -p dist/logs dist/forks
           bash scripts/build-code.sh dist/forks 2>&1 | tee dist/logs/code-build.log
       - name: Preserve compiled candidate before runtime testing
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: livara-code-compiled-candidate
           path: |
@@ -55,7 +55,7 @@ jobs:
           python3 scripts/code-runtime-smoke.py dist/forks/livara-code-linux-x64.tar.xz dist/code-test
       - name: Preserve logs and test proof
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: code-build-logs-${{ github.run_attempt }}
           path: |
@@ -64,7 +64,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
       - name: Upload compiled editor
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: livara-code-linux-x64
           path: |
