@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "date_utc": "2026-10-23",
+  "failed_iso_run": 39978197657,
+  "root_cause": "The old selector sorted all directories under /lib/modules and selected the literal kernel directory shipped by the NVIDIA module package.",
+  "kernel": "7.0.0-38-generic",
+  "nvidia_version": "580.178.04",
+  "nvidia_license": "Dual MIT/GPL",
+  "packages": [
+    {
+      "name": "linux-image-7.0.0-38-generic_7.0.0-38.38~24.04.4_amd64.deb",
+      "sha256": "1791405b126cb2ef8b969dc6706292a02c12da9f581bb3f8fac2d1272a419fd4"
+    },
+    {
+      "name": "linux-modules-7.0.0-38-generic_7.0.0-38.38~24.04.4_amd64.deb",
+      "sha256": "99536f44ce1802e63ed79a90d386bb1025ec12bf7a2f5af43287dbb4af247202"
+    },
+    {
+      "name": "linux-modules-nvidia-580-open-7.0.0-38-generic_7.0.0-38.38~24.04.4+1_amd64.deb",
+      "sha256": "21993e6154e09904b9ed7fdfbc512e72a86c1c3e9325d279db2918c0b4a4cc5b"
+    }
+  ],
+  "checks": {
+    "old_failure_reproduced": true,
+    "real_boot_image_selected": true,
+    "all_five_modules_match_boot_kernel": true,
+    "missing_drm_rejected": true,
+    "newer_incomplete_kernel_rejected": true,
+    "modules_without_boot_image_rejected": true
+  },
+  "reproduce": "bash scripts/test-graphics-kernel.sh <directory-with-APT-verified-kernel-DEBs>",
+  "scope": "Package extraction and real depmod/modinfo validation in a disposable Ubuntu 24.04 container. Does not establish ISO boot or physical GPU operation."
+}

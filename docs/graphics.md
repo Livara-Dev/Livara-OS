@@ -2,7 +2,7 @@
 
 Livara's source build includes Ubuntu's **NVIDIA 580 open kernel driver**, the **Ubuntu 24.04 HWE kernel**, and **matching precompiled NVIDIA kernel modules**. It targets GeForce RTX 20, 30, 40, and 50 series, while retaining Mesa drivers for Intel and AMD graphics. Livara Graphics (`livara-graphics`) shows actual observations and an explicit repair workflow.
 
-This is a driver integration target, not a hardware certification. No physical RTX board, laptop, external monitor, suspend/resume cycle, game, or CUDA application was tested in this environment. A new ISO was not built for this source revision, as requested. Test the image you build on your specific machine before relying on it.
+This is a driver integration target, not a hardware certification. No physical RTX board, laptop, external monitor, suspend/resume cycle, game, or CUDA application was tested in this environment. ISO publication requires the separate BIOS and UEFI live-boot checks to pass. Test the image on your specific machine before relying on it.
 
 | GeForce family | Architecture | Included driver path |
 | --- | --- | --- |
@@ -33,7 +33,7 @@ pciutils
 
 On 2026-10-22 the official Ubuntu 24.04 repositories resolved NVIDIA **580.178.04-0ubuntu0.24.04.1** and HWE **7.0.0-38.38~24.04.4** with corresponding precompiled modules. These are observed repository candidates, not hardcoded kernel ABI promises. The HWE and NVIDIA module metapackages track compatible updates. Builds require the packages to remain available.
 
-The precompiled NVIDIA module metapackage provides the versioned `nvidia-dkms-580-open` dependency. Installing it together with the driver avoids compiling DKMS modules inside Docker against the host kernel. The image configuration checks that the selected boot kernel actually has an NVIDIA module with an open-module license before initramfs creation. NVIDIA DRM kernel modesetting is enabled for the live desktop. Driver services are supplied by the upstream packages.
+The precompiled NVIDIA module metapackage provides the versioned `nvidia-dkms-580-open` dependency. Installing it together with the driver avoids compiling DKMS modules inside Docker against the host kernel. The build selects the latest actual `/boot/vmlinuz-*` image, refreshes its module indexes, and checks the NVIDIA 580 open-module license and all five module ABI versions before application extraction and again before final initramfs creation. It never selects a kernel from arbitrary directories under `/lib/modules`. A regression test using the real Ubuntu kernel and NVIDIA packages reproduced the old failure and verified this fix; see [package qualification](kernel-package-qualification.json) and `scripts/test-graphics-kernel.sh`. NVIDIA DRM kernel modesetting is enabled for the live desktop. Driver services are supplied by the upstream packages.
 
 A compatibility graphics boot entry remains useful for diagnosis; graphics acceleration and glass effects are not expected under `nomodeset`. The preview bootloader is unsigned, so **Secure Boot must be disabled** for this preview even when Ubuntu-supplied NVIDIA modules themselves are signed. Creating a signed boot chain is separate work.
 

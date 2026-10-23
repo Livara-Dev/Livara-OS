@@ -160,19 +160,7 @@ fi
 cat > /etc/modprobe.d/60-livara-nvidia-kms.conf <<'EOF'
 options nvidia_drm modeset=1 fbdev=1
 EOF
-livara_kernel=$(find /lib/modules -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort -V | tail -n 1)
-test -n "$livara_kernel" || { echo 'Livara: no kernel modules installed' >&2; exit 1; }
-livara_nvidia_version=$(modinfo -k "$livara_kernel" -F version nvidia)
-livara_nvidia_license=$(modinfo -k "$livara_kernel" -F license nvidia)
-case "$livara_nvidia_version" in
-  580.*) ;;
-  *) echo "Livara: expected NVIDIA 580 modules for $livara_kernel; found $livara_nvidia_version" >&2; exit 1 ;;
-esac
-case "$livara_nvidia_license" in
-  *MIT*GPL*|*GPL*MIT*) ;;
-  *) echo "Livara: expected NVIDIA open kernel modules; license is $livara_nvidia_license" >&2; exit 1 ;;
-esac
-modinfo -k "$livara_kernel" -F filename nvidia_drm >/dev/null
+bash /usr/lib/livara/verify-graphics-kernel
 if [[ -f /usr/share/plymouth/themes/livara/livara.plymouth ]]; then
   update-alternatives --install /usr/share/plymouth/themes/default.plymouth default.plymouth /usr/share/plymouth/themes/livara/livara.plymouth 200
   update-alternatives --set default.plymouth /usr/share/plymouth/themes/livara/livara.plymouth

@@ -4,6 +4,7 @@ FROM ${UBUNTU_BASE} AS desktop
 ARG LIVARA_APT_REFRESH=manual
 ENV DEBIAN_FRONTEND=noninteractive
 COPY build/packages.txt /tmp/livara-packages.txt
+COPY build/verify-graphics-kernel.sh /usr/lib/livara/verify-graphics-kernel
 RUN --mount=type=secret,id=proxy_ca \
     set -eux; \
     if [ -s /run/secrets/proxy_ca ]; then export SSL_CERT_FILE=/run/secrets/proxy_ca; \
@@ -15,6 +16,7 @@ RUN --mount=type=secret,id=proxy_ca \
     # Seed a configured image kernel first so it cannot fall back to host uname.
     apt-get install -y --no-install-recommends initramfs-tools linux-generic-hwe-24.04; \
     xargs -r apt-get install -y --no-install-recommends < /tmp/livara-packages.txt; \
+    bash /usr/lib/livara/verify-graphics-kernel; \
     apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/*; \
     rm -f /etc/apt/apt.conf.d/99livara-build-ca /usr/sbin/policy-rc.d
 

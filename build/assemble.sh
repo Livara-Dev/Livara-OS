@@ -11,7 +11,7 @@ install -d "$rootfs/dev" "$rootfs/proc" "$rootfs/sys" "$rootfs/run"
 printf 'livara\n' > "$rootfs/etc/hostname"
 printf '127.0.0.1 localhost\n127.0.1.1 livara\n::1 localhost ip6-localhost ip6-loopback\n' > "$rootfs/etc/hosts"
 mkdir -p "$iso_dir/casper" "$iso_dir/boot/grub" "$iso_dir/.disk" /output
-kernel="$(find "$rootfs/boot" -maxdepth 1 -name 'vmlinuz-*' -printf '%f\n' | sort -V | tail -1)"
+kernel="$(find "$rootfs/boot" -maxdepth 1 -type f -name 'vmlinuz-[0-9]*' -printf '%f\n' | sort -V | tail -1)"
 test -n "$kernel"
 cp "$rootfs/boot/$kernel" "$iso_dir/casper/vmlinuz"
 cp "$rootfs/boot/initrd.img-${kernel#vmlinuz-}" "$iso_dir/casper/initrd"
