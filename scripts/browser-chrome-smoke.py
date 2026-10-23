@@ -93,7 +93,7 @@ def main():
                 # configured replacement; typing about:newtab is a different path.
                 handles=client.call('WebDriver:GetWindowHandles')
                 before=set(handles.get('value',handles) if isinstance(handles,dict) else handles)
-                client.script('(window.wrappedJSObject || window).BrowserOpenTab(); return true;')
+                client.script('document.getElementById("cmd_newNavigatorTab").doCommand(); return true;')
                 deadline=time.monotonic()+20
                 while True:
                     handles=client.call('WebDriver:GetWindowHandles')
