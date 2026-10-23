@@ -1,0 +1,8 @@
+{
+  "run_id": 39961526822,
+  "source_sha": "0481305010d8fee33d7a27a85b72179a95718f20",
+  "workflow": "Qualify compiled Livara browser UI",
+  "conclusion": "failure",
+  "url": "https://github.com/Livara-Dev/Livara-OS/actions/runs/39961526822",
+  "scope": "Original test captures/reports. Failure captures do not establish successful qualification."
+}
