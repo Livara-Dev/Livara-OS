@@ -10,6 +10,9 @@ on:
         description: Artifact containing original PNG and JSON test evidence
         required: true
         type: string
+  workflow_run:
+    workflows: [Build and test Livara Code, Qualify compiled Livara browser UI, 'Build, boot-test and publish Livara ISO']
+    types: [completed]
 permissions:
   contents: write
   actions: read
@@ -18,6 +21,10 @@ concurrency:
   cancel-in-progress: false
 jobs:
   proof:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    env:
+      PROOF_RUN: ${{ inputs.run_id || github.event.workflow_run.id }}
+      PROOF_ARTIFACT: ${{ inputs.artifact_name || (github.event.workflow_run.name == 'Build and test Livara Code' && format('code-build-logs-{0}', github.event.workflow_run.run_attempt)) || (github.event.workflow_run.name == 'Qualify compiled Livara browser UI' && 'browser-chrome-proof') || 'iso-build-and-boot-proof' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -27,13 +34,13 @@ jobs:
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           github-token: ${{ github.token }}
-          run-id: ${{ inputs.run_id }}
-          name: ${{ inputs.artifact_name }}
+          run-id: ${{ env.PROOF_RUN }}
+          name: ${{ env.PROOF_ARTIFACT }}
           path: proof-input
       - name: Publish only original PNG captures and qualification JSON
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          PROOF_RUN: ${{ inputs.run_id }}
+          PROOF_RUN: ${{ env.PROOF_RUN }}
           PROOF_DIRECTORY: ${{ github.workspace }}/proof-input
         run: python3 scripts/publish-ci-proof.py
