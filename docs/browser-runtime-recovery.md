@@ -1,0 +1,11 @@
+# Hosted browser runtime qualification
+
+The full native browser source compile and candidate upload succeeded in [run 39940428897](https://github.com/Livara-Dev/Livara-OS/actions/runs/39940428897). The later loopback-page launch test timed out after 120 seconds. The candidate was preserved, so subsequent tests reuse its compiled executable and Gecko engine.
+
+The launch test passed an explicit Firefox profile directory without creating it. It now creates that private directory before launch and installs the same narrow executable-specific AppArmor user-namespace allowance used by the editor test on Ubuntu hosted runners. The browser sandbox stays enabled. In [run 39961526822](https://github.com/Livara-Dev/Livara-OS/actions/runs/39961526822), the corrected real browser passed DOM, JavaScript, storage and canvas checks.
+
+That run also exposed a missing Livara toolbar button. Firefox's CustomizableUI.getWidget can return a wrapper for an unregistered XUL widget, so a truthiness check skipped API widget creation. The source now checks the widget provider instead. The existing source-built package can be refreshed with the current Livara JavaScript resource and requalified; the native binary and Gecko engine hashes are verified unchanged and recorded in livara-chrome-update.json. Unrelated resources are preserved, and generated JavaScript bytecode is rebuilt at runtime. The replacement is performed on the packaged application before launch, not injected by the browser test.
+
+[Run 39962042793](https://github.com/Livara-Dev/Livara-OS/actions/runs/39962042793) passed the engine checks, toolbar initialization, onion-DNS policy and live appearance preference checks. Its New Tab test compared Marionette window handles in chrome context while looking for a new content tab. The test now compares tab handles in content context. The latest qualification run must pass all remaining dashboard and panel checks before its artifact is eligible for ISO assembly.
+
+These are application runtime tests under Xvfb/Openbox. They do not qualify a booted ISO, physical graphics hardware, Secure Boot or encrypted installation. Historical failed runs remain visible; a separate successful qualification run is required for the release pipeline.
