@@ -1,0 +1,21 @@
+{
+  "package_sha256": "81d346b8a15b6707e74d0e7526762fa053d30b49213867d4ee3097afebb3e71c",
+  "test_base": "ubuntu:24.04, disposable Docker container, network disabled",
+  "actual_deb_unpack_passed": true,
+  "actual_deb_reunpack_passed": true,
+  "vendor_fixture_upgrade_preserved_livara_aliases": true,
+  "removal_restored_latest_vendor_launchers": true,
+  "all_four_diversions_removed_after_removal": true,
+  "vendor_payload_overlap_audit": {
+    "calamares_3.3.5-0ubuntu4_amd64.deb": [],
+    "epiphany-browser-data_46.5-0ubuntu1_all.deb": [],
+    "gnome-control-center_1%3a46.7-0ubuntu0.24.04.6_amd64.deb": [
+      "usr/share/applications/org.gnome.Settings.desktop"
+    ],
+    "gnome-system-monitor_46.0-1build1_amd64.deb": [
+      "usr/share/applications/org.gnome.SystemMonitor.desktop"
+    ],
+    "gnome-terminal-data_3.52.0-1ubuntu2_all.deb": []
+  },
+  "scope": "Real Livara DEB unpack/re-unpack/removal against a disposable vendor-ownership fixture. This does not establish full dependency configuration or ISO boot success."
+}

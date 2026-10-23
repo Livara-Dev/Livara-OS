@@ -108,6 +108,21 @@ Description: Livara desktop control center and security workspace
  Native GTK desktop app, read-only system checks, SHA-256 verification,
  evidence workspaces, and an isolated Kali Linux toolbox.
 EOF
+# Keep distribution-owned launcher files under package-managed diversions.
+# A vendor package update then refreshes its saved launcher instead of replacing
+# Livara's alias; removing Livara restores the current vendor launcher.
+cat > "$staging_dir/DEBIAN/preinst" <<'EOF'
+#!/bin/sh
+set -e
+case "$1" in
+  install|upgrade)
+    for name in org.gnome.Epiphany org.gnome.Settings org.gnome.SystemMonitor org.gnome.Terminal; do
+      path="/usr/share/applications/$name.desktop"
+      dpkg-divert --package livara-desktop --add --rename --divert "$path.livara-vendor" "$path"
+    done
+    ;;
+esac
+EOF
 cat > "$staging_dir/DEBIAN/postinst" <<'EOF'
 #!/bin/sh
 set -e
@@ -125,13 +140,19 @@ EOF
 cat > "$staging_dir/DEBIAN/postrm" <<'EOF'
 #!/bin/sh
 set -e
-if [ "$1" = remove ] || [ "$1" = purge ]; then
+if [ "$1" = remove ] || [ "$1" = purge ] || [ "$1" = abort-install ]; then
+    for name in org.gnome.Epiphany org.gnome.Settings org.gnome.SystemMonitor org.gnome.Terminal; do
+        path="/usr/share/applications/$name.desktop"
+        if [ "$(dpkg-divert --listpackage "$path")" = livara-desktop ]; then
+            dpkg-divert --package livara-desktop --remove --rename --divert "$path.livara-vendor" "$path"
+        fi
+    done
     if command -v glib-compile-schemas >/dev/null 2>&1; then
         glib-compile-schemas /usr/share/glib-2.0/schemas
     fc-cache -f /usr/share/fonts/truetype/livara
     fi
 fi
 EOF
-chmod 0755 "$staging_dir/DEBIAN/postinst" "$staging_dir/DEBIAN/postrm"
+chmod 0755 "$staging_dir/DEBIAN/preinst" "$staging_dir/DEBIAN/postinst" "$staging_dir/DEBIAN/postrm"
 dpkg-deb --root-owner-group --build "$staging_dir" "$output_dir/livara-desktop_${version}_all.deb"
 
