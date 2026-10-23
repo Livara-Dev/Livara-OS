@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "run_id": 39989050633,
+  "workflow_url": "https://github.com/Livara-Dev/Livara-OS/actions/runs/39989050633",
+  "source_sha": "093dd528b10e03e51915acf128cba67768ec1d85",
+  "release_tag": "v0.1.0-preview.15.1",
+  "release_url": "https://github.com/Livara-Dev/Livara-OS/releases/tag/v0.1.0-preview.15.1",
+  "published_at": "2026-10-23T17:13:19Z",
+  "iso": {
+    "name": "livara-os-0.1.0-amd64.iso",
+    "bytes": 3566235648,
+    "sha256": "af4165ffb3aa3cbf5a4b0113ea56860b590d0176480e5a586605582c045531ac"
+  },
+  "assets": [
+    {
+      "name": "Join-Livara-ISO.bat",
+      "bytes": 909,
+      "digest": "sha256:164577606e9cc5c1f96beee65e389a85be93e1348b259398e044273d960bd6df"
+    },
+    {
+      "name": "Join-Livara-ISO.sh",
+      "bytes": 431,
+      "digest": "sha256:6ba608bb35fd7e62a27a51ab7159ca6b4bfb572e4d850e36630ec5ff6e4e8a64"
+    },
+    {
+      "name": "livara-os-0.1.0-amd64.iso.001",
+      "bytes": 1900000000,
+      "digest": "sha256:5a492ec624d37069e769932897ae28825996398fceb6b9b63e7f7867188819f1"
+    },
+    {
+      "name": "livara-os-0.1.0-amd64.iso.002",
+      "bytes": 1666235648,
+      "digest": "sha256:3b9f096633640d6a2866dfcc2c6a87734c2a0c7d20e84b33ca02c1970dbdb4fb"
+    },
+    {
+      "name": "livara-os-0.1.0-amd64.iso.sha256",
+      "bytes": 92,
+      "digest": "sha256:c4de83412aeb757d6fdf8dda77a0d7cb4c168de3ecdf156f72b74d74b025bdc5"
+    },
+    {
+      "name": "livara-os-0.1.0-packages.txt",
+      "bytes": 47214,
+      "digest": "sha256:23531aa0f97d0b1de5e811ecfd8bc863ff881679e37f097c216843a9599772c3"
+    },
+    {
+      "name": "README.txt",
+      "bytes": 981,
+      "digest": "sha256:5b973d271184c61a3cd207cf54434e1765cf7b08062f471419771f2960e85b54"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 537,
+      "digest": "sha256:5f701898ba3f5ce5aa2647be9919c83b033a38841c2815c38f2b2edf9865aa57"
+    },
+    {
+      "name": "SHA256SUMS",
+      "bytes": 192,
+      "digest": "sha256:06a04f18bef2da895dfdd3ebca3075d30dfa7e95315f4110343d83225ebe6c73"
+    }
+  ],
+  "compiled_application_runs": {
+    "browser": 39964210008,
+    "code": 39940915546
+  },
+  "boot_tests": {
+    "bios": {
+      "result": {
+        "firmware": "bios",
+        "safe_graphics": false,
+        "desktop_only": false,
+        "passed": true,
+        "seconds": 549,
+        "grub_entry_selected": true
+      },
+      "checkpoints": {
+        "LIVARA_DESKTOP_OK": true,
+        "LIVARA_CENTER_OK": true,
+        "LIVARA_GLASS_AND_EXTRA_TOOLS_OK": true,
+        "LIVARA_DEFAULTS_OK": true,
+        "LIVARA_APPARMOR_OK": true,
+        "LIVARA_KALI_OK": true,
+        "LIVARA_SELFTEST_PASS": true
+      }
+    },
+    "uefi": {
+      "result": {
+        "firmware": "uefi",
+        "safe_graphics": false,
+        "desktop_only": false,
+        "passed": true,
+        "seconds": 577,
+        "grub_entry_selected": true
+      },
+      "checkpoints": {
+        "LIVARA_DESKTOP_OK": true,
+        "LIVARA_CENTER_OK": true,
+        "LIVARA_GLASS_AND_EXTRA_TOOLS_OK": true,
+        "LIVARA_DEFAULTS_OK": true,
+        "LIVARA_APPARMOR_OK": true,
+        "LIVARA_KALI_OK": true,
+        "LIVARA_SELFTEST_PASS": true
+      }
+    }
+  },
+  "scope": "Real ISO under QEMU TCG: x86-64, 4 GiB RAM, two virtual CPUs. Both firmware modes run the full live self-test including rootless offline Kali. No physical GPU, Secure Boot, disk installation/recovery or Tor circuit certification."
+}

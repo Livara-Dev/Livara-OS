@@ -72,7 +72,7 @@ sudo apt-get install linux-generic-hwe-24.04 \
   linux-modules-nvidia-580-open-generic-hwe-24.04 nvidia-driver-580-open nvidia-prime
 ```
 
-Save work and reboot after a successful install. Livara currently supplies a live preview and no disk installer; this repair path also serves users installing the Livara desktop package on an existing supported Ubuntu desktop. A live session uses the driver built into its image. Rebuild the source image to change that driver instead of installing another driver into its temporary overlay.
+Save work and reboot after a successful install. The preview includes a Calamares configuration whose disk installation and reboot path remain unqualified; this repair path also serves users installing the Livara desktop package on an existing supported Ubuntu desktop. A live session uses the driver built into its image. Rebuild the source image to change that driver instead of installing another driver into its temporary overlay.
 
 Do not combine NVIDIA's `.run` installer with this APT-managed stack. Do not disable GSP firmware for the open kernel modules. When a new GPU requires a newer driver branch than 580, update the driver, userspace, precompiled-module metapackages, tests, and documentation together rather than claiming support based solely on its RTX label.
 
