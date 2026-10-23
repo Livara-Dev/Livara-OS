@@ -1,0 +1,8 @@
+{
+  "firmware": "bios",
+  "safe_graphics": false,
+  "desktop_only": false,
+  "passed": true,
+  "seconds": 549,
+  "grub_entry_selected": true
+}
