@@ -11,7 +11,7 @@ bash scripts/build-browser.sh
 python3 scripts/prepare-tor-browser.py dist/forks
 bash packaging/build-deb.sh
 mkdir -p dist .build/rootfs
-build_args=()
+build_args=(--build-arg "LIVARA_APT_REFRESH=$(date -u +%Y-%m-%d)")
 # Standard public trust bundle, passed transiently rather than baked into the OS.
 if [[ -n "${CODEX_PROXY_CERT:-}" && -f "${CODEX_PROXY_CERT}" ]]; then
   build_args+=(--secret "id=proxy_ca,src=/etc/ssl/certs/ca-certificates.crt")

@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
 ARG UBUNTU_BASE=ubuntu:24.04@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac
 FROM ${UBUNTU_BASE} AS desktop
+ARG LIVARA_APT_REFRESH=manual
 ENV DEBIAN_FRONTEND=noninteractive
 COPY build/packages.txt /tmp/livara-packages.txt
 RUN --mount=type=secret,id=proxy_ca \
@@ -8,7 +9,8 @@ RUN --mount=type=secret,id=proxy_ca \
     if [ -s /run/secrets/proxy_ca ]; then export SSL_CERT_FILE=/run/secrets/proxy_ca; \
       printf 'Acquire::https::CaInfo "/run/secrets/proxy_ca";\n' > /etc/apt/apt.conf.d/99livara-build-ca; fi; \
     printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d; chmod +x /usr/sbin/policy-rc.d; \
-    apt-get update; \
+    printf 'APT refresh: %s\n' "$LIVARA_APT_REFRESH"; \
+    apt-get update; apt-get dist-upgrade -y; \
     xargs -r apt-get install -y --no-install-recommends < /tmp/livara-packages.txt; \
     apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/*; \
     rm -f /etc/apt/apt.conf.d/99livara-build-ca /usr/sbin/policy-rc.d

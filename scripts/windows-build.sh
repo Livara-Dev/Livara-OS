@@ -132,7 +132,7 @@ printf 'Downloading and verifying the unchanged official Tor Browser bundle...\n
 python3 scripts/prepare-tor-browser.py /project/dist/forks
 test -s /project/dist/forks/livara-tor-browser-linux-x64.tar.xz
 printf 'Both source-built applications and the verified official Tor Browser bundle are ready for the live filesystem.\n'
-build_args=()
+build_args=(--build-arg "LIVARA_APT_REFRESH=$(date -u +%Y-%m-%d)")
 if [[ -n "${LIVARA_BUILD_CA:-}" ]]; then
   test -s "$LIVARA_BUILD_CA" || { echo 'The supplied build CA bundle is missing or empty.' >&2; exit 1; }
   build_args+=(--secret "id=proxy_ca,src=$LIVARA_BUILD_CA")

@@ -1,6 +1,7 @@
 ARG KALI_BASE=docker.io/kalilinux/kali-rolling:latest@sha256:4be87f78671419c13dcf4f207ead1cfc0de178ea281b3f69c0f49b69ba4e79b1
 FROM ${KALI_BASE}
 ARG LIVARA_PROFILE=core
+ARG LIVARA_APT_REFRESH=manual
 ENV DEBIAN_FRONTEND=noninteractive
 # Separate distribution: never add Kali repositories to the Ubuntu host.
 RUN set -eux; \
@@ -17,7 +18,8 @@ RUN set -eux; \
       *) exit 2 ;; \
     esac; \
     printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d; chmod +x /usr/sbin/policy-rc.d; \
-    apt-get update; \
+    printf 'APT refresh: %s\n' "$LIVARA_APT_REFRESH"; \
+    apt-get update; apt-get dist-upgrade -y; \
     recommends=--no-install-recommends; \
     if [ "$LIVARA_PROFILE" = full ]; then recommends=--install-recommends; fi; \
     apt-get install -y "$recommends" \

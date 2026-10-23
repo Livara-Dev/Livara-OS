@@ -1,0 +1,104 @@
+name: Build, boot-test and publish Livara ISO
+on:
+  workflow_dispatch:
+    inputs:
+      browser_run:
+        description: Successful browser build run ID
+        required: true
+        type: string
+      code_run:
+        description: Successful editor build run ID
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: livara-iso-release
+  cancel-in-progress: false
+jobs:
+  iso:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 350
+    permissions:
+      contents: write
+      actions: read
+    env:
+      LIVARA_BUILD_JOBS: '2'
+      DOCKER_BUILDKIT: '1'
+      BUILDKIT_PROGRESS: plain
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify source application build runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          BROWSER_RUN: ${{ inputs.browser_run }}
+          CODE_RUN: ${{ inputs.code_run }}
+        run: |
+          set -euo pipefail
+          for run in "$BROWSER_RUN" "$CODE_RUN"; do
+            [[ $run =~ ^[0-9]+$ ]]
+            test "$(gh api repos/$GH_REPO/actions/runs/$run --jq .conclusion)" = success
+          done
+          mkdir -p dist/provenance
+          gh api repos/$GH_REPO/actions/runs/$BROWSER_RUN > dist/provenance/browser-run.json
+          gh api repos/$GH_REPO/actions/runs/$CODE_RUN > dist/provenance/code-run.json
+      - name: Prepare disposable hosted runner
+        run: |
+          set -euo pipefail
+          test "$RUNNER_ENVIRONMENT" = github-hosted
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python3-fonttools libharfbuzz-bin gnupg gpgv
+          df -h
+          available=$(df --output=avail -B1 /var/lib/docker | tail -1)
+          test "$available" -ge 53687091200 || { echo 'At least 50 GiB free required for assembly and boot tests.' >&2; exit 1; }
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.browser_run }}
+          name: livara-browser-linux-x64
+          path: dist/forks
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.code_run }}
+          name: livara-code-linux-x64
+          path: dist/forks
+      - name: Build ISO and boot BIOS / UEFI virtual machines
+        run: |
+          set -euo pipefail
+          mkdir -p dist/logs
+          bash scripts/assemble-ci-iso.sh 2>&1 | tee dist/logs/iso-build-and-boot.log
+      - name: Prepare verified release download
+        run: python3 scripts/package-iso-release.py dist/livara-os-0.1.0-amd64.iso dist/release
+      - name: Publish boot-tested preview release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: v0.1.0-preview.${{ github.run_number }}.${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          gh release create "$RELEASE_TAG" --draft --prerelease --target "$GITHUB_SHA" --title "Livara OS x86-64 preview — build $GITHUB_RUN_NUMBER" --notes-file dist/release/README.txt
+          gh release upload "$RELEASE_TAG" dist/release/* dist/livara-os-0.1.0-packages.txt
+          gh release edit "$RELEASE_TAG" --draft=false
+      - name: Preserve build, package and boot proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: iso-build-and-boot-proof
+          path: |
+            dist/logs/
+            dist/provenance/
+            dist/livara-os-0.1.0-packages.txt
+            .build/boot-bios/*.json
+            .build/boot-bios/*.png
+            .build/boot-bios/*.log
+            .build/boot-uefi/*.json
+            .build/boot-uefi/*.png
+            .build/boot-uefi/*.log
+          if-no-files-found: warn
+          retention-days: 30

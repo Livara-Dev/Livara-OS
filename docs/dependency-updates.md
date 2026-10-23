@@ -1,0 +1,9 @@
+# Dependency update policy and current audit
+
+The latest stable Zen release checked on 23 October 2026 is 1.23.4b, which the browser fork already uses. Its chosen Firefox engine is 158.0.1; moving independently to a newer Firefox engine requires porting and rebuilding Zen's patches. The latest stable Code source is 1.143.1, released 22 October; Livara has been updated from 1.143.0 to that release, including its changed remote Node-header target 24.22.1. The official Tor download metadata still advertises 15.0.26, matching the verified, unchanged bundled version.
+
+The build uses the upstream-required compiler/toolchain versions. Node Current 26.12.1 and npm 12.2.1 are newer than some build tools, but forcing unrelated major versions into upstream's lockfile is not a supported dependency update. Deprecated transitive npm build packages must be tracked in the upstream dependency graph; their warnings alone do not establish a vulnerability or that a shipped OS app is obsolete. The project does not claim that every transitive package is the newest release.
+
+Ubuntu 24.04 LTS remains the supported desktop base. New images perform a signed `apt-get update`, full package upgrade and package installation. Build entry points include a daily APT refresh argument, so an old Docker package layer does not indefinitely hide security updates. The separate Kali rolling image is also fully upgraded from its signed repositories. A completed ISO release includes the actual installed package inventory. The existing unattended security-update configuration remains enabled.
+
+The source browser/editor and their pinned toolchains must pass compilation and runtime checks after updates. The hosted ISO job consumes those compiled artifacts, builds the OS, requires BIOS and UEFI QEMU boot/self-tests, and only then publishes a preview release. These tests do not qualify physical hardware, Secure Boot or encrypted disk installation.
