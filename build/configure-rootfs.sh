@@ -90,7 +90,7 @@ driver = "overlay"
 mount_program = "/usr/bin/fuse-overlayfs"
 EOF
 printf 'fuse\n' > /etc/modules-load.d/livara.conf
-systemctl enable NetworkManager.service gdm3.service apt-daily.timer apt-daily-upgrade.timer
+systemctl enable apparmor.service NetworkManager.service gdm3.service apt-daily.timer apt-daily-upgrade.timer
 systemctl set-default graphical.target
 # The toolbox is daemonless and rootless; rootful API/auto-update jobs are unused.
 systemctl disable podman.service podman.socket podman-auto-update.service \
@@ -150,7 +150,8 @@ profile livara-tor-browser-private @{HOME}/.local/share/livara/tor-browser/*/tor
 }
 EOF
   if command -v apparmor_parser >/dev/null; then
-    for livara_policy in /etc/apparmor.d/livara-code /etc/apparmor.d/livara-browser /etc/apparmor.d/livara-tor-browser; do
+    for livara_policy in /etc/apparmor.d/podman /etc/apparmor.d/livara-podman /etc/apparmor.d/livara-code /etc/apparmor.d/livara-browser /etc/apparmor.d/livara-tor-browser; do
+      [[ -f "$livara_policy" ]] || continue
       apparmor_parser --skip-kernel-load --skip-read-cache "$livara_policy"
     done
   fi

@@ -7,6 +7,7 @@ install -D -m 0755 /project/build/live-selftest.sh "$rootfs/usr/lib/livara/live-
 install -m 0644 /project/build/livara-selftest.service "$rootfs/etc/systemd/system/"
 install -m 0644 /project/build/configure-rootfs.sh "$rootfs/tmp/livara-configure.sh"
 install -D -m 0644 /project/build/verify-graphics-kernel.sh "$rootfs/usr/lib/livara/verify-graphics-kernel"
+install -D -m 0644 /project/build/apparmor-live.conf "$rootfs/etc/systemd/system/apparmor.service.d/60-livara-live.conf"
 mount --bind /dev "$rootfs/dev"
 mount -t proc proc "$rootfs/proc"
 mount --rbind /sys "$rootfs/sys"

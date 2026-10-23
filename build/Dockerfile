@@ -25,9 +25,10 @@ COPY dist/forks/livara-code-linux-x64.tar.xz dist/forks/livara-browser-linux-x64
 COPY build/install-forks.py /tmp/livara-install-forks.py
 RUN python3 /tmp/livara-install-forks.py /tmp/livara-forks \
     && rm -rf /tmp/livara-forks /tmp/livara-install-forks.py
-COPY dist/livara-desktop_0.1.0_all.deb build/configure-rootfs.sh build/live-selftest.sh build/livara-selftest.service /tmp/livara-build/
+COPY dist/livara-desktop_0.1.0_all.deb build/configure-rootfs.sh build/live-selftest.sh build/livara-selftest.service build/apparmor-live.conf /tmp/livara-build/
 RUN install -D -m 0755 /tmp/livara-build/live-selftest.sh /usr/lib/livara/live-selftest \
     && install -m 0644 /tmp/livara-build/livara-selftest.service /etc/systemd/system/livara-selftest.service \
+    && install -D -m 0644 /tmp/livara-build/apparmor-live.conf /etc/systemd/system/apparmor.service.d/60-livara-live.conf \
     && dpkg -i /tmp/livara-build/livara-desktop_0.1.0_all.deb \
     && bash /tmp/livara-build/configure-rootfs.sh && rm -rf /tmp/livara-build
 CMD ["/sbin/init"]

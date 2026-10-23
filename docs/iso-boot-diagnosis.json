@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "run_id": 39983284141,
+  "source_sha": "b92b049d2a660e264c7b09a21cad0a2d8144aa9c",
+  "iso_bytes": 3566157824,
+  "checks": {
+    "image_assembled": true,
+    "image_sha256_check": true,
+    "nvidia_modules_and_boot_kernel": true,
+    "branding_audit": true,
+    "bios_kernel_and_live_session": true,
+    "gnome_desktop": true,
+    "livara_control_center": true,
+    "livara_glass_active": true,
+    "appearance_defaults": true,
+    "extra_native_tools": true,
+    "offline_kali": false,
+    "complete_bios_test": false,
+    "uefi_test_ran": false,
+    "published": false
+  },
+  "failure": "Podman could not clone its rootless user namespace. The AppArmor vendor service skips live media via ConditionPathExists=!/rofs/etc/apparmor.d, leaving its Podman userns profile unloaded.",
+  "repair": "Load AppArmor during Livara live boot using a service drop-in that resets the live-media path conditions. Preserve ConditionSecurity and writable security-interface checks; validate profile presence in the live test.",
+  "repair_checks_before_retry": [
+    "Real Ubuntu AppArmor podman profile syntax parsed successfully",
+    "systemd-analyze cat-config discovers the vendor unit and Livara override"
+  ],
+  "scope": "Real BIOS live-boot evidence from the failed ISO run. The repair requires another complete BIOS and UEFI qualification."
+}

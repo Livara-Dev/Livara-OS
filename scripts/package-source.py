@@ -31,7 +31,7 @@ REQUIRED_FILES = (
     "README.md", "LICENSE", "Makefile", "pyproject.toml", ".dockerignore",
     ".gitattributes", "Build-Livara.bat", "Build-Livara.ps1",
     "build/Dockerfile", "build/windows-builder.Dockerfile", "build/assemble.sh", "build/install-forks.py",
-    "build/configure-rootfs.sh", "build/verify-graphics-kernel.sh", "build/packages.txt", "build/grub.cfg",
+    "build/configure-rootfs.sh", "build/verify-graphics-kernel.sh", "build/apparmor-live.conf", "build/packages.txt", "build/grub.cfg",
     "packaging/build-deb.sh", "scripts/windows-build.sh", "scripts/package-source.py",
     "scripts/assemble-ci-iso.sh", "scripts/boot-ci-iso.sh",
     "scripts/capture-native-gallery.py", "scripts/settings-ui-smoke.py", "scripts/app-icons-smoke.py",

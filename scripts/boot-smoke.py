@@ -131,6 +131,13 @@ def main():
                         from PIL import Image
                         Image.open(output / "progress.ppm").save(output / "progress.png")
                     next_screenshot = time.monotonic() + 60
+        if not passed and not args.safe_graphics:
+            # Progress samples can miss the actual failure between two polls.
+            # Retain the VM's diagnostic tail in the Actions log as well.
+            clean = re.sub(rb"\x1b\[[0-?]*[ -/]*[@-~]", b"", bytes(transcript))
+            lines = clean.decode(errors="replace").replace("\r", "").splitlines()
+            print("VM failure diagnostics (last 240 lines):", flush=True)
+            print("\n".join(lines[-240:])[-48000:], flush=True)
         # Allow a pending desktop frame to finish before capturing it.
         time.sleep(2)
         ppm = output / "desktop.ppm"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Runs only when the live image is booted with livara.selftest on its kernel line.
 set -euo pipefail
-trap 'echo LIVARA_SELFTEST_FAIL line=$LINENO; journalctl -b _COMM=gnome-shell --no-pager -n 60; journalctl -b -p warning --no-pager -n 40; echo LIVARA_SELFTEST_LOG_END; exit 1' ERR
+trap 'echo LIVARA_SELFTEST_FAIL line=$LINENO; journalctl -b -u apparmor --no-pager -n 40; journalctl -b -k --no-pager -n 40; journalctl -b _COMM=gnome-shell --no-pager -n 60; journalctl -b -p warning --no-pager -n 40; echo LIVARA_SELFTEST_LOG_END; exit 1' ERR
 echo LIVARA_SELFTEST_START
 test -f /cdrom/casper/filesystem.squashfs
 test "$(. /etc/os-release; printf '%s' "$ID")" = livara
@@ -47,6 +47,10 @@ test -f /home/livara/.config/livara/live-initialized
 "${user_cmd[@]}" gsettings get org.gnome.shell.extensions.dash-to-dock dock-position | grep BOTTOM
 "${user_cmd[@]}" gsettings get org.gnome.desktop.background picture-uri | grep '/livara/livara-glass.png'
 echo LIVARA_DEFAULTS_OK
+systemctl is-active apparmor.service
+aa-enabled
+grep -E '(^podman |^/usr/bin/podman )' /sys/kernel/security/apparmor/profiles
+echo LIVARA_APPARMOR_OK
 if [[ -f /usr/share/livara/toolbox/kali-core.tar.gz ]]; then
   "${user_cmd[@]}" livara toolbox setup
   "${user_cmd[@]}" livara toolbox run -- cat /etc/os-release
