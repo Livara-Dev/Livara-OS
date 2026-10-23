@@ -1,0 +1,35 @@
+{
+  "version": "Mozilla Livara 1.23.4b",
+  "checks": {
+    "compiled_chrome_initialized": {
+      "ui": "object",
+      "button": true,
+      "controls": 3,
+      "glass": "true"
+    },
+    "onion_dns_locked": true,
+    "appearance_readback": {
+      "radius": "26px",
+      "motion": "true"
+    },
+    "new_tab": {
+      "title": "Livara \u00b7 Start",
+      "uri": "chrome://browser/content/livara/start.xhtml",
+      "dashboard": true,
+      "notes": true
+    },
+    "dashboard_initialization": {
+      "ready": "complete",
+      "clock": "01:50 PM",
+      "mode": "Normal session \u00b7 onion requests blocked",
+      "services": "object"
+    },
+    "notes_saved": "SAVED LOCALLY",
+    "notes_persisted": "\u0633\u0644\u0627\u0645 \u0644\u06cc\u0648\u0627\u0631\u0627 \u2014 native test",
+    "focus_started": "Pause focus",
+    "appearance_panel": true
+  },
+  "sandbox_disabled": false,
+  "automation": "Marionette enabled only in this private test profile",
+  "context": "Actual compiled native browser with Openbox/Xvfb. No Tor circuit or physical hardware claim."
+}
