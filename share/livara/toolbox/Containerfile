@@ -1,10 +1,17 @@
+# syntax=docker/dockerfile:1
 ARG KALI_BASE=docker.io/kalilinux/kali-rolling:latest@sha256:4be87f78671419c13dcf4f207ead1cfc0de178ea281b3f69c0f49b69ba4e79b1
 FROM ${KALI_BASE}
 ARG LIVARA_PROFILE=core
 ARG LIVARA_APT_REFRESH=manual
 ENV DEBIAN_FRONTEND=noninteractive
 # Separate distribution: never add Kali repositories to the Ubuntu host.
-RUN set -eux; \
+RUN --mount=type=secret,id=proxy_ca \
+    set -eux; \
+    if [ -s /run/secrets/proxy_ca ]; then printf 'Acquire::https::CaInfo "/run/secrets/proxy_ca";\n' > /etc/apt/apt.conf.d/99livara-build-ca; fi; \
+    printf 'Acquire::Retries "3";\nAcquire::http::Timeout "20";\nAcquire::https::Timeout "20";\n' > /etc/apt/apt.conf.d/80livara-downloads; \
+    for source in /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do \
+      if [ -f "$source" ]; then sed -i 's|https\?://http.kali.org/kali|http://kali.download/kali|g' "$source"; fi; \
+    done; \
     case "$LIVARA_PROFILE" in \
       core) extra='' ;; \
       web) extra='kali-tools-web' ;; \
@@ -19,6 +26,10 @@ RUN set -eux; \
     esac; \
     printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d; chmod +x /usr/sbin/policy-rc.d; \
     printf 'APT refresh: %s\n' "$LIVARA_APT_REFRESH"; \
+    apt-get update; apt-get install -y --no-install-recommends ca-certificates; \
+    for source in /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do \
+      if [ -f "$source" ]; then sed -i 's|http://kali.download/kali|https://kali.download/kali|g' "$source"; fi; \
+    done; \
     apt-get update; apt-get dist-upgrade -y; \
     recommends=--no-install-recommends; \
     if [ "$LIVARA_PROFILE" = full ]; then recommends=--install-recommends; fi; \
@@ -26,7 +37,7 @@ RUN set -eux; \
       bash ca-certificates nmap dnsutils whois tshark tcpdump iproute2 \
       iputils-ping netcat-openbsd openssl python3 curl git jq file less nano libcap2-bin $extra; \
     getcap -r /usr 2>/dev/null | while read -r executable capabilities; do setcap -r "$executable"; done; \
-    apt-get clean; rm -rf /var/lib/apt/lists/*; rm -f /usr/sbin/policy-rc.d; \
+    apt-get clean; rm -rf /var/lib/apt/lists/*; rm -f /usr/sbin/policy-rc.d /etc/apt/apt.conf.d/99livara-build-ca; \
     printf 'Livara Kali Toolbox · %s\n' "$LIVARA_PROFILE" > /etc/motd
 WORKDIR /work
 CMD ["/bin/bash"]
