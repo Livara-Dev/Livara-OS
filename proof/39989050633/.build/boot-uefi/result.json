@@ -1,0 +1,8 @@
+{
+  "firmware": "uefi",
+  "safe_graphics": false,
+  "desktop_only": false,
+  "passed": true,
+  "seconds": 577,
+  "grub_entry_selected": true
+}
