@@ -115,6 +115,8 @@ def main():
                 client.context('content');time.sleep(2)
                 checks['new_tab']=client.script('return {title:document.title,uri:document.documentURI,dashboard:!!document.getElementById("dashboard"),notes:!!document.getElementById("notes")};')
                 if checks['new_tab']['title']!='Livara · Start' or not checks['new_tab']['dashboard'] or not checks['new_tab']['notes']:raise RuntimeError('Livara new-tab dashboard did not render: '+json.dumps(checks['new_tab']))
+                checks['dashboard_initialization']=client.script('return {ready:document.readyState,clock:document.getElementById("clock").textContent,mode:document.getElementById("network-mode").textContent,services:typeof Services};')
+                print('Dashboard initialization: '+json.dumps(checks['dashboard_initialization']),flush=True)
                 client.script('const note=document.getElementById("notes"); note.value="سلام لیوارا — native test"; note.dispatchEvent(new window.Event("input",{bubbles:true})); return true;')
                 time.sleep(1)
                 checks['notes_saved']=client.script('return document.getElementById("notes-state").textContent;')
@@ -135,6 +137,12 @@ def main():
                 report={'version':version,'checks':checks,'sandbox_disabled':False,'automation':'Marionette enabled only in this private test profile','context':'Actual compiled native browser with Openbox/Xvfb. No Tor circuit or physical hardware claim.'}
                 (out/'qualification.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
             except Exception:
+                if client:
+                    try:
+                        client.context('chrome')
+                        errors=client.script('return Services.console.getMessageArray().filter(e => String(e.message || e.errorMessage).includes("livara") || String(e.sourceName).includes("livara")).slice(-12).map(e => ({message:String(e.message || e.errorMessage),source:String(e.sourceName || ""),line:e.lineNumber || 0}));')
+                        print('Browser diagnostics: '+json.dumps(errors),flush=True)
+                    except Exception as diagnostic:print('Could not retrieve browser diagnostics: '+str(diagnostic),flush=True)
                 try:
                     from PIL import ImageGrab
                     ImageGrab.grab(xdisplay=':96').save(out/'failure-screen.png')
