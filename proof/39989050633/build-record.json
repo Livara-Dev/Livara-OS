@@ -1,0 +1,8 @@
+{
+  "run_id": 39989050633,
+  "source_sha": "093dd528b10e03e51915acf128cba67768ec1d85",
+  "workflow": "Build, boot-test and publish Livara ISO",
+  "conclusion": "success",
+  "url": "https://github.com/Livara-Dev/Livara-OS/actions/runs/39989050633",
+  "scope": "Original test captures/reports. Failure captures do not establish successful qualification."
+}
