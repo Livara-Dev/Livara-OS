@@ -5,6 +5,7 @@ cd "$project_dir"
 docker_cmd=("$project_dir/scripts/docker-local.sh")
 "${docker_cmd[@]}" info >/dev/null
 test "$(uname -m)" = x86_64 || { echo 'This image build requires an x86_64 Linux Docker host.' >&2; exit 1; }
+python3 forks/browser/prepare-toolchains.py --check
 python3 scripts/build-fonts.py
 bash scripts/build-code.sh
 bash scripts/build-browser.sh

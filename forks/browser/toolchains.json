@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "firefox": "158.0.1",
+  "task_id": "EjVk13JnRzGtJTrpJjppFQ",
+  "artifact": "public/build/clang.tar.zst",
+  "sha256": "115862b87b97049ee92b6eaf19837ded48ce4092fae6e7634ac059eb24008bfe",
+  "size": 453558736,
+  "chain_of_trust_sha256": "ae3fa5daf4167705031af08ad70c3c62e3bad0653d5ca66cda1b07cf20875ad8"
+}

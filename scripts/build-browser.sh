@@ -30,7 +30,9 @@ log_dir=${LIVARA_BROWSER_LOG_DIR:-$output_dir/logs}
 mkdir -p "$log_dir"
 log_path="$log_dir/browser-build-$(date -u +%Y%m%dT%H%M%SZ)-$$.log"
 printf 'Compiling the full browser; persistent log: %s\n' "$log_path"
-if ! "$docker_cmd" "${arguments[@]}" "$project_dir" 2>&1 | tee "$log_path"; then
+# Fail before building toolchain images or downloading the large source archive.
+python3 "$project_dir/forks/browser/prepare-toolchains.py" --check 2>&1 | tee "$log_path"
+if ! "$docker_cmd" "${arguments[@]}" "$project_dir" 2>&1 | tee -a "$log_path"; then
     printf 'Browser compilation failed. Full log retained at %s. Existing compiler caches were preserved.\n' "$log_path" >&2
     exit 1
 fi

@@ -98,6 +98,10 @@ for path in root.rglob('*'):
     path.chmod(0o755 if path.suffix == '.sh' or shebang else 0o644)
 PY
 cd /project
+if [[ "$mode" == build ]]; then
+  # Check browser compiler access before spending hours compiling the editor.
+  python3 forks/browser/prepare-toolchains.py --check
+fi
 printf 'Rebuilding Livara font binaries from the editable UFO sources...\n'
 python3 scripts/build-fonts.py
 printf 'Validating local VS Code and Zen fork recipes without downloads...\n'

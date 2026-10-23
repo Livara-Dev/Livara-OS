@@ -92,3 +92,7 @@ The updated recipe fetches Electron and Node header archives from their official
 Download the updated source ZIP, extract the complete folder and run `Build-Livara.bat` again with Docker Desktop in Linux mode. Keep Docker's existing images/cache. Do not run a global Docker prune or upgrade npm merely because the log advertises a new version. Existing work-volume names in the report are diagnostic; they do not prove an ISO was completed.
 
 The fix was tested by downloading and verifying all four pinned header archives and compiling an Electron 43.7.7 native addon through a real npm lifecycle with Docker networking disabled. The exact previously failing `@vscode/deviceid` 0.1.5 package also completed `npm rebuild` offline against the cached Electron headers. All three Node header targets configured offline. This specifically qualifies header cache preparation and npm cache use; it does not establish that the entire editor, browser or ISO build has finished on Windows.
+
+## Mozilla compiler download returns HTTP 403
+
+See [compiler recovery](browser-toolchain-recovery.md). The current full builder checks this dependency before compiling the editor, and caches checksum-verified compiler provenance and archives. Keep existing Docker caches; a network refusal is not fixed by deleting them.

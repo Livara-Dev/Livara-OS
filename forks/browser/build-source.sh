@@ -20,6 +20,9 @@ import json,sys
 m=json.load(open(sys.argv[1]));print(m['upstream']);print(m['commit']);print(m['tag']);print(m['firefox']['source_url']);print(m['firefox']['sha512'])
 PY
 )
+# Fetch and verify the compiler before clone/source extraction and patching.
+export MOZBUILD_STATE_PATH=${MOZBUILD_STATE_PATH:-/home/builder/.mozbuild}
+python3 "$fork_dir/prepare-toolchains.py" --state "$MOZBUILD_STATE_PATH"
 checkout=$work_dir/zen-verified-v2
 if [[ ! -d "$checkout/.git" ]]; then
     git clone --depth=1 --branch "${pinned[2]}" --filter=blob:none "${pinned[0]}" "$checkout"
@@ -58,6 +61,7 @@ npm run import
 # generated source with Livara's maintained branded defaults before compiling.
 install -m 0644 "$fork_dir/branding-pref.js" engine/browser/branding/release/pref/firefox-branding.js
 cd engine
+python3 "$fork_dir/prepare-toolchains.py" --state "$MOZBUILD_STATE_PATH" --engine "$PWD"
 ./mach --no-interactive bootstrap --application-choice browser --no-system-changes
 cd ..
 npm run build -- --jobs "$jobs"

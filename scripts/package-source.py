@@ -55,6 +55,7 @@ REQUIRED_FILES = (
     "build/Dockerfile.code", "build/Dockerfile.browser",
     "scripts/build-code.sh", "scripts/build-browser.sh",
     "forks/code/upstream.json", "forks/browser/upstream.json",
+    "forks/browser/prepare-toolchains.py", "forks/browser/toolchains.json",
     "forks/browser/overlay/src/livara/LivaraWindowControls.js",
     "forks/code/test-features.cjs", "forks/code/test-window-controls.mjs",
     "forks/code/overlay/core/livara.contribution.ts", "forks/code/overlay/core/windowControls.ts",

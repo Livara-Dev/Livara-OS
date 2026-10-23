@@ -15,6 +15,7 @@ assert re.fullmatch(r"[0-9a-f]{128}", manifest["firefox"]["sha512"])
 assert manifest["firefox"]["version"] in manifest["firefox"]["source_url"]
 required = [HERE / path for path in manifest["patches"]] + [
     HERE / "prepare.py", HERE / "build-source.sh", HERE / "package-build.py",
+    HERE / "prepare-toolchains.py", HERE / "toolchains.json",
     HERE / "runtime/livara.cfg", HERE / "runtime/livara-autoconfig.js",
     HERE / "overlay/src/livara/LivaraUI.js", HERE / "overlay/src/livara/jar.inc.mn",
     HERE / "overlay/src/livara/LivaraWindowControls.js",

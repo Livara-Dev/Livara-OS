@@ -1,0 +1,12 @@
+{
+  "upstream": "Mozilla Firefox 158.0.1 actual artifact_commands.py",
+  "task_id": "EjVk13JnRzGtJTrpJjppFQ",
+  "compiler_archive_bytes": 453558736,
+  "compiler_sha256": "115862b87b97049ee92b6eaf19837ded48ce4092fae6e7634ac059eb24008bfe",
+  "actual_upstream_ArtifactRecord_passed_with_network_403": true,
+  "pinned_task_network_calls": 0,
+  "corrupted_provenance_rejected": true,
+  "other_tasks_keep_original_HTTP_errors": true,
+  "matches_upstream_download_cache_filename": true,
+  "scope": "Compiler dependency integration only; no full browser compile/GUI/ISO claim."
+}
