@@ -8,5 +8,13 @@
   "corrupted_provenance_rejected": true,
   "other_tasks_keep_original_HTTP_errors": true,
   "matches_upstream_download_cache_filename": true,
-  "scope": "Compiler dependency integration only; no full browser compile/GUI/ISO claim."
+  "scope": "Compiler dependency integration only; no full browser compile/GUI/ISO claim.",
+  "compiler_executed_version": "clang version 22.1.8 (taskcluster-a7khuLbmThmzkX-Cz-OXmg)",
+  "upstream_artifact_commands_sha256": "e60a55a81d799e2b43eaf8de305e12c0c6026a4e4d517ff49c9a08cf5acde659",
+  "network_preflight_passed_inside_linux_windows_controller_container": true,
+  "python_regression_tests_run": 222,
+  "python_regression_tests_expected_skips": 1,
+  "editor_node_tests_passed": 15,
+  "desktop_contract_checks_passed": true,
+  "context": "Linux Docker controller image and private test caches. Native Windows execution and full browser compilation remain separate."
 }

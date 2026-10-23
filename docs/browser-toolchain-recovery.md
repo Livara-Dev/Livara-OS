@@ -10,7 +10,7 @@ A permanently inaccessible server now stops the early network check with a usefu
 
 The actual 453,558,736-byte official archive was downloaded and matched SHA-256 `115862b87b97049ee92b6eaf19837ded48ce4092fae6e7634ac059eb24008bfe`. Its Clang binary executed and reported 22.1.8. The actual Firefox 158.0.1 `ArtifactRecord` class was exercised with the patch while network requests deliberately raised HTTP 403: the pinned task succeeded without a request, altered local provenance was rejected, and an unrelated task retained its HTTP error. The cached archive name also matched Mozilla's URL-derived cache naming. See [the bounded qualification report](browser-toolchain-qualification.json).
 
-Six regression checks cover cache reuse without network, corrupt metadata, corrupt downloads, bounded persistent-403 handling, guarded/idempotent integration and early-check ordering. These results qualify this dependency recovery only. They do not establish a completed browser build, browser GUI test or bootable ISO.
+Six regression checks cover cache reuse without network, corrupt metadata, corrupt downloads, bounded persistent-403 handling, guarded/idempotent integration and early-check ordering. The complete Linux controller-image check passed 222 Python tests (one expected skip), 15 editor Node tests and the desktop contract checks; its real network preflight also passed. These results qualify this dependency recovery only. They do not establish a completed browser build, browser GUI test or bootable ISO.
 
 ## Apply the repair
 
