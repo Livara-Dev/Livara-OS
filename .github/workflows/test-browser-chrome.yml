@@ -33,6 +33,8 @@ jobs:
           path: dist/forks
       - name: Check archive integrity
         run: cd dist/forks && sha256sum --check livara-browser-linux-x64.tar.xz.sha256
+      - name: Apply current Livara chrome source to the compiled engine
+        run: python3 scripts/refresh-browser-chrome.py dist/forks/livara-browser-linux-x64.tar.xz
       - name: Test real browser DOM, JavaScript, storage and rendering
         run: python3 scripts/browser-runtime-smoke.py dist/forks/livara-browser-linux-x64.tar.xz dist/browser-runtime
       - name: Test real browser chrome, preferences, dashboard and Tor controls

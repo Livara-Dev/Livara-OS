@@ -267,7 +267,7 @@ var LivaraUI = (() => {
     }
     initialized = true;
     const { CustomizableUI } = ChromeUtils.importESModule("moz-src:///browser/components/customizableui/CustomizableUI.sys.mjs");
-    if (!CustomizableUI.getWidget("livara-style-button")) {
+    if (CustomizableUI.getWidget("livara-style-button")?.provider !== CustomizableUI.PROVIDER_API) {
       CustomizableUI.createWidget({
         id: "livara-style-button", type: "button", defaultArea: "nav-bar",
         label: "Livara", tooltiptext: "Customize Livara Browser",
