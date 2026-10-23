@@ -95,9 +95,14 @@ def main():
                 if checks['appearance_readback']!={'radius':'26px','motion':'true'}:raise RuntimeError('Appearance controls did not apply: '+json.dumps(checks['appearance_readback']))
                 # Exercise the actual New Tab action, which uses AboutNewTab's
                 # configured replacement; typing about:newtab is a different path.
+                # Marionette returns browser-window handles in chrome context,
+                # but tab handles in content context. Compare tabs consistently.
+                client.context('content')
                 handles=client.call('WebDriver:GetWindowHandles')
                 before=set(handles.get('value',handles) if isinstance(handles,dict) else handles)
+                client.context('chrome')
                 client.script('document.getElementById("cmd_newNavigatorTab").doCommand(); return true;')
+                client.context('content')
                 deadline=time.monotonic()+20
                 while True:
                     handles=client.call('WebDriver:GetWindowHandles')
