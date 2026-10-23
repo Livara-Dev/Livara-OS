@@ -1,0 +1,52 @@
+name: Publish verified Mozilla compiler cache
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: livara-compiler-cache
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Download and verify original Mozilla compiler and provenance
+        run: python3 forks/browser/prepare-toolchains.py --state "$RUNNER_TEMP/mozbuild"
+      - name: Split verified archive into downloads below 200 MB
+        run: |
+          python3 - <<'PY'
+          import hashlib,importlib.util,json,os
+          from pathlib import Path
+          spec=importlib.util.spec_from_file_location('cache','forks/browser/prepare-toolchains.py');cache=importlib.util.module_from_spec(spec);spec.loader.exec_module(cache)
+          item=cache.manifest();archive,cot=cache.cached_paths(Path(os.environ['RUNNER_TEMP'])/'mozbuild',item)
+          assert archive.stat().st_size==item['size'] and cache.digest(archive)==item['sha256']
+          cache.verify_cot(cot.read_bytes(),item)
+          out=Path('compiler-cache');out.mkdir()
+          checks=[]
+          with archive.open('rb') as stream:
+              index=1
+              while data:=stream.read(180*1024*1024):
+                  name=f'clang.tar.zst.{index:03}';(out/name).write_bytes(data)
+                  checks.append(hashlib.sha256(data).hexdigest()+'  '+name);index+=1
+          (out/cot.name).write_bytes(cot.read_bytes())
+          checks.append(item['chain_of_trust_sha256']+'  '+cot.name)
+          (out/'SHA256SUMS').write_text('\n'.join(checks)+'\n')
+          (out/'README.txt').write_text('Verified Mozilla Clang compiler dependency for Livara source builds. This is not an OS ISO or browser. The builder downloads these parts automatically when Mozilla endpoints are inaccessible. Reassembled archive SHA-256: '+item['sha256']+'\n')
+          Path('compiler-tag.txt').write_text('compiler-'+item['firefox']+'-'+item['task_id'])
+          PY
+      - name: Publish compiler dependency cache
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          tag=$(cat compiler-tag.txt)
+          if ! gh release view "$tag" >/dev/null 2>&1; then
+            gh release create "$tag" --draft --prerelease --latest=false --target "$GITHUB_SHA" --title 'Verified compiler dependency cache — not an OS ISO' --notes-file compiler-cache/README.txt
+          fi
+          gh release upload "$tag" compiler-cache/* --clobber
+          gh release edit "$tag" --draft=false --latest=false
