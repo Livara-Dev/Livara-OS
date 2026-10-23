@@ -3,6 +3,7 @@
 "use strict";
 
 (() => {
+  function initializeDashboard() {
   const PREF = "browser.livara.start.dashboard";
   const PREFIX = "browser.livara.";
   const $ = id => document.getElementById(id);
@@ -289,4 +290,11 @@
   appearance();
   render();
   clock();
+  }
+  // XHTML loaders may execute the head script before its form controls exist.
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeDashboard, { once: true });
+  } else {
+    initializeDashboard();
+  }
 })();
