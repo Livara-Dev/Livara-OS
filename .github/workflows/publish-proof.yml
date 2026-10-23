@@ -1,0 +1,39 @@
+name: Publish native build proof
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Completed Actions run containing the proof artifact
+        required: true
+        type: string
+      artifact_name:
+        description: Artifact containing original PNG and JSON test evidence
+        required: true
+        type: string
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: publish-build-proof
+  cancel-in-progress: false
+jobs:
+  proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.run_id }}
+          name: ${{ inputs.artifact_name }}
+          path: proof-input
+      - name: Publish only original PNG captures and qualification JSON
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PROOF_RUN: ${{ inputs.run_id }}
+          PROOF_DIRECTORY: ${{ github.workspace }}/proof-input
+        run: python3 scripts/publish-ci-proof.py
