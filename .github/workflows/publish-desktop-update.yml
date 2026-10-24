@@ -43,11 +43,20 @@ jobs:
       - name: Install source check dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends python3-fonttools gnupg gpgv libharfbuzz-bin python3-gi gir1.2-gdkpixbuf-2.0 librsvg2-common webp-pixbuf-loader
+          sudo apt-get install -y --no-install-recommends python3-venv gnupg gpgv libharfbuzz-bin python3-gi gir1.2-gdkpixbuf-2.0 librsvg2-common webp-pixbuf-loader
       - name: Run source and resource update tests
         run: |
-          make check
-          python3 scripts/package-source.py --check
+          set -euo pipefail
+          # Font serialization must match the committed font build. Ubuntu's
+          # older FontTools and optional HarfBuzz table repacker change bytes
+          # despite equivalent outlines/shaping. Retain distro PyGObject while
+          # pinning both parts of the verified font compiler.
+          python3 -m venv --system-site-packages .venv
+          .venv/bin/python -m pip install --no-deps -r build/requirements-check.txt
+          export PATH="$PWD/.venv/bin:$PATH"
+          mkdir -p dist/logs
+          make check 2>&1 | tee dist/logs/desktop-source-check.log
+          python3 scripts/package-source.py --check 2>&1 | tee dist/logs/desktop-source-audit.log
           git diff --exit-code
       - name: Package desktop update without rebuilding engines or ISO
         run: python3 scripts/package-desktop-update.py
@@ -73,6 +82,12 @@ jobs:
         with:
           name: livara-desktop-update
           path: dist/update/
+      - name: Retain source check logs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: desktop-update-check-logs
+          path: dist/logs/
 
   publish:
     needs: [desktop-update, code-build]

@@ -1,0 +1,4 @@
+# Match the committed TTF serializer and its optional OpenType table repacker.
+# Both pins are needed for byte-for-byte font roundtrip tests.
+fonttools==4.61.1
+uharfbuzz==0.57.0
