@@ -27,7 +27,7 @@ def sha256(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
-def build(archive, output):
+def build(archive, output, *, check_only=False):
     archive, output = archive.resolve(), output.resolve()
     expected = Path(str(archive) + '.sha256').read_text().split()
     if expected != [sha256(archive), archive.name]:
@@ -60,6 +60,9 @@ def build(archive, output):
                          'resources/app/out/vs/workbench/workbench.desktop.main.css', 'resources/app/product.json'):
             if not (app / relative).is_file():
                 raise ValueError('Incomplete Code distribution: ' + relative)
+        if check_only:
+            print('Verified matching compiled Code source manifest, recipe hashes, archive checksum and executable; runtime not yet tested.')
+            return None
         manifest['desktop_package_version'] = __version__
         manifest_path.write_text(json.dumps(manifest, indent=2) + '\n')
         # App files are public, but do not introduce a setuid sandbox helper.
@@ -110,10 +113,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('archive', type=Path)
     parser.add_argument('--output-dir', type=Path, default=ROOT / 'dist/update-code')
+    parser.add_argument('--check-only', action='store_true', help='Validate identity before executing a reused candidate')
     args = parser.parse_args()
     if not re.fullmatch(r'\d+\.\d+\.\d+', __version__):
         parser.error('Invalid desktop update version')
-    build(args.archive, args.output_dir)
+    build(args.archive, args.output_dir, check_only=args.check_only)
     return 0
 
 

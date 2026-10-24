@@ -61,6 +61,11 @@ class CodeUpdatePackage(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'current source fix'):
             packager.build(self.archive(), self.root / 'output')
 
+    def test_check_only_validates_without_creating_installable_package(self):
+        result = packager.build(self.archive(), self.root / 'output', check_only=True)
+        self.assertIsNone(result)
+        self.assertEqual(list((self.root / 'output').glob('*.deb')), [])
+
     def test_modified_archive_is_rejected_before_packaging(self):
         archive = self.archive()
         archive.write_bytes(archive.read_bytes() + b'modified')

@@ -3,8 +3,15 @@ on:
   push:
     tags: ['desktop-v*']
   workflow_dispatch:
+    inputs:
+      reuse_code_run:
+        description: 'Optional same-repository matching compiled Code candidate run'
+        type: string
+        required: false
+        default: ''
 permissions:
   contents: read
+  actions: read
 jobs:
   validate-release:
     runs-on: ubuntu-24.04
@@ -22,6 +29,8 @@ jobs:
   code-build:
     needs: validate-release
     uses: ./.github/workflows/build-code.yml
+    with:
+      reuse_run_id: ${{ inputs.reuse_code_run || '' }}
   desktop-update:
     needs: validate-release
     runs-on: ubuntu-24.04

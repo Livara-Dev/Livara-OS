@@ -7,6 +7,7 @@ from pathlib import Path
 import signal
 import socket
 import subprocess
+import sys
 import tarfile
 import tempfile
 import time
@@ -136,6 +137,26 @@ try {
     await waitFor(() => execFileSync('xprop', ['-id', windowId, 'WM_STATE'], { encoding: 'utf8' }).includes('Normal'), 'restore minimized window');
     checks.push('native minimize and window-manager restore');
     console.log(JSON.stringify({ passed: true, defaults, checks }));
+} catch (error) {
+    let renderer;
+    try {
+        renderer = await evaluate(`(() => ({
+            title: document.title, classes: document.documentElement.className,
+            controls: [...document.querySelectorAll('.window-controls-container')].map(group => ({
+                classes: group.className, visible: group.getBoundingClientRect().width,
+                buttons: [...group.querySelectorAll('.window-icon')].map(button => ({
+                    classes: button.className, label: button.getAttribute('aria-label'),
+                    rect: button.getBoundingClientRect().toJSON(),
+                    diameter: getComputedStyle(button, '::after').width,
+                    color: getComputedStyle(button, '::after').backgroundColor
+                }))
+            }))
+        }))()`);
+    } catch (diagnosticError) { renderer = { unavailable: String(diagnosticError) }; }
+    let nativeState;
+    try { nativeState = state(); } catch (diagnosticError) { nativeState = String(diagnosticError); }
+    console.error(JSON.stringify({ passed: false, completedChecks: checks, renderer, nativeState }));
+    throw error;
 } finally {
     try {
         await evaluate(`(() => { const state = window.__livaraSmokeControls; if (state?.replacement.isConnected) state.replacement.replaceWith(state.original); delete window.__livaraSmokeControls; })()`);
@@ -219,6 +240,13 @@ def main():
                                      env=env,capture_output=True,text=True,timeout=150)
                 (out/'controls-probe.log').write_text(probe.stdout+probe.stderr)
                 if probe.returncode:
+                    print(probe.stdout+probe.stderr,file=sys.stderr)
+                    if os.environ.get('GITHUB_ACTIONS') == 'true':
+                        detail=(probe.stdout+probe.stderr)[-12000:]
+                        detail=detail.replace('%','%25').replace('\r','%0D').replace('\n','%0A')
+                        print(f'::error title=Code controls runtime validation::{detail}',flush=True)
+                    from PIL import ImageGrab
+                    ImageGrab.grab(xdisplay=display).save(out/'livara-code-failed.png')
                     raise RuntimeError('Compiled window controls failed behavioral validation; see controls-probe.log')
                 controls=json.loads(probe.stdout)
                 if controls.get('passed') is not True:raise RuntimeError('Controls probe did not report successful checks')
