@@ -16,4 +16,13 @@ The separate **official Tor Browser is unchanged**. These custom controls, fonts
 
 Browser popup windows with a hidden navigation toolbar retain their stock titlebar controls, styled with the selected traffic-light colors, rather than hiding the only usable controls. These stock popup buttons keep their native maximize/restore action. Code's source controller now rebinds replaced titlebar controls after workbench layout changes and releases old listeners. That controller change requires a Code build; updating only an existing Code bundle's CSS does not install new TypeScript behavior.
 
+Code's Linux startup default is also applied in the shared window configuration
+used by its main process. A renderer-only default arrives too late for the first
+native window and previously left an unstyled native overlay in place. Explicit
+native, custom and hidden control choices remain respected. The separate Code
+DEB in the desktop update ships the compiled startup and lifecycle fixes; its
+release gate tests the real default window and native button behavior.
+
+Code's Linux default also selects custom controls in the shared platform accessor before Electron creates the first window. Registering this default only in the renderer was too late: a fresh profile could launch with native overlay controls, which the Livara controller intentionally leaves alone. The source patch changes the Linux startup default and matching configuration schema together; an explicit native/hidden control choice or native titlebar remains respected. The release runtime test starts with a fresh profile and checks the actual controls, native actions and rebinding behavior.
+
 The native GTK4 implementation was exercised with GTK 4.14.5 and libadwaita 1.5, including actual fullscreen, F11, maximize/restore, live preferences, RTL placement and close guards. The GTK3 stylesheet parsed without errors in GTK 3.24.49 at the minimum, default and maximum sizes. Livara Code's emitted controller/contribution and CSS were exercised in the already source-built Electron app, including the real fullscreen command, live preferences and native button actions; the complete workbench was not rebuilt after those changes. GTK CSS/storage helpers and browser control actions/preferences have automated checks. The normal Gecko source fork has not been compiled in this authoring environment; its controls are source-validated and require the local full browser build for runtime qualification.

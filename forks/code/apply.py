@@ -72,6 +72,57 @@ def refresh_inline_script_hashes(original: str, changed: str) -> str:
     return changed
 
 
+def window_controls_default_plans(source: Path, *, refresh: bool = False):
+    """Set Linux defaults before Electron creates its very first window.
+
+    Renderer-only default registrations happen too late for the native main
+    process. Patch the shared accessor and matching schema, preserving explicit
+    user choices and all non-Linux platform defaults. Guard both pinned files
+    before the caller writes any source or product metadata.
+    """
+    shared = source / 'src/vs/platform/window/common/window.ts'
+    schema = source / 'src/vs/workbench/electron-browser/desktop.contribution.ts'
+    shared_text, schema_text = shared.read_text(), schema.read_text()
+    if shared_text.count('return TitlebarStyle.CUSTOM; // default to custom on all OS') != 1:
+        raise ValueError('Upstream titlebar default changed; review Linux startup controls.')
+    titlebar_schema = "'window.titleBarStyle': {\n\t\t\t\t'type': 'string',\n\t\t\t\t'enum': ['native', 'custom'],\n\t\t\t\t'default': 'custom',"
+    if schema_text.count(titlebar_schema) != 1:
+        raise ValueError('Upstream titlebar schema changed; review Linux startup controls.')
+    original_function = '''export function getWindowControlsStyle(configurationService: IConfigurationService): WindowControlsStyle {
+\tif (isWeb || isMacintosh || getTitleBarStyle(configurationService) === TitlebarStyle.NATIVE) {
+\t\treturn WindowControlsStyle.NATIVE; // only supported on Windows/Linux desktop with custom titlebar
+\t}
+
+\tconst configuration = configurationService.getValue<IWindowSettings | undefined>('window');
+\tconst style = configuration?.controlsStyle;
+\tif (style === WindowControlsStyle.CUSTOM || style === WindowControlsStyle.HIDDEN) {
+\t\treturn style;
+\t}
+
+\treturn WindowControlsStyle.NATIVE; // default to native on all OS
+}'''
+    patched_function = original_function.replace(
+        'style === WindowControlsStyle.CUSTOM || style === WindowControlsStyle.HIDDEN',
+        'style === WindowControlsStyle.NATIVE || style === WindowControlsStyle.CUSTOM || style === WindowControlsStyle.HIDDEN'
+    ).replace('return WindowControlsStyle.NATIVE; // default to native on all OS',
+              'return isLinux ? WindowControlsStyle.CUSTOM : WindowControlsStyle.NATIVE; // Livara: main-process Linux default before the renderer starts')
+    original_import = "import { isMacintosh, isNative, isTahoeOrNewer, isWeb } from '../../../base/common/platform.js';"
+    patched_import = original_import.replace('{ isMacintosh,', '{ isLinux, isMacintosh,')
+    original_schema = "'window.controlsStyle': {\n\t\t\t\t'type': 'string',\n\t\t\t\t'enum': ['native', 'custom', 'hidden'],\n\t\t\t\t'default': 'native',"
+    patched_schema = original_schema.replace("'default': 'native'", "'default': isLinux ? 'custom' : 'native'")
+    plans = []
+    for path, text, replacements in ((shared, shared_text, ((original_import, patched_import), (original_function, patched_function))),
+                                      (schema, schema_text, ((original_schema, patched_schema),))):
+        for original, patched in replacements:
+            if refresh and text.count(patched) == 1 and original not in text:
+                continue
+            if text.count(original) != 1 or patched in text:
+                raise ValueError('Upstream window-controls defaults changed; review the pinned Linux startup patch.')
+            text = text.replace(original, patched)
+        plans.append((path, text))
+    return plans
+
+
 def apply(source: Path, project: Path = ROOT, *, refresh: bool = False) -> dict:
     source = source.resolve(strict=True)
     package_path = source / 'package.json'
@@ -91,6 +142,7 @@ def apply(source: Path, project: Path = ROOT, *, refresh: bool = False) -> dict:
     logo = project / 'artwork/livara-code.png'
     if not logo.read_bytes().startswith(b'\x89PNG\r\n\x1a\n'):
         raise ValueError('The Livara Code PNG icon is missing or invalid.')
+    window_defaults = window_controls_default_plans(source, refresh=refresh)
     # All public app identity comes from product.json; technical module/API IDs are preserved.
     product_path = source / 'product.json'
     product = product_configuration(json.loads(product_path.read_text()))
@@ -98,6 +150,8 @@ def apply(source: Path, project: Path = ROOT, *, refresh: bool = False) -> dict:
     package['name'] = 'livara-code-source'
     package['author'] = {'name': 'Livara contributors; original work by Microsoft contributors'}
     package_path.write_text(json.dumps(package, indent=2) + '\n')
+    for path, text in window_defaults:
+        path.write_text(text)
     if "contrib/livara/" not in main:
         main_path.write_text(main.replace(anchor, anchor + "\nimport './contrib/livara/browser/livara.contribution.js';"))
     core_target = source / 'src/vs/workbench/contrib/livara/browser'

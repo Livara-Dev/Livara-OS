@@ -50,8 +50,15 @@ def build(archive, output, *, check_only=False):
                 manifest.get('built') is not True or manifest.get('distribution') != 'Livara Code' or
                 manifest.get('build_target') != 'vscode-linux-x64-min'):
             raise ValueError('Expected the matching fully compiled Livara Code source build')
-        for name in ('overlay/core/windowControls.ts', 'overlay/core/livara.css', 'overlay/core/livara.contribution.ts'):
-            if manifest.get('recipes', {}).get(name) != sha256(ROOT / 'forks/code' / name):
+        # apply.py changes main-process defaults as well as renderer overlays.
+        # Validate the complete recorded recipe set, not just controller/CSS,
+        # so an older executable cannot pass after a main-process source fix.
+        recipe_root = ROOT / 'forks/code'
+        recipes = sorted(path for path in recipe_root.rglob('*')
+                         if path.is_file() and '__pycache__' not in path.parts)
+        for path in recipes:
+            name = str(path.relative_to(recipe_root))
+            if manifest.get('recipes', {}).get(name) != sha256(path):
                 raise ValueError('Compiled Code does not contain the current source fix: ' + name)
         binary = app / 'livara-code'
         if binary.read_bytes()[:4] != b'\x7fELF' or not os.access(binary, os.X_OK):

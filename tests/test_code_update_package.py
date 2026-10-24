@@ -34,8 +34,9 @@ class CodeUpdatePackage(unittest.TestCase):
         (self.app / 'resources/app/product.json').write_text('{}')
         self.manifest = {'upstream': json.loads((ROOT / 'forks/code/upstream.json').read_text()),
                          'built': True, 'distribution': 'Livara Code', 'build_target': 'vscode-linux-x64-min',
-                         'recipes': {name: packager.sha256(ROOT / 'forks/code' / name) for name in
-                                     ('overlay/core/windowControls.ts', 'overlay/core/livara.css', 'overlay/core/livara.contribution.ts')}}
+                         'recipes': {str(path.relative_to(ROOT / 'forks/code')): packager.sha256(path)
+                                     for path in (ROOT / 'forks/code').rglob('*')
+                                     if path.is_file() and '__pycache__' not in path.parts}}
 
     def archive(self):
         (self.app / 'resources/app/livara-build.json').write_text(json.dumps(self.manifest))
@@ -60,6 +61,11 @@ class CodeUpdatePackage(unittest.TestCase):
         self.manifest['recipes']['overlay/core/windowControls.ts'] = 'old-source-hash'
         with self.assertRaisesRegex(ValueError, 'current source fix'):
             packager.build(self.archive(), self.root / 'output')
+
+    def test_stale_main_process_recipe_is_rejected_before_execution(self):
+        self.manifest['recipes']['apply.py'] = 'old-main-process-defaults'
+        with self.assertRaisesRegex(ValueError, 'current source fix: apply.py'):
+            packager.build(self.archive(), self.root / 'output', check_only=True)
 
     def test_check_only_validates_without_creating_installable_package(self):
         result = packager.build(self.archive(), self.root / 'output', check_only=True)
