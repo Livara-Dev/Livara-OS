@@ -68,7 +68,6 @@ def main(chat: bool = False, argv: list[str] | None = None) -> int:
 
         def do_startup(self):
             Adw.Application.do_startup(self)
-            self.get_style_manager().set_color_scheme(Adw.ColorScheme.FORCE_DARK)
             css = Gtk.CssProvider()
             css.load_from_data(b"""
                 window.livara-web { background: #0e1220; color: #f2edff; }

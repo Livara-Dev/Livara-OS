@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 project_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-version=0.1.0
+version="$(PYTHONPATH="$project_dir/src" python3 -c 'from livara import __version__; print(__version__)')"
 output_dir="${1:-$project_dir/dist}"
 mkdir -p "$output_dir"
 output_dir="$(cd "$output_dir" && pwd)"
@@ -24,6 +24,34 @@ install -d "$staging_dir/DEBIAN" "$staging_dir/usr/bin" \
   "$staging_dir/usr/share/glib-2.0/schemas" \
   "$staging_dir/usr/share/doc/livara-desktop"
 install -m 0644 "$project_dir"/src/livara/*.py "$staging_dir/usr/lib/python3/dist-packages/livara/"
+# Ship only maintained UI resources, never another browser/editor engine.
+install -d "$staging_dir/usr/share/livara/app-resources/browser" "$staging_dir/usr/share/livara/app-resources/code"
+for resource in LivaraUI.js LivaraWindowControls.js start.js livara-glass.css start.css; do
+  install -m 0644 "$project_dir/forks/browser/overlay/src/livara/$resource" "$staging_dir/usr/share/livara/app-resources/browser/"
+done
+python3 - "$project_dir" "$staging_dir/usr/share/livara/app-resources" "$version" <<'PYRESOURCES'
+import base64, json, pathlib, sys
+root, output, version = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2]), sys.argv[3]
+code_css = (root / 'forks/code/overlay/core/livara.css').read_text()
+logo = 'data:image/png;base64,' + base64.b64encode((root / 'artwork/livara-code.png').read_bytes()).decode('ascii')
+(output / 'code/livara.css').write_text(code_css.replace('@@LIVARA_ICON_DATA@@', logo))
+(output / 'manifest.json').write_text(json.dumps({'version': version,
+    'browser_commit': json.loads((root / 'forks/browser/upstream.json').read_text())['commit'],
+    'code_commit': json.loads((root / 'forks/code/upstream.json').read_text())['commit']}, indent=2) + '\n')
+PYRESOURCES
+cat > "$staging_dir/usr/bin/livara-refresh-app-resources" <<'PYWRAPPER'
+#!/usr/bin/python3
+from livara.app_updates import main
+raise SystemExit(main())
+PYWRAPPER
+chmod 0755 "$staging_dir/usr/bin/livara-refresh-app-resources"
+install -D -m 0644 "$project_dir/share/autostart/org.livara.SessionRefresh.desktop" "$staging_dir/etc/xdg/autostart/org.livara.SessionRefresh.desktop"
+cat > "$staging_dir/usr/bin/livara-session-refresh" <<'PYSESSION'
+#!/usr/bin/python3
+from livara.session import main
+raise SystemExit(main())
+PYSESSION
+chmod 0755 "$staging_dir/usr/bin/livara-session-refresh"
 install -m 0644 "$project_dir/share/livara/toolbox/Containerfile" "$staging_dir/usr/share/livara/toolbox/"
 install -m 0644 "$project_dir/share/livara/icons/"*.svg "$staging_dir/usr/share/livara/icons/"
 install -m 0644 "$project_dir/artwork/livara-logo.png" "$staging_dir/usr/share/livara/logo.png"
@@ -129,6 +157,11 @@ set -e
 if [ "$1" = configure ]; then
     glib-compile-schemas /usr/share/glib-2.0/schemas
     fc-cache -f /usr/share/fonts/truetype/livara
+    # In-place updates preserve user settings; only pinned first-party app
+    # resources are refreshed. A different/custom fork is left untouched.
+    if ! /usr/bin/livara-refresh-app-resources; then
+        echo 'Livara desktop updated; application resources need attention. Close Browser/Code and run sudo livara-refresh-app-resources.' >&2
+    fi
     if command -v update-desktop-database >/dev/null 2>&1; then
         update-desktop-database -q /usr/share/applications
     fi
@@ -149,7 +182,7 @@ if [ "$1" = remove ] || [ "$1" = purge ] || [ "$1" = abort-install ]; then
     done
     if command -v glib-compile-schemas >/dev/null 2>&1; then
         glib-compile-schemas /usr/share/glib-2.0/schemas
-    fc-cache -f /usr/share/fonts/truetype/livara
+        if command -v fc-cache >/dev/null 2>&1; then fc-cache -f /usr/share/fonts/truetype/livara; fi
     fi
 fi
 EOF

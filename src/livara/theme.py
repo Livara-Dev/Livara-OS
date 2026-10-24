@@ -52,6 +52,8 @@ def css(values, *, light=False, motion=True):
 .studio-card, .tool-workspace, .essentials-card {{
  border-radius:{value['theme-radius']}px; border:{value['theme-border']}px solid alpha({accent},.32);
  background-color:rgba({surface},{value['theme-opacity'] / 100:.2f});
+ background-image:linear-gradient(135deg,alpha(white,.10),alpha(white,.015) 45%,alpha({accent},.06));
+ box-shadow:inset 0 1px alpha(white,.14),inset 0 -1px alpha(black,.08),0 8px 24px alpha(black,.12);
  transition-duration:{duration};
 }}
 button.primary, .lv-primary, .nav:checked, switch:checked {{ background-color:{accent}; color:{ink}; }}

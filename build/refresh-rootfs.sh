@@ -2,7 +2,7 @@
 set -euo pipefail
 rootfs=/build/rootfs
 test -f "$rootfs/var/lib/dpkg/status"
-dpkg-deb -x /output/livara-desktop_0.1.0_all.deb "$rootfs"
+dpkg-deb -x /output/livara-desktop_0.1.1_all.deb "$rootfs"
 install -D -m 0755 /project/build/live-selftest.sh "$rootfs/usr/lib/livara/live-selftest"
 install -m 0644 /project/build/livara-selftest.service "$rootfs/etc/systemd/system/"
 install -m 0644 /project/build/configure-rootfs.sh "$rootfs/tmp/livara-configure.sh"
@@ -35,7 +35,7 @@ if [[ ${#missing_packages[@]} -gt 0 ]]; then
   rm -rf "$rootfs/var/lib/apt/lists/"*
 fi
 # Reinstall package metadata and run the same defaults used by a fresh image build.
-cp /output/livara-desktop_0.1.0_all.deb "$rootfs/tmp/livara-desktop.deb"
+cp /output/livara-desktop_0.1.1_all.deb "$rootfs/tmp/livara-desktop.deb"
 chroot "$rootfs" dpkg -i /tmp/livara-desktop.deb
 chroot "$rootfs" bash /tmp/livara-configure.sh
 rm -f "$rootfs/tmp/livara-desktop.deb" "$rootfs/tmp/livara-configure.sh"

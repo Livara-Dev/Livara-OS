@@ -205,6 +205,62 @@ class DesktopBatchTests(unittest.TestCase):
         self.assertEqual(dock.values, original)
         self.assertNotIn("intellihide", dock.values)
 
+    def test_single_palette_failure_restores_primary_and_derived_preferences(self):
+        schemas, settings, prepare, write = self.fixture()
+        schemas["org.livara.desktop"].values["accent"] = "blue"
+        interface = schemas["org.gnome.desktop.interface"]
+        interface.defaults.update({"color-scheme": "default", "gtk-theme": "Yaru", "icon-theme": "Yaru"})
+        interface.values["gtk-theme"] = "User theme"
+        original = dict(interface.values)
+        def failed_palette(**kwargs):
+            write("org.gnome.desktop.interface", "color-scheme", "prefer-dark")
+            write("org.gnome.desktop.interface", "gtk-theme", "Yaru-sage-dark")
+            raise ValueError("fixture: icon theme locked")
+        with patch.object(desktop, "settings_for", side_effect=settings), patch.object(desktop, "prepare_setting", side_effect=prepare), patch.object(desktop, "write_setting", side_effect=write), patch.object(desktop, "apply_palette", side_effect=failed_palette):
+            with self.assertRaisesRegex(ValueError, "previous preferences were restored"):
+                desktop.set_option("accent", "sage")
+        self.assertEqual(schemas["org.livara.desktop"].values["accent"], "blue")
+        self.assertEqual(interface.values, original)
+
+    def test_explicit_reset_can_restore_motion_while_presets_preserve_it(self):
+        schemas, settings, prepare, write = self.fixture()
+        with patch.object(desktop, "settings_for", side_effect=settings), patch.object(desktop, "prepare_setting", side_effect=prepare), patch.object(desktop, "write_setting", side_effect=write):
+            result = desktop.reset_options(["animations"])
+        self.assertEqual(result["applied"], ["animations"])
+        self.assertNotIn("enable-animations", schemas[desktop.OPTIONS["animations"][0]].values)
+
+    def test_explicit_full_glass_reenables_motion_and_rolls_back_on_failure(self):
+        schemas, settings, prepare, write = self.fixture()
+        schemas["org.livara.desktop"].defaults.update({"glass-enabled": False, "blur-radius": 0})
+        original = dict(schemas["org.gnome.desktop.interface"].values)
+        def failed_write(schema, key, value):
+            if key == "blur-radius":
+                raise ValueError("fixture: locked blur radius")
+            write(schema, key, value)
+        with patch.object(desktop, "settings_for", side_effect=settings), patch.object(desktop, "prepare_setting", side_effect=prepare), patch.object(desktop, "write_setting", side_effect=failed_write):
+            with self.assertRaisesRegex(ValueError, "previous preferences were restored"):
+                desktop.apply_rendering_mode(True)
+        self.assertNotIn("glass-enabled", schemas["org.livara.desktop"].values)
+        self.assertEqual(schemas["org.gnome.desktop.interface"].values, original)
+        with patch.object(desktop, "settings_for", side_effect=settings), patch.object(desktop, "prepare_setting", side_effect=prepare), patch.object(desktop, "write_setting", side_effect=write):
+            result = desktop.apply_rendering_mode(True)
+        self.assertEqual(len(result["applied"]), 3)
+        self.assertTrue(schemas["org.gnome.desktop.interface"].values["enable-animations"])
+
+    def test_dark_wallpaper_failure_restores_all_background_targets(self):
+        schemas, settings, prepare, write = self.fixture()
+        schemas["org.gnome.desktop.background"] = self.Settings({"picture-uri": "file:///old.png"}, {"picture-uri": "", "picture-uri-dark": ""})
+        schemas["org.gnome.desktop.screensaver"] = self.Settings({}, {"picture-uri": ""})
+        def failed_write(schema, key, value):
+            if key == "picture-uri-dark":
+                raise ValueError("fixture: dark background locked")
+            write(schema, key, value)
+        with patch.object(desktop, "settings_for", side_effect=settings), patch.object(desktop, "prepare_setting", side_effect=prepare), patch.object(desktop, "write_setting", side_effect=failed_write):
+            with self.assertRaisesRegex(ValueError, "previous backgrounds were restored"):
+                desktop._write_wallpaper(Path("/new.png"))
+        self.assertEqual(schemas["org.gnome.desktop.background"].values, {"picture-uri": "file:///old.png"})
+        self.assertEqual(schemas["org.gnome.desktop.screensaver"].values, {})
+
 
 class WallpaperTests(unittest.TestCase):
     PNG = base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aXioAAAAASUVORK5CYII=")

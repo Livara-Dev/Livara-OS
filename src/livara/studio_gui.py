@@ -10,7 +10,7 @@ import stat
 from pathlib import Path
 from datetime import datetime, timezone
 
-from . import desktop, studio, window_style
+from . import desktop, materials, studio, window_style
 
 
 def main() -> int:
@@ -67,11 +67,11 @@ def main() -> int:
                 self.motion_settings.connect("changed::enable-animations", self.motion_changed)
                 self.motion_settings.connect("changed::font-name", lambda *args: self.install_style())
                 self.motion_settings.connect("changed::monospace-font-name", lambda *args: self.install_style())
-            Adw.StyleManager.get_default().set_color_scheme(Adw.ColorScheme.FORCE_DARK)
             self.install_style()
             self.window = Adw.ApplicationWindow(application=self, title="Livara Studio", default_width=1260, default_height=860,
                                                 css_classes=["studio-window"])
-            self.window.set_size_request(1000, 660)
+            self.window.set_size_request(860, 620)
+            self.window.set_icon_name("org.livara.Studio")
             self.window.connect("close-request", self.close_requested)
             self.window.connect("destroy", lambda *args: self.remove_focus_source())
             self.overlay = Adw.ToastOverlay()
@@ -107,14 +107,18 @@ def main() -> int:
                 icon = Gtk.Image.new_from_file(str(logo)) if logo else Gtk.Image()
             icon.set_pixel_size(38)
             brand.append(icon)
-            brand.append(self.label("LIVARA\nSTUDIO", "brand"))
+            brand.append(self.label("STUDIO", "brand"))
             sidebar.append(brand)
             sidebar.append(self.label("A place to make progress.", "muted", "small"))
             modes = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
             self.mode_buttons = {}
             group = None
-            for key, name in (("home", "Overview"), ("tools", "Tool library"), ("notes", "Notebook"), ("focus", "Focus room")):
-                button = Gtk.ToggleButton(label=name, css_classes=["mode"])
+            for key, name, glyph in (("home", "Overview", "view-grid-symbolic"), ("tools", "Tool library", "applications-utilities-symbolic"), ("notes", "Notebook", "document-edit-symbolic"), ("focus", "Focus room", "alarm-symbolic")):
+                button = Gtk.ToggleButton(css_classes=["mode"])
+                contents = Gtk.Box(spacing=10)
+                contents.append(Gtk.Image.new_from_icon_name(glyph))
+                contents.append(Gtk.Label(label=name, xalign=0))
+                button.set_child(contents)
                 if group:
                     button.set_group(group)
                 else:
@@ -226,6 +230,7 @@ def main() -> int:
                 .empty-icon {{ font-size: 42px; color: #77538e; }}
             """
             self.style_provider.load_from_data(css.encode("utf-8"))
+            materials.set_accent_override(accent)
 
         def action_row(self, title, subtitle=""):
             row = Adw.ActionRow(activatable=True)

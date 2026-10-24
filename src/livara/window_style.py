@@ -162,8 +162,12 @@ def apply_user_style(values: Mapping, config_home: Path | None = None) -> list[P
     plans = []
     for version in (3, 4):
         path = Path(config_home) / f"gtk-{version}.0/gtk.css"
-        if path.is_symlink():
+        if path.is_symlink() or path.parent.is_symlink():
             raise ValueError(f"{path} is a symbolic link; its target was preserved")
+        if path.exists():
+            info = path.stat()
+            if not stat.S_ISREG(info.st_mode) or info.st_size > 2 * 1024 * 1024:
+                raise ValueError(f"{path} is not a bounded regular stylesheet; it was preserved")
         original = path.read_text(encoding="utf-8") if path.exists() else ""
         changed = _replace_block(original, css_for_values(prefs, version))
         if changed != original:
@@ -227,6 +231,8 @@ class _LiveStyle:
 def install_live_style():
     """Install one shared live GTK4 provider per native application process."""
     global _live_handle
+    from . import materials
+    materials.install_live_style()
     if _live_handle is None:
         _live_handle = _LiveStyle()
     return _live_handle

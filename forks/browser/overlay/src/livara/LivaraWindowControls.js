@@ -107,14 +107,30 @@ var LivaraWindowControls = (() => {
     values = prefs;
     const root = document.documentElement;
     const nav = document.getElementById("nav-bar");
-    if (!nav) {
-      return;
-    }
-    if (values["controls-style"] !== "traffic-lights") {
+    // Popup/app windows can intentionally hide their navigation toolbar. Never
+    // hide the stock titlebar when its replacement would be inside that hidden
+    // toolbar, leaving a window with no close/minimize/maximize controls.
+    const hiddenChrome = (root.getAttribute("chromehidden") || "").split(/\s+/);
+    const hiddenToolbar = !nav || hiddenChrome.includes("toolbar") || nav.hidden ||
+      nav.getAttribute("collapsed") === "true" || nav.getAttribute("hidden") === "true";
+    if (values["controls-style"] !== "traffic-lights" || hiddenToolbar) {
       root.removeAttribute("livara-window-controls");
+      if (hiddenToolbar && values["controls-style"] === "traffic-lights") {
+        root.setAttribute("livara-native-window-controls", "traffic-lights");
+        root.setAttribute("livara-control-symbols", String(values["controls-symbols"]));
+        root.style.setProperty("--livara-control-size", values["controls-size"] + "px");
+        for (const action of ["close", "minimize", "maximize"]) {
+          root.style.setProperty("--livara-control-" + action, values["controls-" + action]);
+        }
+      } else {
+        root.removeAttribute("livara-native-window-controls");
+        root.removeAttribute("livara-control-symbols");
+      }
       box?.remove();
       return;
     }
+    root.removeAttribute("livara-native-window-controls");
+    root.removeAttribute("livara-control-symbols");
     if (!box) {
       create();
     }
@@ -137,6 +153,8 @@ var LivaraWindowControls = (() => {
 
   function dispose() {
     document.documentElement.removeAttribute("livara-window-controls");
+    document.documentElement.removeAttribute("livara-native-window-controls");
+    document.documentElement.removeAttribute("livara-control-symbols");
     box?.remove();
     if (listening) {
       window.removeEventListener("sizemodechange", updateState);

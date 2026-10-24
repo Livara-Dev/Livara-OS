@@ -60,7 +60,7 @@ def main():
                     for full, horizontal in ((False, 560), (True, 380)):
                         subprocess.run(["xdotool", "mousemove", "--window", window, str(horizontal), "270", "click", "1"], check=True)
                         time.sleep(.5)
-                        checks = (("org.livara.desktop", "glass-enabled", str(full).lower()), ("org.livara.desktop", "blur-radius", "18" if full else "0"), ("org.gnome.desktop.interface", "enable-animations", str(full).lower()))
+                        checks = (("org.livara.desktop", "glass-enabled", str(full).lower()), ("org.livara.desktop", "blur-radius", "24" if full else "0"), ("org.gnome.desktop.interface", "enable-animations", str(full).lower()))
                         for schema, key, value in checks:
                             actual = subprocess.run(["gsettings", "get", schema, key], check=True, capture_output=True, text=True).stdout.strip()
                             if actual != value:

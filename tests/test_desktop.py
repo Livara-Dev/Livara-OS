@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import unittest
+from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 from livara import desktop
@@ -70,6 +71,43 @@ class WindowPreferences(unittest.TestCase):
         self.assertNotIn(("org.gnome.desktop.interface", "enable-animations"), settings)
         self.assertNotIn(("org.livara.desktop", "glass-enabled"), settings)
         apply.assert_called_once_with()
+
+
+class InactivePreferences(unittest.TestCase):
+    def test_controls_explain_why_native_dependencies_disable_them(self):
+        values = {"dynamic-workspaces": True, "night-light": False, "night-light-automatic": True,
+                  "titlebar-system-font": True, "animations": False}
+        with patch.object(desktop, "read_option", side_effect=values.get):
+            self.assertIn("Dynamic workspaces", desktop.inactive_reason("workspace-count"))
+            self.assertIn("Sunset to sunrise", desktop.inactive_reason("night-light-from"))
+            self.assertIn("Night Light", desktop.inactive_reason("night-light-temperature"))
+            self.assertIn("interface font", desktop.inactive_reason("titlebar-font"))
+            self.assertIn("Desktop animations", desktop.inactive_reason("window-animation-style"))
+            self.assertEqual(desktop.inactive_reason("accent"), "")
+        values.update({"dynamic-workspaces": False, "night-light": True, "night-light-automatic": False,
+                       "titlebar-system-font": False, "animations": True})
+        with patch.object(desktop, "read_option", side_effect=values.get):
+            for name in ("workspace-count", "night-light-from", "night-light-temperature", "titlebar-font", "window-animation-style"):
+                self.assertEqual(desktop.inactive_reason(name), "", name)
+
+
+class ExtensionReadiness(unittest.TestCase):
+    def test_shell_runtime_info_distinguishes_loaded_disabled_and_failed(self):
+        gio, glib = MagicMock(), MagicMock()
+        bus = gio.bus_get_sync.return_value
+        for info, expected in (({"state": 1}, ""), ({"state": 2}, "Enable"),
+                               ({"state": 3}, "failed to load"), ({"state": 4}, "incompatible"),
+                               ({}, "not installed")):
+            with self.subTest(info=info):
+                desktop._extension_status_cache.clear()
+                bus.call_sync.return_value.unpack.return_value = (info,)
+                with patch.dict("sys.modules", {"gi.repository": SimpleNamespace(Gio=gio, GLib=glib)}):
+                    note = desktop.shell_extension_note("livara-glass@livara.local")
+                    self.assertIn(expected, note)
+                    self.assertEqual(desktop.shell_extension_note("livara-glass@livara.local"), note)
+                self.assertEqual(bus.call_sync.call_args.args[:4],
+                    ("org.gnome.Shell", "/org/gnome/Shell", "org.gnome.Shell.Extensions", "GetExtensionInfo"))
+        desktop._extension_status_cache.clear()
 
 
 if __name__ == "__main__":

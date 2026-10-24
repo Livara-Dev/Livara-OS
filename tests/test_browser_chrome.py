@@ -147,6 +147,14 @@ assert.equal(window.fullScreen,false);assert.equal(calls.restore,2);
 api.refresh({...prefs,"controls-side":"right"});assert.equal(nav.lastChild,box);
 window.rtl=true;api.refresh(prefs);assert.equal(nav.lastChild,box); // Physical left in an RTL toolbar.
 api.refresh({...prefs,"controls-side":"right"});assert.equal(nav.firstChild,box);
+root.attrs.chromehidden="menubar toolbar location";api.refresh(prefs);
+assert.equal(nav.children.length,1);assert.equal(root.attrs["livara-window-controls"],undefined);
+assert.equal(root.attrs["livara-native-window-controls"],"traffic-lights");
+assert.equal(root.style.values["--livara-control-size"],"18px");
+root.removeAttribute("chromehidden");api.refresh(prefs);assert.equal(nav.children.length,2);
+assert.equal(root.attrs["livara-native-window-controls"],undefined);
+nav.attrs.collapsed="true";api.refresh(prefs);assert.equal(nav.children.length,1);
+nav.removeAttribute("collapsed");api.refresh(prefs);assert.equal(nav.children.length,2);
 api.refresh({...prefs,"controls-style":"default"});assert.equal(nav.children.length,1);
 assert.equal(root.attrs["livara-window-controls"],undefined);assert.equal(nav.firstChild,address);
 api.refresh(prefs);assert.equal(nav.children.length,2);assert.equal(box.children.length,3);

@@ -4,6 +4,8 @@ import base64
 import hashlib
 import json
 import re
+import shutil
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -64,6 +66,11 @@ class CodeFork(unittest.TestCase):
         accounts=root/'src/vs/workbench/services/accounts/browser/defaultAccount.ts'
         accounts.parent.mkdir(parents=True,exist_ok=True)
         accounts.write_text('function toDefaultAccountConfig(defaultChatAgent: IDefaultChatAgent): IDefaultAccountConfig {\n}\nthis.defaultAccountConfig = toDefaultAccountConfig(productService.defaultChatAgent);\nconst defaultAccountProvider = this._register(instantiationService.createInstance(DefaultAccountProvider, toDefaultAccountConfig(productService.defaultChatAgent)));\n')
+        for fixture, relative in (('code-window-defaults.ts', 'src/vs/platform/window/common/window.ts'),
+                                  ('code-desktop-defaults.ts', 'src/vs/workbench/electron-browser/desktop.contribution.ts')):
+            path = root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / 'tests/fixtures' / fixture, path)
         for name in ('resources/linux','resources/server'):
             (root/name).mkdir(parents=True)
 
@@ -100,6 +107,60 @@ class CodeFork(unittest.TestCase):
             original=(source/'product.json').read_bytes()
             with self.assertRaises(ValueError): PATCH.apply(source, ROOT)
             self.assertEqual((source/'product.json').read_bytes(), original)
+
+    @unittest.skipUnless(shutil.which('node'), 'Node24 is required to execute patched TypeScript accessors')
+    def test_first_linux_window_has_custom_controls_and_explicit_choices_survive(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp); self.fixture(source)
+            for path, text in PATCH.window_controls_default_plans(source):
+                # Replace only the fixture's platform import with test bindings;
+                # execute the transformed upstream functions, not a Python model.
+                text = re.sub(r"import \{[^\n]+\} from '[^\n]+platform.js';",
+                              'const { isLinux, isMacintosh, isNative, isTahoeOrNewer, isWeb } = globalThis.__livaraTestPlatform;', text)
+                path.write_text(text)
+            shared = (source / 'src/vs/platform/window/common/window.ts').as_uri()
+            schema = (source / 'src/vs/workbench/electron-browser/desktop.contribution.ts').as_uri()
+            script = r'''
+import assert from 'node:assert/strict';
+for (const platform of ['linux', 'windows', 'mac', 'web']) {
+    globalThis.__livaraTestPlatform = { isLinux: platform === 'linux', isMacintosh: platform === 'mac', isWeb: platform === 'web' };
+    const api = await import(SHARED + '?' + platform);
+    const service = value => ({ getValue: () => value });
+    assert.equal(api.getTitleBarStyle(service(undefined)), 'custom');
+    assert.equal(api.getWindowControlsStyle(service(undefined)), platform === 'linux' ? 'custom' : 'native');
+    for (const choice of ['native', 'custom', 'hidden']) {
+        assert.equal(api.getWindowControlsStyle(service({ controlsStyle: choice })),
+            ['linux', 'windows'].includes(platform) ? choice : 'native');
+    }
+    assert.equal(api.getWindowControlsStyle(service({ titleBarStyle: 'native', controlsStyle: 'custom' })), 'native');
+    const { schemas } = await import(SCHEMA + '?' + platform);
+    assert.equal(schemas['window.controlsStyle'].default, platform === 'linux' ? 'custom' : 'native');
+    assert.equal(schemas['window.titleBarStyle'].default, 'custom');
+}
+'''.replace('SHARED', json.dumps(shared)).replace('SCHEMA', json.dumps(schema))
+            result = subprocess.run(['node', '--input-type=module', '-e', script], text=True, capture_output=True, timeout=20)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_window_default_source_drift_is_rejected_before_product_changes(self):
+        for relative, old, changed in (
+            ('src/vs/platform/window/common/window.ts', 'return TitlebarStyle.CUSTOM; // default to custom on all OS', 'return TitlebarStyle.NATIVE; // upstream changed'),
+            ('src/vs/platform/window/common/window.ts', 'style === WindowControlsStyle.HIDDEN', 'style === WindowControlsStyle.CUSTOM'),
+            ('src/vs/workbench/electron-browser/desktop.contribution.ts', "'default': 'native'", "'default': 'hidden'"),
+        ):
+            with self.subTest(relative=relative, changed=changed), tempfile.TemporaryDirectory() as tmp:
+                source = Path(tmp); self.fixture(source)
+                target = source / relative; target.write_text(target.read_text().replace(old, changed))
+                previous = (source / 'product.json').read_bytes()
+                with self.assertRaisesRegex(ValueError, 'Upstream'):
+                    PATCH.apply(source, ROOT)
+                self.assertEqual((source / 'product.json').read_bytes(), previous)
+
+    def test_window_default_refresh_is_repeatable(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp); self.fixture(source)
+            for path, text in PATCH.window_controls_default_plans(source): path.write_text(text)
+            before = {path: path.read_text() for path, _ in PATCH.window_controls_default_plans(source, refresh=True)}
+            self.assertEqual(dict(PATCH.window_controls_default_plans(source, refresh=True)), before)
 
     def test_amoled_and_real_command_entrypoints(self):
         theme=json.loads((ROOT/'forks/code/overlay/extension/themes/livara-amoled.json').read_text())

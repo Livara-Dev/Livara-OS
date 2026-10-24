@@ -30,7 +30,6 @@ def main() -> int:
             if self.get_active_window():
                 self.get_active_window().present()
                 return
-            Adw.StyleManager.get_default().set_color_scheme(Adw.ColorScheme.FORCE_DARK)
             css = Gtk.CssProvider()
             css.load_from_data(b"window{background:#08050d;color:#f5efff;}headerbar{background:#100b18;} .card{background:linear-gradient(135deg,rgba(106,46,175,.20),rgba(33,20,49,.7));border:1px solid rgba(206,157,255,.20);border-radius:24px;padding:20px;} .eyebrow{color:#cd9fff;font-size:11px;letter-spacing:2px;} .graphics-title{font-size:29px;font-weight:800;} .muted{color:#b8abc9;} button.suggested-action{background:#a866ef;color:#0b0214;} textview,textview text{background:#08050d;color:#ded0ed;} ")
             Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)

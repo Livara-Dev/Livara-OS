@@ -519,10 +519,7 @@ class SettingsStudio:
         self.change(lambda: desktop.reset_options(names), "Section restored to its defaults")
 
     def rendering_mode(self, full):
-        def apply():
-            for name, value in (("glass-enabled", full), ("blur-radius", 18 if full else 0), ("animations", full)):
-                desktop.set_option(name, value)
-        self.change(apply, "Full Glass enabled" if full else "Efficient rendering enabled")
+        self.change(lambda: desktop.apply_rendering_mode(full), "Full Glass enabled" if full else "Efficient rendering enabled")
 
     def set_option(self, name, value):
         if not self._updating:
@@ -557,12 +554,30 @@ class SettingsStudio:
                 item, widget = binding["item"], binding["widget"]
                 kind = item["kind"]
                 value = desktop.read_option(name)
-                widget.set_sensitive(value is not None and item.get("writable", True))
+                reason = desktop.inactive_reason(name) if value is not None else ""
+                native = desktop.settings_for(item["schema"])
+                writable = bool(native is not None and native.is_writable(item["key"]))
+                item["writable"] = writable
+                widget.set_sensitive(value is not None and writable and not reason)
                 if value is None:
                     widget.set_tooltip_text("This control needs a compatible desktop session")
                     continue
-                if not item.get("writable", True):
+                if not writable:
                     widget.set_tooltip_text("This setting is managed by your system")
+                elif reason:
+                    widget.set_tooltip_text(reason)
+                else:
+                    widget.set_tooltip_text(item.get("description", ""))
+                service_note = ""
+                if name in ("glass-enabled", "blur-radius", "window-animation-style", "window-animation-duration"):
+                    service_note = desktop.shell_extension_note("livara-glass@livara.local")
+                elif name.startswith("dock-"):
+                    service_note = desktop.shell_extension_note("ubuntu-dock@ubuntu.com")
+                row = self.rows.get(name)
+                if row is not None and hasattr(row, "set_subtitle"):
+                    row.set_subtitle(reason or service_note or item.get("description", ""))
+                if not reason and writable and service_note:
+                    widget.set_tooltip_text(service_note)
                 if kind == "bool":
                     widget.set_active(value)
                 elif kind in ("int", "float"):
@@ -679,8 +694,13 @@ class SettingsStudio:
         dark = desktop.read_option("appearance") != "light"
         text = "#f5efff" if dark else "#24172f"
         muted = "#b6a7cb" if dark else "#6d5b7b"
-        panel = "#120d1c" if dark else "#fbf7ff"
-        border = "rgba(204,160,255,.18)" if dark else "rgba(91,49,124,.18)"
+        panel = "#211f2a" if dark else "#ffffff"
+        border = "rgba(255,255,255,.13)" if dark else "rgba(81,67,97,.11)"
+        accent = desktop.ACCENTS.get(desktop.read_option("accent"), desktop.ACCENTS["purple"])[1]
+        label_accent = accent if dark else f"shade({accent},.52)"
+        glass = desktop.read_option("glass-enabled") is not False
+        sheen = f"linear-gradient(135deg,alpha(white,.09),alpha(white,.015) 40%,alpha({accent},.05))" if glass else "none"
+        elevation = "inset 0 1px alpha(white,.14),0 8px 24px alpha(black,.10)" if glass else "none"
         close, minimize, maximize = (desktop.read_option(key) or desktop.WINDOW_DEFAULTS[key] for key in desktop.WINDOW_COLOR_KEYS)
         # dconf edits outside this UI are still data, never CSS source.
         for key, value in zip(desktop.WINDOW_COLOR_KEYS, (close, minimize, maximize)):
@@ -692,35 +712,35 @@ class SettingsStudio:
                 else: maximize = desktop.WINDOW_DEFAULTS[key]
         css = f'''
 .lv-settings {{ color: {text}; }}
-.lv-settings .lv-eyebrow {{ color: #bc91f0; font-size: 9px; font-weight: 800; letter-spacing: 1.6px; }}
+.lv-settings .lv-eyebrow {{ color: {label_accent}; font-size: 11px; font-weight: 600; letter-spacing: 1px; }}
 .lv-settings .lv-studio-title {{ font-size: 29px; font-weight: 800; letter-spacing: -.7px; }}
 .lv-settings .lv-section-title {{ font-size: 23px; font-weight: 800; letter-spacing: -.5px; }}
 .lv-settings .lv-muted {{ color: {muted}; }}
 .lv-settings .lv-small {{ font-size: 11px; }}
-.lv-settings .lv-card-title {{ font-size: 14px; font-weight: 750; }}
-.lv-settings .lv-button, .lv-settings .lv-icon-button {{ background: alpha(#b879f2,.12); border: 1px solid {border}; border-radius: 13px; padding: 8px 10px; color: {text}; box-shadow: none; }}
-.lv-settings .lv-primary {{ background: linear-gradient(135deg,#aa6ee8,#cf9fff); color:#160822; font-weight:750; border-radius:14px; padding:9px 13px; box-shadow:none; }}
+.lv-settings .lv-card-title {{ font-size: 15px; font-weight: 600; }}
+.lv-settings .lv-button, .lv-settings .lv-icon-button {{ background: alpha({accent},.12); border: 1px solid {border}; border-radius: 12px; padding: 9px 12px; color: {text}; box-shadow: none; }}
+.lv-settings .lv-primary {{ background-color:{accent}; background-image:linear-gradient(to bottom,alpha(white,.16),transparent); color:#160822; font-weight:600; border-radius:12px; padding:10px 16px; box-shadow:0 3px 8px alpha(black,.12); }}
 .lv-settings .lv-tabs flowboxchild {{ padding: 0; }}
-.lv-settings .lv-tab {{ border:1px solid transparent; border-radius:12px; background:alpha(#a16fe0,.07); padding:9px 7px; color:{muted}; box-shadow:none; }}
-.lv-settings .lv-tab:checked {{ background:alpha(#b879f2,.22); border-color:alpha(#c294ff,.3); color:{text}; }}
+.lv-settings .lv-tab {{ border:1px solid transparent; border-radius:12px; background:alpha({accent},.07); padding:9px 7px; color:{muted}; box-shadow:none; }}
+.lv-settings .lv-tab:checked {{ background:alpha({accent},.17); border-color:alpha({accent},.25); color:{text}; }}
 .lv-settings .lv-search {{ border-radius:15px; border:1px solid {border}; background:{panel}; padding:8px 12px; }}
-.lv-settings .lv-control-list {{ background:{panel}; border:1px solid {border}; border-radius:20px; }}
+.lv-settings .lv-control-list {{ background-color:{panel}; background-image:{sheen}; border:1px solid {border}; border-radius:20px; box-shadow:{elevation}; }}
 .lv-settings .lv-control-row {{ background:transparent; padding:4px 3px; }}
 .lv-settings .lv-control-row label.subtitle {{ font-size:11px; color:{muted}; }}
 .lv-settings .lv-control-list > row:not(:last-child) {{ border-bottom:1px solid alpha(#ac87cc,.10); }}
-.lv-settings dropdown > button {{ border-radius:11px; background:alpha(#b879f2,.12); border:1px solid {border}; box-shadow:none; }}
-.lv-settings .lv-value {{ min-width:15px; font-size:11px; font-weight:750; color:#b991f0; }}
-.lv-settings .lv-preview-card {{ background:linear-gradient(130deg,alpha(#9d61df,.12),alpha(#4c2a79,.06)); border:1px solid {border}; border-radius:21px; padding:14px; }}
+.lv-settings dropdown > button {{ border-radius:11px; background:alpha({accent},.12); border:1px solid {border}; box-shadow:none; }}
+.lv-settings .lv-value {{ min-width:15px; font-size:12px; font-weight:600; color:{label_accent}; }}
+.lv-settings .lv-preview-card {{ background-color:{panel}; background-image:{sheen}; border:1px solid {border}; border-radius:22px; padding:18px; box-shadow:{elevation}; }}
 .lv-settings .lv-preview-screen {{ border-radius:15px; background:#110a1d; }}
-.lv-settings .lv-preview-window {{ background:rgba(17,11,28,.77); border:1px solid rgba(240,220,255,.25); border-radius:14px; padding:12px; }}
-.lv-settings .lv-preview-label {{ color:#e0cfee; font-size:10px; }}
-.lv-settings .lv-preview-title {{ color:#f7efff; font-size:19px; font-weight:750; }}
+.lv-settings .lv-preview-window {{ background-color:{panel}; background-image:{sheen}; border:1px solid {border}; border-radius:14px; padding:14px; box-shadow:{elevation}; }}
+.lv-settings .lv-preview-label {{ color:{muted}; font-size:11px; }}
+.lv-settings .lv-preview-title {{ color:{text}; font-size:19px; font-weight:600; }}
 .lv-settings .lv-preview-light {{ border-radius:50%; }}
 .lv-settings .lv-preview-close {{ background:{close}; }}
 .lv-settings .lv-preview-minimize {{ background:{minimize}; }}
 .lv-settings .lv-preview-maximize {{ background:{maximize}; }}
 .lv-settings .lv-preset {{ border:1px solid {border}; border-radius:17px; background:{panel}; padding:0; box-shadow:none; }}
-.lv-settings .lv-preset:hover {{ border-color:#b780ef; }}
+.lv-settings .lv-preset:hover {{ border-color:{accent}; }}
 .lv-settings .lv-preset-caption {{ font-size:10px; color:{muted}; }}
 .lv-settings .lv-prism {{ background:linear-gradient(125deg,alpha(#a564e9,.28),{panel}); }}
 .lv-settings .lv-aurora {{ background:linear-gradient(125deg,alpha(#49c998,.23),{panel}); }}
@@ -733,7 +753,7 @@ class SettingsStudio:
 .lv-settings .lv-swatch-1 {{ opacity:.60; }}
 .lv-settings .lv-swatch-2 {{ opacity:.30; }}
 .lv-settings .lv-saved-preset {{ border:1px solid {border}; border-radius:13px; padding:5px; }}
-.lv-settings .lv-palette-card {{ background:{panel}; border:1px solid {border}; border-radius:17px; padding:12px; }}
+.lv-settings .lv-palette-card {{ background-color:{panel}; background-image:{sheen}; border:1px solid {border}; border-radius:18px; padding:14px; box-shadow:{elevation}; }}
 .lv-settings spinbutton {{ border-radius:10px; background:alpha(#b879f2,.09); border:1px solid {border}; font-size:11px; }}
 .lv-settings entry {{ border-radius:11px; padding:7px; }}
 '''

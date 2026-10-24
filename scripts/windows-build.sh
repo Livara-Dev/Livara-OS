@@ -8,7 +8,7 @@ case "$mode" in check|build|export) ;; *) echo 'Usage: livara-windows-build chec
 if [[ "$mode" == export ]]; then
   test -d /export || { echo 'The Windows output folder must be mounted at /export.' >&2; exit 1; }
   copied=0
-  for name in livara-desktop_0.1.0_all.deb livara-os-0.1.0-amd64.iso livara-os-0.1.0-amd64.iso.sha256 livara-os-0.1.0-packages.txt CHECK-RESULT.txt; do
+  for name in livara-desktop_0.1.1_all.deb livara-os-0.1.0-amd64.iso livara-os-0.1.0-amd64.iso.sha256 livara-os-0.1.0-packages.txt CHECK-RESULT.txt; do
     if [[ -f "/output/$name" ]]; then
       cp -- "/output/$name" "/export/$name"
       copied=$((copied + 1))
@@ -124,7 +124,7 @@ if ((available_bytes < 100 * 1024 * 1024 * 1024)); then
   exit 1
 fi
 mkdir -p /project/dist
-cp /output/livara-desktop_0.1.0_all.deb /project/dist/
+cp /output/livara-desktop_0.1.1_all.deb /project/dist/
 mkdir -p /project/dist/forks
 printf 'Compiling Livara Code from its pinned VS Code source...\n'
 bash scripts/build-code.sh /project/dist/forks

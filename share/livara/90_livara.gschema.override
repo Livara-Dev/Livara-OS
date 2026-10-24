@@ -15,7 +15,7 @@ document-font-name='Livara Sans 11'
 monospace-font-name='Livara Mono 11'
 
 [org.livara.desktop]
-blur-radius=18
+blur-radius=24
 
 [org.gnome.shell]
 enabled-extensions=['ubuntu-dock@ubuntu.com', 'ubuntu-appindicators@ubuntu.com', 'ding@rastersoft.com', 'livara-glass@livara.local']

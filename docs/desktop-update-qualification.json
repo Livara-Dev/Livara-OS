@@ -1,0 +1,84 @@
+{
+  "version": "0.1.1",
+  "source_commit": "c8c36abd7a77a1831c881a258cf9b4055ebd360b",
+  "release": "https://github.com/Livara-Dev/Livara-OS/releases/tag/desktop-v0.1.1",
+  "release_workflow": "https://github.com/Livara-Dev/Livara-OS/actions/runs/40085018120",
+  "published_at": "2026-10-24T10:28:12Z",
+  "source_checks": {
+    "python": {
+      "run": 258,
+      "passed": 257,
+      "skipped": 1,
+      "skip_reason": "optional local pinned Zen checkout absent"
+    },
+    "node": {
+      "passed": 16
+    },
+    "desktop_tools": "passed",
+    "shell_syntax": "passed",
+    "source_audit": "passed"
+  },
+  "native_desktop": {
+    "environment": "Ubuntu 24.04 GTK 4 under Xvfb/Openbox; shipped fonts and icons",
+    "settings": {
+      "catalog": 94,
+      "write_readback_passed": 94,
+      "changed_values": 93,
+      "same_value": "only installed cursor theme",
+      "dependency_transitions": 6,
+      "categories": 8,
+      "responsive_window": "800x600"
+    },
+    "apps_dark_and_live_light": 7,
+    "window_control_checks": 26,
+    "essentials_workflow_checks": 25,
+    "material_css_variants": 8,
+    "update_callbacks": 2,
+    "enabled_theme_preview_checks": 2,
+    "icons": {
+      "distinct": 13,
+      "rendered_sizes": [
+        32,
+        128
+      ]
+    }
+  },
+  "compositor": {
+    "environment": "GNOME Shell 46 headless software renderer, production extension",
+    "computed_materials": 6,
+    "mapped_surfaces_with_real_blur_and_cached_lens": 4,
+    "hidden_surface_cleanup": "passed"
+  },
+  "code": {
+    "source_compilation": "passed",
+    "native_cli_window": "passed",
+    "sandbox_disabled": false,
+    "default_traffic_lights": "visible at left;14px circles,28px pointer targets",
+    "checks": [
+      "native fullscreen and F11",
+      "recreated-control keyboard bindings",
+      "native maximize/restore",
+      "minimize and window manager restore"
+    ]
+  },
+  "package_upgrade": {
+    "from": "0.1.0",
+    "to": "0.1.1",
+    "scope": "Real DEB unpack upgrade, user-file and administrator conffile preservation; vendor launcher upgrade/removal ownership. No full installed-desktop APT configure claim.",
+    "result": "passed"
+  },
+  "published_assets": {
+    "desktop_bytes": 14426420,
+    "code_bytes": 254685514,
+    "code_sha256": "0b459da963f17ed64362e9f2902a7b20e55328f68ac9a6fac8782b5cc7019a38",
+    "public_downloads": "both DEBs and all auxiliary files verified against GitHub digests and SHA256SUMS",
+    "provenance": "GitHub build provenance generation passed in release workflow; local legacy gh CLI has no attestation verification command",
+    "desktop_sha256": "2397fd1e972fcef199a64a43f2e588ed28e2ae471c2e957c8b0378823191f605"
+  },
+  "limitations": [
+    "Chat WebKit runtime blocked by host sandbox namespace restrictions; sandbox preserved.",
+    "Settings backend/readback does not establish physical hardware behavior.",
+    "Browser resource updates validated through guarded archive fixtures and JS/CSS tests; no new Gecko native runtime qualification.",
+    "No ISO rebuild, boot, physical hardware or disk installation qualification was performed."
+  ]
+}

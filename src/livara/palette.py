@@ -53,7 +53,6 @@ def main():
             super().__init__(application_id='org.livara.Palette');self.connect('activate',self.activate)
         def activate(self,app):
             if self.get_active_window():self.window.present();self.entry.grab_focus();return
-            Adw.StyleManager.get_default().set_color_scheme(Adw.ColorScheme.FORCE_DARK)
             provider=Gtk.CssProvider();provider.load_from_data(CSS.encode())
             Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(),provider,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
             self.entries=commands();self.apps={};self.timeout=None
@@ -72,7 +71,7 @@ def main():
             box=Gtk.Box(orientation=Gtk.Orientation.VERTICAL,spacing=14,margin_start=20,margin_end=20,margin_bottom=20);self.overlay.set_child(box)
             header=Adw.HeaderBar();window_style.configure_native_headerbar(self.window,header)
             header.set_title_widget(Adw.WindowTitle(title='Livara Palette',subtitle='Your next move'));box.append(header)
-            self.entry=Gtk.SearchEntry(placeholder_text='Apps, files, settings, tools…');box.append(self.entry)
+            self.entry=Gtk.SearchEntry(placeholder_text='Apps, files, settings, tools…', css_classes=['palette-search']);box.append(self.entry)
             self.entry.connect('search-changed',self.schedule);self.entry.connect('activate',lambda e:self.open_selected())
             scroll=Gtk.ScrolledWindow(vexpand=True,hscrollbar_policy=Gtk.PolicyType.NEVER);box.append(scroll)
             self.list=Gtk.ListBox(selection_mode=Gtk.SelectionMode.SINGLE,css_classes=['boxed-list']);scroll.set_child(self.list)

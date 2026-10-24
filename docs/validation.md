@@ -29,6 +29,19 @@ Earlier component records retain their original revision-specific scope: [window
 
 ## Reproduce and limits
 
+The committed font binaries were serialized with the tools pinned in
+`build/requirements-check.txt`. Use the same compiler and HarfBuzz table
+repacker for source checks; installing FontTools alone can produce equivalent
+font behavior with different GPOS/GSUB bytes and fail the roundtrip tests.
+Keep distribution PyGObject available while using the pinned tools:
+
+```sh
+python3 -m venv --system-site-packages .venv
+.venv/bin/python -m pip install -r build/requirements-check.txt
+. .venv/bin/activate
+make check
+```
+
 `make check` runs source/backend tests, Node tests, compilation and shell checks. `make deb` builds the desktop package. `python3 scripts/package-source.py --check` audits source delivery. `Build-Livara.bat -Check` exercises the source/package path in Docker. These smaller checks do not compile the full engines or build an ISO. The full builder needs substantial resources; see [Windows instructions](windows-build.md).
 
 The complete Kali catalog remains an on-demand option; its full runtime was not qualified. Physical RTX/Core Ultra hardware, graphics workloads, suspend/resume, encrypted disk installation, reboot, snapshot restore and phone pairing need separate testing. Native Windows execution remains unqualified. The current GRUB chain is unsigned, so this preview requires Secure Boot disabled. The live session is ephemeral; the repository README documents its account and persistence behavior.

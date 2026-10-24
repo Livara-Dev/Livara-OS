@@ -187,7 +187,8 @@ class DebianPackaging(unittest.TestCase):
         project = Path(__file__).resolve().parents[1]
         with tempfile.TemporaryDirectory() as directory:
             subprocess.run(["bash", str(project / "packaging/build-deb.sh"), directory], check=True, capture_output=True)
-            package = Path(directory) / "livara-desktop_0.1.0_all.deb"
+            from livara import __version__
+            package = Path(directory) / f"livara-desktop_{__version__}_all.deb"
             archive = subprocess.run(["dpkg-deb", "--fsys-tarfile", str(package)], check=True, capture_output=True).stdout
             with tarfile.open(fileobj=io.BytesIO(archive)) as files:
                 root = files.getmember(".")

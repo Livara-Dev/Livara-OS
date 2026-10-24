@@ -29,11 +29,13 @@
   --livara-accent: #bd9aff;
   --livara-radius: 20px;
   --livara-font-size: 14px;
-  --livara-surface: #171021;
-  --livara-text: #f6f0ff;
-  --livara-muted: #c1b4d5;
-  --livara-line: rgba(227, 211, 255, .17);
-  --livara-glass: rgba(39, 26, 59, .78);
+  --livara-surface: #141720;
+  --livara-text: #f6f7fc;
+  --livara-muted: #b7bfce;
+  --livara-line: rgba(227, 236, 255, .19);
+  --livara-glass: rgba(35, 40, 54, .92);
+  --livara-lens: linear-gradient(145deg, rgba(255,255,255,.17), rgba(231,238,255,.025) 38%, rgba(206,220,255,.065));
+  --livara-edge: rgba(255,255,255,.48);
   --zen-primary-color: var(--livara-accent) !important;
   --zen-border-radius: var(--livara-radius) !important;
   --zen-branding-dark: #100a19;
@@ -50,11 +52,13 @@
   color-scheme: dark;
 }
 :root[livara-appearance="light"] {
-  --livara-surface: #f4effc;
-  --livara-text: #28133f;
-  --livara-muted: #675576;
-  --livara-line: rgba(74, 35, 105, .2);
-  --livara-glass: rgba(247, 240, 255, .86);
+  --livara-surface: #eff1f8;
+  --livara-text: #22273a;
+  --livara-muted: #586179;
+  --livara-line: rgba(51, 66, 103, .18);
+  --livara-glass: rgba(247, 249, 255, .94);
+  --livara-lens: linear-gradient(145deg, rgba(255,255,255,.9), rgba(255,255,255,.12) 38%, rgba(214,225,253,.28));
+  --livara-edge: rgba(255,255,255,.9);
   --zen-branding-paper: #f4effc;
   color-scheme: light;
 }
@@ -67,18 +71,20 @@
   color: var(--livara-text);
 }
 #zen-toolbar-background {
-  background: linear-gradient(150deg, color-mix(in srgb, var(--livara-accent) 10%, var(--livara-glass)), var(--livara-glass)) !important;
+  background: var(--livara-lens), var(--livara-glass) !important;
   border: 1px solid var(--livara-line);
   border-radius: var(--livara-radius) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .09), 0 8px 28px rgba(9, 2, 19, .18);
+  border-top-color: var(--livara-edge);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.045), inset 0 -1px 0 rgba(210,226,255,.13), 0 12px 32px rgba(4, 9, 23, .24);
 }
 :root[livara-glass="true"] #zen-toolbar-background {
-  backdrop-filter: blur(24px) saturate(135%);
+  backdrop-filter: blur(28px) saturate(145%);
 }
 :root[livara-glass="false"] #zen-toolbar-background {
   background: var(--livara-surface) !important;
   backdrop-filter: none;
 }
+:root[livara-glass="false"] { --livara-lens: none; --livara-glass: var(--livara-surface); }
 #nav-bar {
   color: var(--livara-text);
   border-radius: var(--livara-radius);
@@ -88,6 +94,39 @@
 :root[livara-window-controls="traffic-lights"] .titlebar-buttonbox-container {
   display: none !important;
 }
+/* Popup/app windows may have no navigation toolbar. Keep their original
+ * controls and actions, using the same material instead of hiding the titlebar. */
+:root[livara-native-window-controls="traffic-lights"] .titlebar-buttonbox {
+  align-items: center;
+  gap: 7px;
+  padding-inline: 9px;
+}
+:root[livara-native-window-controls="traffic-lights"] .titlebar-button {
+  appearance: none !important;
+  min-width: var(--livara-control-size, 14px) !important;
+  width: var(--livara-control-size, 14px) !important;
+  min-height: var(--livara-control-size, 14px) !important;
+  height: var(--livara-control-size, 14px) !important;
+  padding: 0 !important;
+  margin-block: 8px !important;
+  border: 1px solid rgba(0,0,0,.23) !important;
+  border-radius: 50% !important;
+  color: #251920 !important;
+  background-image: linear-gradient(to bottom, rgba(255,255,255,.30), transparent 50%, rgba(0,0,0,.08)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.16);
+}
+:root[livara-native-window-controls="traffic-lights"] .titlebar-close { background-color: var(--livara-control-close, #ff5f57) !important; }
+:root[livara-native-window-controls="traffic-lights"] .titlebar-min { background-color: var(--livara-control-minimize, #febc2e) !important; }
+:root[livara-native-window-controls="traffic-lights"] :is(.titlebar-max, .titlebar-restore) { background-color: var(--livara-control-maximize, #28c840) !important; }
+:root[livara-native-window-controls="traffic-lights"] .titlebar-button > .toolbarbutton-icon {
+  width: 10px;
+  height: 10px;
+  opacity: 0;
+}
+:root[livara-native-window-controls="traffic-lights"] .titlebar-buttonbox:hover .toolbarbutton-icon,
+:root[livara-native-window-controls="traffic-lights"][livara-control-symbols="true"] .titlebar-button > .toolbarbutton-icon,
+:root[livara-native-window-controls="traffic-lights"] .titlebar-button:focus-visible > .toolbarbutton-icon { opacity: 1; }
+:root[livara-native-window-controls="traffic-lights"] .titlebar-button:focus-visible { outline: 2px solid var(--livara-accent); outline-offset: 3px; }
 #livara-window-controls {
   display: flex;
   align-items: center;
@@ -131,7 +170,7 @@
 #livara-window-controls .livara-window-control:hover { box-shadow: inset 0 0 0 1px rgba(0,0,0,.2); }
 #livara-window-controls .livara-window-control:focus-visible { outline: 2px solid var(--livara-accent); outline-offset: 3px; }
 #urlbar .urlbar-background {
-  background: var(--livara-glass) !important;
+  background: var(--livara-lens), var(--livara-glass) !important;
   border: 1px solid var(--livara-line) !important;
   border-radius: calc(var(--livara-radius) + 2px) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 3px 16px rgba(8, 2, 18, .16) !important;
@@ -164,9 +203,11 @@
 
 #livara-appearance-panel::part(content) {
   border-radius: var(--livara-radius);
-  background: var(--livara-glass);
+  background: var(--livara-lens), var(--livara-glass);
   color: var(--livara-text);
   border: 1px solid var(--livara-line);
+  border-top-color: var(--livara-edge);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), 0 18px 52px rgba(0,0,0,.3);
 }
 .livara-panel {
   box-sizing: border-box;
@@ -176,7 +217,7 @@
   padding: 22px;
   font: 400 14px/1.45 "Livara Sans", "Livara Persian", "Noto Sans", sans-serif;
   color: var(--livara-text);
-  background: var(--livara-glass);
+  background: transparent;
 }
 .livara-panel-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
 .livara-panel-heading img { object-fit: contain; border-radius: 12px; }
@@ -227,16 +268,18 @@
   #navigator-toolbox *, #livara-appearance-panel * { transition-duration: 0s !important; animation-duration: 0s !important; }
 }
 @media (prefers-contrast: more) {
-  :root { --livara-line: currentColor; --livara-glass: var(--livara-surface); }
+  :root { --livara-line: currentColor; --livara-glass: var(--livara-surface); --livara-lens: none; }
 }
 @media (forced-colors: active) {
-  #livara-window-controls .livara-window-control {
+  #livara-window-controls .livara-window-control,
+  :root[livara-native-window-controls="traffic-lights"] .titlebar-button {
     forced-color-adjust: auto;
-    background: ButtonFace;
-    color: ButtonText;
-    border-color: ButtonText;
+    background: ButtonFace !important;
+    color: ButtonText !important;
+    border-color: ButtonText !important;
   }
   #livara-window-controls .livara-window-control > span { opacity: 1; }
+  :root[livara-native-window-controls="traffic-lights"] .titlebar-button > .toolbarbutton-icon { opacity: 1; }
   #zen-main-app-wrapper, #zen-toolbar-background, .livara-panel, #urlbar .urlbar-background {
     background: Canvas !important;
     color: CanvasText !important;

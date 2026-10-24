@@ -139,6 +139,12 @@ export default class LivaraGlass extends Extension {
             this._addSurface(actor, 'dock');
         else if (actor.has_style_class_name?.('popup-menu-content'))
             this._addSurface(actor, 'menu');
+        else if (actor.has_style_class_name?.('notification-banner'))
+            this._addSurface(actor, 'notification');
+        else if (actor.has_style_class_name?.('osd-window'))
+            this._addSurface(actor, 'osd');
+        else if (actor.has_style_class_name?.('modal-dialog'))
+            this._addSurface(actor, 'dialog');
         else if (actor !== this._panelBackground)
             this._removeSurface(actor);
     }
@@ -254,7 +260,9 @@ export default class LivaraGlass extends Extension {
             }
             // GNOME 46 uses radius, not the obsolete sigma property.
             state.effect.radius = this._radius;
-            state.effect.brightness = state.kind === 'menu' ? 0.78 : 0.88;
+            // Content plates carry contrast; keep the sampled scene luminous
+            // instead of tinting every surface into the same dark purple pane.
+            state.effect.brightness = ['menu', 'dialog', 'notification'].includes(state.kind) ? 0.90 : 0.96;
         } else if (state.effect) {
             actor.remove_effect(state.effect);
             state.effect = null;
@@ -288,21 +296,33 @@ export default class LivaraGlass extends Extension {
         // blur; it does not displace/refract the desktop's sampled pixels.
         const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
 <defs><linearGradient id="body" x2="0" y2="1">
-<stop stop-color="#ffffff" stop-opacity=".15"/>
-<stop offset=".08" stop-color="#ded4ff" stop-opacity=".055"/>
-<stop offset=".32" stop-color="#b8a3ed" stop-opacity=".012"/>
+<stop stop-color="#ffffff" stop-opacity=".26"/>
+<stop offset=".08" stop-color="#ded4ff" stop-opacity=".09"/>
+<stop offset=".32" stop-color="#b8a3ed" stop-opacity=".018"/>
 <stop offset=".5" stop-color="#9074c4" stop-opacity="0"/>
 <stop offset=".7" stop-color="#93cbff" stop-opacity=".018"/>
-<stop offset=".92" stop-color="#abc5ff" stop-opacity=".045"/>
-<stop offset="1" stop-color="#e3deff" stop-opacity=".11"/>
+<stop offset=".92" stop-color="#abc5ff" stop-opacity=".075"/>
+<stop offset="1" stop-color="#e3deff" stop-opacity=".19"/>
 </linearGradient><linearGradient id="edge" x2="1" y2="1">
 <stop stop-color="#ffffff" stop-opacity=".72"/>
 <stop offset=".22" stop-color="#e4cdff" stop-opacity=".38"/>
 <stop offset=".46" stop-color="#8b6eb5" stop-opacity=".06"/>
 <stop offset=".68" stop-color="#a5d4ff" stop-opacity=".22"/>
 <stop offset="1" stop-color="#f0e3ff" stop-opacity=".48"/>
-</linearGradient></defs>
+</linearGradient>
+<radialGradient id="lens" cx="0" cy="0" r="1">
+<stop stop-color="#ffffff" stop-opacity=".18"/>
+<stop offset=".4" stop-color="#dcecff" stop-opacity=".045"/>
+<stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="caustic" cx="1" cy="1" r="1">
+<stop stop-color="#e8efff" stop-opacity=".12"/>
+<stop offset=".25" stop-color="#d4bcff" stop-opacity=".025"/>
+<stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+</radialGradient></defs>
 <rect x=".75" y=".75" width="${width - 1.5}" height="${height - 1.5}" rx="${radius}" fill="url(#body)" stroke="url(#edge)" stroke-width="1.1"/>
+<rect x="2" y="2" width="${Math.max(0, width - 4)}" height="${Math.max(0, height - 4)}" rx="${Math.max(0, radius - 1)}" fill="url(#lens)"/>
+<rect x="2" y="2" width="${Math.max(0, width - 4)}" height="${Math.max(0, height - 4)}" rx="${Math.max(0, radius - 1)}" fill="url(#caustic)"/>
 <rect x="2" y="2" width="${Math.max(0, width - 4)}" height="${Math.max(0, height - 4)}" rx="${Math.max(0, radius - 1)}" fill="none" stroke="#ffffff" stroke-opacity=".055" stroke-width=".7"/>
 </svg>`;
         const scale = Math.min(1, MAX_RIM_TEXTURE / Math.max(width, height));
