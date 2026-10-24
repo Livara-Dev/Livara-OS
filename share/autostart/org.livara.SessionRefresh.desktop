@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Livara Session Appearance
+Comment=Refresh your selected window controls without resetting preferences
+Exec=livara-session-refresh
+NoDisplay=true
+OnlyShowIn=GNOME;Unity;
+X-GNOME-Autostart-enabled=true

@@ -35,11 +35,47 @@ export class WindowControlsController {
     private readonly fullscreen: () => void;
     private readonly keys = new Map<HTMLElement, (event: KeyboardEvent) => void>();
     private readonly clicks = new Map<HTMLElement, (event: MouseEvent) => void>();
+    private readonly observer: MutationObserver | undefined;
+    private preferences: WindowControlsPreferences | undefined;
+    private scheduled = false;
+    private disposed = false;
     private greenAction: 'fullscreen' | 'maximize' = 'fullscreen';
 
-    constructor(document: Document, fullscreen: () => void) { this.document = document; this.fullscreen = fullscreen; }
+    constructor(document: Document, fullscreen: () => void) {
+        this.document = document;
+        this.fullscreen = fullscreen;
+        const Observer = document.defaultView?.MutationObserver;
+        if (Observer) {
+            // Workbench titlebars can be rebuilt after startup (menu/layout and
+            // fullscreen changes). Bind the new native-host buttons as well.
+            this.observer = new Observer(records => {
+                if (this.scheduled || this.disposed) { return; }
+                const titlebarChanged = records.some(record => {
+                    const target = record.target.nodeType === 1 ? record.target as Element : undefined;
+                    if (target?.closest('.part.titlebar')) { return true; }
+                    return [...record.addedNodes, ...record.removedNodes].some(node => node.nodeType === 1 &&
+                        ((node as Element).matches('.part.titlebar') || (node as Element).querySelector('.part.titlebar')));
+                });
+                if (!titlebarChanged) { return; }
+                this.scheduled = true;
+                queueMicrotask(() => {
+                    this.scheduled = false;
+                    if (!this.disposed && this.preferences) { this.apply(this.preferences); }
+                });
+            });
+            this.observer.observe(document.documentElement, { childList: true, subtree: true });
+        }
+    }
 
     apply(preferences: WindowControlsPreferences): void {
+        if (this.disposed) { return; }
+        this.preferences = preferences;
+        for (const [button, listener] of this.keys) {
+            if (!button.isConnected) { button.removeEventListener('keydown', listener); this.keys.delete(button); }
+        }
+        for (const [button, listener] of this.clicks) {
+            if (!button.isConnected) { button.removeEventListener('click', listener, true); this.clicks.delete(button); }
+        }
         const root = this.document.documentElement;
         this.greenAction = preferences.style === 'trafficlights' ? preferences.greenAction : 'maximize';
         root.classList.toggle('livara-traffic-lights', preferences.style === 'trafficlights');
@@ -60,7 +96,12 @@ export class WindowControlsController {
                 else { target.append(group); }
             }
             const order = preferences.style === 'trafficlights' ? [close, minimize, maximize] : [minimize, maximize, close];
-            for (const button of order) { group.append(button); }
+            // Avoid mutating an already-correct group: our observer also sees
+            // these moves and must settle after one refresh.
+            const current = Array.from(group.children).filter(child => order.includes(child as HTMLElement));
+            if (order.some((button, index) => current[index] !== button)) {
+                for (const button of order) { group.append(button); }
+            }
             for (const [button, label] of [[close, 'Close window'], [minimize, 'Minimize window'], [maximize, 'Maximize or restore window']] as const) {
                 if (!button.hasAttribute('role')) { button.setAttribute('role', 'button'); }
                 const fullscreen = button === maximize && this.greenAction === 'fullscreen';
@@ -97,6 +138,8 @@ export class WindowControlsController {
     }
 
     dispose(): void {
+        this.disposed = true;
+        this.observer?.disconnect();
         for (const [button, listener] of this.keys) { button.removeEventListener('keydown', listener); }
         for (const [button, listener] of this.clicks) { button.removeEventListener('click', listener, true); }
         this.keys.clear();

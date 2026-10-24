@@ -6,6 +6,7 @@ from pathlib import Path
 import copy
 import os
 import re
+import time
 from urllib.parse import unquote, urlsplit
 
 from . import preferences
@@ -108,14 +109,60 @@ def set_option(name: str, value) -> None:
         return
     if name == "cursor-theme" and value not in cursor_themes():
         raise ValueError("Choose a locally installed pointer theme")
-    dock_fixed = _prepare_dock_mode({name: value}) if name in ("dock-autohide", "dock-intellihide") else None
-    write_setting(schema, key, value)
-    if dock_fixed is not None:
-        write_setting("org.gnome.shell.extensions.dash-to-dock", "dock-fixed", dock_fixed)
-    if name in WINDOW_STYLE_KEYS or name == "window-buttons":
-        apply_window_style()
-    if name in ("accent", "appearance", "wallpaper"):
-        apply_palette(update_wallpaper=name == "wallpaper")
+    targets = _option_targets({name})
+    snapshots = _setting_snapshots(targets)
+    try:
+        dock_fixed = _prepare_dock_mode({name: value}) if name in ("dock-autohide", "dock-intellihide") else None
+        write_setting(schema, key, value)
+        if dock_fixed is not None:
+            write_setting("org.gnome.shell.extensions.dash-to-dock", "dock-fixed", dock_fixed)
+        if name in WINDOW_STYLE_KEYS or name == "window-buttons":
+            apply_window_style()
+        if name in ("accent", "appearance", "wallpaper"):
+            apply_palette(update_wallpaper=name == "wallpaper")
+    except Exception as error:
+        failures = _rollback(snapshots)
+        if name in WINDOW_STYLE_KEYS or name == "window-buttons":
+            try:
+                apply_window_style()
+            except Exception:
+                failures.append("GTK window styles")
+        if failures:
+            raise ValueError("The change failed and these settings could not be restored: " + ", ".join(failures)) from error
+        raise ValueError("The change could not be applied; previous preferences were restored. " + str(error)) from error
+
+
+def _option_targets(names):
+    """Include derived desktop keys when preserving a preference operation."""
+    targets = {OPTIONS[name] for name in names}
+    if set(names).intersection(("dock-autohide", "dock-intellihide")):
+        targets.add(("org.gnome.shell.extensions.dash-to-dock", "dock-fixed"))
+    if set(names).intersection(("accent", "appearance")):
+        targets.update(("org.gnome.desktop.interface", key) for key in ("color-scheme", "gtk-theme", "icon-theme"))
+    if set(names).intersection(("wallpaper", "wallpaper-image")):
+        targets.update((("org.gnome.desktop.background", "picture-uri"),
+                        ("org.gnome.desktop.background", "picture-uri-dark"),
+                        ("org.gnome.desktop.screensaver", "picture-uri")))
+    return targets
+
+
+def _setting_snapshots(targets):
+    snapshots = []
+    for schema, key in sorted(targets):
+        settings = settings_for(schema)
+        if settings is not None and settings.props.settings_schema.has_key(key):
+            snapshots.append((settings, key, settings.get_user_value(key)))
+    return snapshots
+
+
+def apply_rendering_mode(full: bool) -> dict:
+    """Apply an explicit rendering choice together, including its motion choice."""
+    if type(full) is not bool:
+        raise ValueError("Choose Full Glass or Efficient rendering")
+    values = {"glass-enabled": full, "blur-radius": 24 if full else 0, "animations": full}
+    for name, value in values.items():
+        prepare_setting(*OPTIONS[name], value)
+    return _apply_options(values, preserve_reduced_motion=False)
 
 
 def validate_window_value(name: str, value):
@@ -232,8 +279,15 @@ def _write_wallpaper(path: Path) -> None:
             available.append((schema, key))
     if not available or targets[0] not in available:
         raise ValueError("The desktop wallpaper service is unavailable")
-    for schema, key in available:
-        write_setting(schema, key, uri)
+    snapshots = _setting_snapshots(available)
+    try:
+        for schema, key in available:
+            write_setting(schema, key, uri)
+    except Exception as error:
+        failures = _rollback(snapshots)
+        if failures:
+            raise ValueError("The wallpaper failed and these settings could not be restored: " + ", ".join(failures)) from error
+        raise ValueError("The wallpaper could not be applied; previous backgrounds were restored. " + str(error)) from error
 
 
 def set_wallpaper_image(value: str) -> None:
@@ -301,6 +355,72 @@ def preference_metadata() -> list[dict]:
     return catalog
 
 
+_extension_status_cache = {}
+
+
+def shell_extension_note(uuid: str) -> str:
+    """Observe the Shell's runtime state, rather than equating a schema with a service."""
+    cached = _extension_status_cache.get(uuid)
+    now = time.monotonic()
+    if cached and now - cached[0] < 5:
+        return cached[1]
+    try:
+        from gi.repository import Gio, GLib
+        bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        reply = bus.call_sync("org.gnome.Shell", "/org/gnome/Shell",
+            "org.gnome.Shell.Extensions", "GetExtensionInfo", GLib.Variant("(s)", (uuid,)),
+            GLib.VariantType.new("(a{sv})"), Gio.DBusCallFlags.NO_AUTO_START, 1000, None)
+        info = reply.unpack()[0]
+        state = info.get("state")
+        if state == 1:
+            note = ""
+        elif state == 3:
+            note = "The desktop extension failed to load. Open Extensions for its error, then log out and back in after updating."
+        elif state == 4:
+            note = "The desktop extension is incompatible with this GNOME version."
+        elif not info:
+            note = "The required desktop extension is not installed. Install the Livara desktop update, then log out and back in."
+        else:
+            note = "Enable the desktop extension in Extensions to use this control."
+    except Exception:
+        # GNOME's interface is absent outside the graphical session. Saving a
+        # preference remains allowed; do not claim that its renderer is running.
+        note = "This control takes effect in a GNOME session with its desktop extension running."
+    _extension_status_cache[uuid] = (now, note)
+    return note
+
+
+def inactive_reason(name: str) -> str:
+    """Explain controls whose native desktop consumer currently ignores them."""
+    dependencies = {
+        "workspace-count": ("dynamic-workspaces", False, "Turn off Dynamic workspaces to choose a fixed count."),
+        "titlebar-font": ("titlebar-system-font", False, "Turn off Use interface font in titles to choose a separate title font."),
+        "font-rgba-order": ("font-antialiasing", "rgba", "Choose Subpixel font smoothing to use this order."),
+        "auto-raise-delay": ("auto-raise", True, "Enable Raise on pointer focus to use this delay."),
+        "cursor-blink-time": ("cursor-blink", True, "Enable Blink text cursor to use this period."),
+        "keyboard-delay": ("keyboard-repeat", True, "Enable Key repeat to use this delay."),
+        "keyboard-interval": ("keyboard-repeat", True, "Enable Key repeat to use this interval."),
+        "lock-delay": ("screen-lock", True, "Enable Automatic screen lock to use this delay."),
+        "window-animation-style": ("animations", True, "Enable Desktop animations to use window transitions."),
+        "window-animation-duration": ("animations", True, "Enable Desktop animations to use window transitions."),
+        "night-light-temperature": ("night-light", True, "Enable Night Light to use this temperature."),
+        "night-light-automatic": ("night-light", True, "Enable Night Light to configure its schedule."),
+        "night-light-from": ("night-light-automatic", False, "Turn off Sunset to sunrise to set a manual start time."),
+        "night-light-to": ("night-light-automatic", False, "Turn off Sunset to sunrise to set a manual end time."),
+    }
+    dependency = dependencies.get(name)
+    if dependency:
+        option, expected, explanation = dependency
+        actual = read_option(option)
+        if actual is not None and actual != expected:
+            return explanation
+    if name in ("night-light-from", "night-light-to") and read_option("night-light") is False:
+        return "Enable Night Light to configure its schedule."
+    if name == "window-animation-duration" and read_option("window-animation-style") == "off":
+        return "Choose a window transition to use this duration."
+    return ""
+
+
 def _prepare_dock_mode(values: dict):
     """A visible dock needs fixed mode when neither hiding behavior is active."""
     schema = "org.gnome.shell.extensions.dash-to-dock"
@@ -329,7 +449,7 @@ def _rollback(snapshots):
     return failures
 
 
-def _apply_options(values: dict, *, reset: bool = False) -> dict:
+def _apply_options(values: dict, *, reset: bool = False, preserve_reduced_motion: bool = True) -> dict:
     """Preflight a bounded group and roll back user overrides on write failure."""
     values = preferences.validate_values(values)
     available, skipped, snapshots = {}, [], []
@@ -339,7 +459,7 @@ def _apply_options(values: dict, *, reset: bool = False) -> dict:
         if settings is None or not settings.props.settings_schema.has_key(key):
             skipped.append(name)
             continue
-        if name == "animations" and value and not read_option("animations"):
+        if preserve_reduced_motion and not reset and name == "animations" and value and not read_option("animations"):
             skipped.append(name)  # Aesthetic presets never turn reduced motion off.
             continue
         if name == "wallpaper-image":

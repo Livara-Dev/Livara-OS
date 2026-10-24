@@ -1,5 +1,6 @@
 name: Build and test Livara Code
 on:
+  workflow_call:
   workflow_dispatch:
 permissions:
   contents: read
@@ -19,11 +20,14 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.18.0'
       - name: Prepare ephemeral runner
         run: |
           set -euo pipefail
           test "$RUNNER_ENVIRONMENT" = github-hosted
-          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc
           if ! swapon --show | grep -q .; then
             sudo fallocate -l 8G /swapfile
             sudo chmod 600 /swapfile
@@ -31,7 +35,7 @@ jobs:
             sudo swapon /swapfile
           fi
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends python3-fonttools libharfbuzz-bin libgtk-3-0t64 libnss3 libasound2t64 libxss1 libgbm1 xvfb xauth xdotool python3-pil python3-psutil
+          sudo apt-get install -y --no-install-recommends python3-fonttools libharfbuzz-bin libgtk-3-0t64 libnss3 libasound2t64 libxss1 libgbm1 xvfb xauth xdotool openbox x11-utils python3-pil python3-psutil
           python3 scripts/build-fonts.py
           df -h
           free -h
@@ -53,6 +57,15 @@ jobs:
         run: |
           set -euo pipefail
           python3 scripts/code-runtime-smoke.py dist/forks/livara-code-linux-x64.tar.xz dist/code-test
+      - name: Package tested Code-only application update
+        run: python3 scripts/package-code-update.py dist/forks/livara-code-linux-x64.tar.xz
+      - name: Upload Code-only DEB
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: livara-code-update
+          path: dist/update-code/*.deb
+          compression-level: 0
+          retention-days: 30
       - name: Preserve logs and test proof
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

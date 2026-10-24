@@ -7,7 +7,9 @@ import stat
 import subprocess
 import sys
 import threading
-from . import desktop, essentials as backend, theme, window_style
+from . import __version__, desktop, essentials as backend, theme, window_style
+
+DESKTOP_RELEASE_URI = f'https://github.com/Livara-Dev/Livara-OS/releases/tag/desktop-v{__version__}'
 
 CSS = """
 window { background:#050408; color:#f0e9ff; }
@@ -50,10 +52,13 @@ def main():
 
         def activate(self, app):
             if self.get_active_window(): self.window.present();return
-            Adw.StyleManager.get_default().set_color_scheme(Adw.ColorScheme.FORCE_DARK)
             provider = Gtk.CssProvider();provider.load_from_data(CSS.encode())
             Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
             self.window = Adw.ApplicationWindow(application=self, title='Livara Essentials', default_width=1180, default_height=800)
+            self.window.set_icon_name('org.livara.Essentials')
+            self.appearance_settings = desktop.settings_for('org.livara.desktop')
+            if self.appearance_settings:
+                self.appearance_settings.connect('changed::appearance', lambda *args: self.update_preview() if getattr(self, 'current', None) == 'theme' and hasattr(self, 'preview_provider') else None)
             self.window.set_size_request(760, 560)
             self.overlay = Adw.ToastOverlay();self.window.set_content(self.overlay)
             outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL);self.overlay.set_child(outer)
@@ -65,9 +70,19 @@ def main():
             self.nav = Gtk.ListBox(selection_mode=Gtk.SelectionMode.SINGLE, css_classes=['navigation-sidebar'])
             navscroll.set_child(self.nav);split.set_start_child(navscroll);split.set_resize_start_child(False);split.set_shrink_start_child(False)
             self.rows = {}
+            feature_icons = {'theme':'applications-graphics-symbolic', 'profiles':'preferences-system-symbolic',
+                'layouts':'view-grid-symbolic', 'palette':'system-search-symbolic', 'tiling':'view-dual-symbolic',
+                'clipboard':'edit-paste-symbolic', 'preview':'document-open-symbolic', 'capture':'media-record-symbolic',
+                'recovery':'document-revert-symbolic', 'permissions':'changes-prevent-symbolic',
+                'lab':'security-high-symbolic', 'hardware':'computer-symbolic', 'connect':'phone-symbolic',
+                'help':'help-browser-symbolic', 'install':'drive-harddisk-symbolic', 'accounts':'avatar-default-symbolic',
+                'updates':'software-update-available-symbolic'}
             for key, title, hint, category, command in backend.FEATURES:
                 row = Gtk.ListBoxRow();row.key = key
-                row.set_child(Gtk.Label(label=title, xalign=0));self.nav.append(row);self.rows[key] = row
+                contents = Gtk.Box(spacing=12, css_classes=['feature-nav-row'])
+                contents.append(Gtk.Image(icon_name=feature_icons[key], css_classes=['feature-nav-icon']))
+                contents.append(Gtk.Label(label=title, xalign=0, wrap=True))
+                row.set_child(contents);row.set_tooltip_text(hint);self.nav.append(row);self.rows[key] = row
             self.nav.connect('row-selected', lambda box, row: self.show(row.key) if row else None)
             self.scroller = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER, hexpand=True)
             split.set_end_child(self.scroller);self.select('theme');self.window.present()
@@ -139,10 +154,13 @@ def main():
             preview.append(self.label('AMOLED surfaces · soft edges · a personal accent', 'muted'))
             preview.append(self.button('A little more Livara', lambda: self.toast('This is a visual preview'), True));card.append(preview)
             if not hasattr(self, 'preview_provider'):
-                self.preview_provider = Gtk.CssProvider();Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), self.preview_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 2)
+                # Scope the draft above the currently applied Theme Studio CSS,
+                # otherwise editing an enabled theme cannot preview new values.
+                self.preview_provider = Gtk.CssProvider();Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), self.preview_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER + 2)
             accent = self.entry('#c5a3ff');accent.set_text(self.tokens['theme-accent'])
             accent.connect('changed', lambda entry: self.preview_change('theme-accent', entry.get_text()))
-            self.line(card, self.label('Accent'), accent)
+            caption = self.label('Accent');caption.set_size_request(115, -1)
+            self.line(card, caption, accent)
             for key, title, low, high in [('theme-radius', 'Corner radius', 0, 36), ('theme-border', 'Border width', 0, 4), ('theme-opacity', 'Surface opacity', 60, 100)]:
                 scale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, low, high, 1);scale.set_value(self.tokens[key]);scale.set_hexpand(True);scale.set_draw_value(True)
                 scale.connect('value-changed', lambda widget, k=key: self.preview_change(k, int(widget.get_value())))
@@ -173,7 +191,11 @@ def main():
             except ValueError: pass
         def update_preview(self):
             value = self.tokens
-            self.preview_provider.load_from_data((f"#theme-preview {{ background:rgba(12,8,18,{value['theme-opacity']/100}); border:{value['theme-border']}px solid {value['theme-accent']}; border-radius:{value['theme-radius']}px; }} #theme-preview button {{ background:{value['theme-accent']}; color:#13091d; }}").encode())
+            light = desktop.read_option('appearance') == 'light'
+            surface, ink, muted = ('248,245,253', '#242032', '#686174') if light else ('12,8,18', '#f5f2fc', '#bdb8cc')
+            rgb = [int(value['theme-accent'][index:index + 2], 16) / 255 for index in (1, 3, 5)]
+            button_ink = '#13091d' if sum(c * w for c, w in zip(rgb, (.2126, .7152, .0722))) > .48 else '#ffffff'
+            self.preview_provider.load_from_data((f"#theme-preview {{ background:rgba({surface},{value['theme-opacity']/100}); color:{ink}; border:{value['theme-border']}px solid {value['theme-accent']}; border-radius:{value['theme-radius']}px; }} #theme-preview label {{ color:{ink}; }} #theme-preview .muted {{ color:{muted}; }} #theme-preview button {{ background:{value['theme-accent']}; color:{button_ink}; }} #theme-preview button label {{ color:{button_ink}; }}").encode())
         def theme_apply(self):
             self.bundle['tokens'] = self.tokens;backend.apply_theme_bundle(self.bundle);self.toast('Theme applied')
         def disable_theme(self): theme.apply({**self.tokens, 'theme-enabled': False});self.toast('Original app styling restored')
@@ -366,11 +388,17 @@ def main():
             card=self.card('A desktop that remembers you', 'Installed accounts keep files and preferences in their home folders. Live USB sessions are temporary unless persistence was explicitly configured. The installer creates a password-protected local account; automatic login is disabled.')
             card.append(self.button('Manage local accounts',lambda:self.launch(['gnome-control-center','user-accounts']),True))
         def page_updates(self):
+            release=self.card('Update Livara without a new ISO', f'Installed desktop version: {__version__}. Download the desktop update package from the official GitHub release, then follow the update guide to upgrade this installation. Your files and preferences stay in place. Code and Browser use their own application packages when provided.')
+            self.line(release,self.button('Open Livara update release',lambda:Gio.AppInfo.launch_default_for_uri(DESKTOP_RELEASE_URI,None),True),self.button('Read update instructions',self.update_instructions))
             card=self.card('Keep the foundations current', 'Software Updater applies signed distribution package updates. Automatic security updates use the installed unattended-upgrades service. Review changes and maintain a configured recovery snapshot before major updates.')
             self.line(card,self.button('Check package updates',lambda:self.launch(['update-manager']),True),self.button('Update sources',lambda:self.launch(['software-properties-gtk'])))
-            self.card('Livara application releases', 'There is no Livara release server configured. Rebuild the included Livara desktop, Code and browser sources to update those components. Do not enable an untrusted package source or assume upstream application auto-updaters will update a locally branded build.')
             firmware=self.card('Device firmware', 'Read firmware devices in Hardware assistant. Apply supported updates using the system firmware utility after reviewing its instructions. Physical hardware support depends on the manufacturer.')
             firmware.append(self.button('Hardware assistant',lambda:self.select('hardware')))
+        def update_instructions(self):
+            guide = next((path for path in backend.help_documents() if path.name == 'updates.md'), None)
+            if guide is None:
+                raise ValueError('The update guide is missing. See the instructions on the official Livara update release.')
+            self.show_output('Update Livara',guide.read_text())
 
     app=Essentials()
     argv=sys.argv if Path(sys.argv[0]).name in ('livara-essentials','essentials_gui.py') else ['livara-essentials']

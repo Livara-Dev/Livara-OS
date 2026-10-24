@@ -40,6 +40,7 @@ def choose(name,value):
  ui=app().preferences_ui
  binding=ui.bindings[name]
  kind=binding['item']['kind'];w=binding['widget']
+ require(w.get_sensitive(),f'{name} is unexpectedly disabled: {w.get_tooltip_text()}')
  if kind=='choice':w.set_selected(next(i for i,pair in enumerate(binding['item']['choices']) if pair[0]==value))
  elif kind=='bool':w.set_active(value)
  elif kind in ('int','float'):w.livara_spin.set_value(value)
@@ -62,8 +63,44 @@ def workflow():
   ui.tab_buttons[section].set_active(True)
   require(ui.stack.get_visible_child_name()==section,'Category navigation failed')
  for name,binding in ui.bindings.items():
-  expected=desktop.read_option(name)is not None and binding['item']['writable']
+  expected=desktop.read_option(name)is not None and binding['item']['writable'] and not desktop.inactive_reason(name)
   require(binding['widget'].get_sensitive()==expected,'Availability incorrect: '+name)
+ ui.smoke_unavailable=[name for name in ui.bindings if desktop.read_option(name) is None]
+ ui.smoke_available=len(ui.bindings)-len(ui.smoke_unavailable)
+ record(f'{ui.smoke_available}/94 native settings available; missing schemas: '+(', '.join(ui.smoke_unavailable) or 'none'))
+ # Exercise dependent controls through their actual parent widgets. Disabled
+ # controls are not treated as failed preferences or bypassed programmatically.
+ for parent,off,on,dependent,value in (
+  ('auto-raise',False,True,'auto-raise-delay',150),
+  ('dynamic-workspaces',True,False,'workspace-count',5),
+  ('keyboard-repeat',False,True,'keyboard-delay',400),
+ ):
+  before=desktop.read_option(parent)
+  choose(parent,off)
+  require(not ui.bindings[dependent]['widget'].get_sensitive(),dependent+' should be inactive')
+  require(bool(ui.bindings[dependent]['widget'].get_tooltip_text()),dependent+' is missing its explanation')
+  choose(parent,on)
+  require(ui.bindings[dependent]['widget'].get_sensitive(),dependent+' did not reactivate')
+  choose(dependent,value)
+  choose(parent,before)
+ choose('night-light',True)
+ choose('night-light-automatic',True)
+ require(not ui.bindings['night-light-from']['widget'].get_sensitive(),'Manual Night Light schedule should be inactive')
+ choose('night-light-automatic',False)
+ require(ui.bindings['night-light-from']['widget'].get_sensitive(),'Manual Night Light schedule did not reactivate')
+ choose('night-light-from',20.5)
+ choose('titlebar-system-font',True)
+ require(not ui.bindings['titlebar-font']['widget'].get_sensitive(),'Separate title font should be inactive')
+ choose('titlebar-system-font',False)
+ titlefont=ui.bindings['titlebar-font']['widget']
+ require(titlefont.get_sensitive(),'Separate title font did not reactivate')
+ titlefont.set_font('Sans Bold 12');titlefont.emit('font-set')
+ require(desktop.read_option('titlebar-font')=='Sans Bold 12','Separate title font did not apply')
+ choose('animations',False)
+ require(not ui.bindings['window-animation-style']['widget'].get_sensitive(),'Motion control should be inactive')
+ choose('animations',True)
+ require(ui.bindings['window-animation-style']['widget'].get_sensitive(),'Motion control did not reactivate')
+ record('Actual dependency transitions: auto-raise delay, fixed workspace count, repeat delay, Night Light schedule, title font and window motion PASS')
  ui.search.set_text('font');ui.filter_changed()
  require(ui.stack.get_visible_child_name()=='typography','Search did not jump to type controls')
  require(ui.rows['interface-font'].get_visible(),'Actual matching row hidden')
@@ -191,7 +228,7 @@ def finish_narrow():
  a=app()
  shot('narrow-800x600.png')
  record('Actual Openbox window 800x600: all eight responsive categories rendered after layout PASS')
- (out/'result.json').write_text(json.dumps({'ok':True,'checks':results,'settings':94,'sections':8,'narrow_client_width':a.window.get_width(),'narrow_client_height':a.window.get_height()},indent=2)+'\n')
+ (out/'result.json').write_text(json.dumps({'ok':True,'checks':results,'settings':94,'available_settings':a.preferences_ui.smoke_available,'unavailable_settings':a.preferences_ui.smoke_unavailable,'sections':8,'narrow_client_width':a.window.get_width(),'narrow_client_height':a.window.get_height()},indent=2)+'\n')
  a.quit()
 
 GLib.timeout_add_seconds(3,workflow)

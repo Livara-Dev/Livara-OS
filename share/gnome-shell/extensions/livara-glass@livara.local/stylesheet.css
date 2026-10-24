@@ -1,50 +1,71 @@
-/* Original Livara optical material. SPDX-License-Identifier: GPL-3.0-or-later
- * GNOME St's two-stop gradients form the fallback material. A bounded cached
- * seven-stop image supplies layered specular light above real background blur.
- * No web backdrop-filter, screen clones, or animated full-screen shaders. */
-#panel.livara-panel {
-  background-color: transparent;
-  box-shadow: none;
-}
+/* SPDX-License-Identifier: GPL-3.0-or-later
+ * Livara liquid material: luminous outer lens, dark readable content plates,
+ * and bounded cached highlights over real compositor background blur.
+ * St supports two-stop gradients; the extension paints the compound lens.
+ */
+#panel.livara-panel { background-color: transparent; box-shadow: none; }
 .livara-panel-background {
-  background-color: rgba(15, 16, 29, 0.40);
+  background-color: rgba(21, 24, 34, 0.64);
   background-gradient-direction: vertical;
-  background-gradient-start: rgba(50, 40, 72, 0.32);
-  background-gradient-end: rgba(13, 16, 29, 0.48);
-  border-bottom: 1px solid rgba(229, 218, 255, 0.22);
+  background-gradient-start: rgba(112, 118, 139, 0.33);
+  background-gradient-end: rgba(19, 22, 32, 0.66);
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+  border-bottom: 1px solid rgba(229, 235, 255, 0.24);
 }
 .livara-glass .dash-background {
-  background-color: rgba(16, 17, 29, 0.43) !important;
+  background-color: rgba(29, 33, 45, 0.65) !important;
   background-gradient-direction: vertical;
-  background-gradient-start: rgba(62, 49, 82, 0.38);
-  background-gradient-end: rgba(17, 20, 34, 0.52);
-  border: 1px solid rgba(220, 211, 246, 0.25) !important;
-  border-top-color: rgba(253, 245, 255, 0.51) !important;
-  border-bottom-color: rgba(182, 188, 239, 0.22) !important;
+  background-gradient-start: rgba(107, 115, 138, 0.43);
+  background-gradient-end: rgba(23, 27, 39, 0.69);
+  border: 1px solid rgba(223, 231, 255, 0.32) !important;
+  border-top-color: rgba(255, 255, 255, 0.72) !important;
+  border-bottom-color: rgba(197, 212, 255, 0.37) !important;
   border-radius: 28px;
-  box-shadow: 0 7px 20px rgba(0, 0, 0, 0.30);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.32);
 }
-.livara-glass .popup-menu-content {
-  color: #f4f1ff;
-  background-color: rgba(17, 18, 30, 0.80);
+.livara-glass .popup-menu-content,
+.livara-glass .notification-banner,
+.livara-glass .osd-window,
+.livara-glass .modal-dialog {
+  color: #f6f7fc;
+  background-color: rgba(25, 28, 39, 0.91);
   background-gradient-direction: vertical;
-  background-gradient-start: rgba(44, 37, 60, 0.81);
-  background-gradient-end: rgba(17, 20, 32, 0.86);
-  border: 1px solid rgba(223, 212, 250, 0.24);
-  border-top-color: rgba(255, 247, 255, 0.43);
-  border-bottom-color: rgba(172, 185, 230, 0.20);
+  background-gradient-start: rgba(72, 77, 96, 0.86);
+  background-gradient-end: rgba(22, 25, 36, 0.95);
+  border: 1px solid rgba(221, 230, 255, 0.30);
+  border-top-color: rgba(255, 255, 255, 0.65);
+  border-bottom-color: rgba(178, 196, 240, 0.26);
   border-radius: 28px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.34);
 }
 .livara-glass .quick-settings { border-radius: 28px; padding: 20px; }
 .livara-glass .quick-toggle {
-  border-radius: 22px;
-  background-color: rgba(238, 227, 255, 0.085);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.09);
+  border-radius: 20px;
+  background-color: rgba(242, 245, 255, 0.095);
+  background-gradient-direction: vertical;
+  background-gradient-start: rgba(245, 248, 255, 0.09);
+  background-gradient-end: rgba(245, 248, 255, 0.025);
+  border: 1px solid rgba(242, 245, 255, 0.10);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.14);
 }
-.livara-glass .quick-toggle:hover { background-color: rgba(238, 227, 255, 0.15); }
-.livara-glass .quick-toggle:checked { background-color: #c5a3ff; color: #21112f; }
-.livara-glass .quick-toggle:checked:hover { background-color: #d7bdff; }
+.livara-glass .quick-toggle:hover { background-color: rgba(242, 245, 255, 0.18); }
+.livara-glass .quick-toggle:checked {
+  background-color: #d1bcff;
+  background-gradient-start: #e4d6ff;
+  background-gradient-end: #c4a6fa;
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #211a32;
+}
+.livara-glass .quick-toggle:checked:hover { background-color: #e2d2ff; }
+.livara-glass .popup-menu-item { border-radius: 14px; }
+.livara-glass .popup-menu-item:focus,
+.livara-glass .popup-menu-item:hover { background-color: rgba(240, 237, 255, 0.13); }
 .livara-glass .calendar { border-radius: 22px; }
-.livara-glass .notification-banner { border-radius: 24px; }
-.livara-launcher { icon-shadow: 0 0 7px rgba(184, 132, 255, 0.34); }
+.livara-glass .calendar .calendar-day-base:selected { background-color: #d1bcff; color: #211a32; }
+.livara-glass .message {
+  border-radius: 18px;
+  background-color: rgba(235, 240, 255, 0.055);
+  border: 1px solid rgba(235, 240, 255, 0.08);
+}
+.livara-glass .slider { -barlevel-active-background-color: #d1bcff; }
+.livara-launcher { icon-shadow: 0 2px 6px rgba(184, 132, 255, 0.30); }

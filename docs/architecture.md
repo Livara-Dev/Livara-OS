@@ -48,6 +48,10 @@ Settings and Center share an original Python GTK application shell; Settings has
 
 GNOME’s compositor can blur the backdrop of selected shell actors through Shell.BlurEffect. Blur stays on selected shell surfaces. Window motion uses bounded, finite compositor transitions on ordinary window actors, respecting native completion and reduced-motion settings. Highlights, curved borders and gradients provide the Livara visual treatment. GTK app card gradients do not implement desktop backdrop refraction. Apple’s iOS Liquid Glass material and its exact optical renderer are not part of Linux/GNOME; this source does not claim pixel-identical behavior.
 
+The current material separates three layers: a blurred scene, a neutral dark content plate, and a curved luminous lens with a diagonal highlight and lower caustic. The panel, dock, menus, notifications, on-screen indicators and modal dialogs share this language. Text stays on readable content plates; the accent belongs to selected controls. Highlights are cached static SVG textures with a maximum 512-pixel edge, rasterized after layout settles. At most 24 shell surfaces receive blur. Hidden surfaces, Overview and the lock screen release their effects; high-contrast themes keep GNOME's standard material. There is no per-frame pointer shader or sampled-pixel displacement.
+
+Browser chrome and its offline dashboard use the same lens/plate separation in dark and light appearances. Their glass-off and increased-contrast paths use opaque surfaces. Code's lens is scoped to workbench chrome; editors retain the selected theme's opaque canvas and extension views retain VS Code color tokens. Browser popup windows keep styled native titlebar controls when there is no visible navigation toolbar to host the custom controls.
+
 Disabling glass removes blur effects. Reduced-motion preferences turn off Livara transitions. Pre-rendered wallpapers avoid startup SVG filters. No cross-device FPS, memory, battery, or thermal benchmark has been established. GPU driver/kernel integration is described separately in graphics.md and needs hardware qualification.
 
 ## Windows source builder

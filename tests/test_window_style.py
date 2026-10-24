@@ -69,6 +69,28 @@ class WindowStyle(unittest.TestCase):
             self.assertEqual(window_style.apply_user_style({"window-button-style": "default"}, root), [])
             self.assertFalse((root / "gtk-4.0/gtk.css").exists())
 
+    def test_linked_directory_and_oversized_stylesheet_preserve_both_files(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            first = root / "gtk-3.0/gtk.css"
+            first.parent.mkdir()
+            first.write_text("/* first remains untouched */")
+            outside = root / "other-style"
+            outside.mkdir()
+            (outside / "gtk.css").write_text("/* linked user's CSS */")
+            (root / "gtk-4.0").symlink_to(outside, target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, "symbolic link"):
+                window_style.apply_user_style({}, root)
+            self.assertEqual((outside / "gtk.css").read_text(), "/* linked user's CSS */")
+            (root / "gtk-4.0").unlink()
+            (root / "gtk-4.0").mkdir()
+            second = root / "gtk-4.0/gtk.css"
+            second.write_text(" " * (2 * 1024 * 1024 + 1))
+            with self.assertRaisesRegex(ValueError, "bounded regular"):
+                window_style.apply_user_style({}, root)
+            self.assertEqual(first.read_text(), "/* first remains untouched */")
+            self.assertEqual(second.stat().st_size, 2 * 1024 * 1024 + 1)
+
 
 if __name__ == "__main__":
     unittest.main()

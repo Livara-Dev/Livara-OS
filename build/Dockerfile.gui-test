@@ -1,16 +1,23 @@
 # syntax=docker/dockerfile:1
 FROM ubuntu:24.04@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac
+ARG LIVARA_DESKTOP_VERSION=0.1.1
 RUN --mount=type=secret,id=proxy_ca \
     set -eux; \
     if [ -s /run/secrets/proxy_ca ]; then printf 'Acquire::https::CaInfo "/run/secrets/proxy_ca";\n' > /etc/apt/apt.conf.d/99livara-build-ca; fi; \
     apt-get update; apt-get install -y --no-install-recommends \
       python3 python3-gi python3-pil python3-cairo python3-gi-cairo gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-webkit-6.0 gir1.2-gtksource-5 gir1.2-vte-3.91 \
-      fontconfig xvfb xauth xdotool dbus-x11 fonts-dejavu-core adwaita-icon-theme gsettings-desktop-schemas; \
+      fontconfig xvfb xauth xdotool dbus-x11 fonts-dejavu-core adwaita-icon-theme sound-theme-freedesktop gsettings-desktop-schemas; \
     apt-get clean; rm -rf /var/lib/apt/lists/*; rm -f /etc/apt/apt.conf.d/99livara-build-ca
-RUN apt-get update && apt-get install -y --no-install-recommends librsvg2-common libglib2.0-bin \
+RUN apt-get update && apt-get install -y --no-install-recommends librsvg2-common webp-pixbuf-loader libglib2.0-bin \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
-COPY dist/livara-desktop_0.1.0_all.deb /tmp/livara-desktop.deb
-RUN dpkg -i /tmp/livara-desktop.deb && rm /tmp/livara-desktop.deb
+COPY dist/livara-desktop_${LIVARA_DESKTOP_VERSION}_all.deb /tmp/livara-desktop.deb
+# Source UI smoke environment: unpack the real package over the minimal GTK
+# runtime. This deliberately does not configure the full OS service/installer
+# dependency set and is not a complete package-installation qualification.
+RUN dpkg --unpack /tmp/livara-desktop.deb \
+    && glib-compile-schemas /usr/share/glib-2.0/schemas \
+    && fc-cache -f /usr/share/fonts/truetype/livara \
+    && rm /tmp/livara-desktop.deb
 ENV PYTHONPATH=/project/src
 ENV LIVARA_DATA_DIR=/project/share/livara
 WORKDIR /project

@@ -1,0 +1,118 @@
+name: Publish desktop update
+on:
+  push:
+    tags: ['desktop-v*']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate-release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Require matching desktop release tag
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          version=$(PYTHONPATH=src python3 -c 'from livara import __version__; print(__version__)')
+          [[ "$TAG_NAME" == "desktop-v$version" ]]
+  code-build:
+    needs: validate-release
+    uses: ./.github/workflows/build-code.yml
+  desktop-update:
+    needs: validate-release
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.18.0'
+      - name: Validate release tag
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          version=$(PYTHONPATH=src python3 -c 'from livara import __version__; print(__version__)')
+          [[ "$TAG_NAME" == "desktop-v$version" ]] || { echo 'Publish only from the matching desktop-vVERSION tag.' >&2; exit 1; }
+      - name: Install source check dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python3-fonttools gnupg gpgv libharfbuzz-bin python3-gi gir1.2-gdkpixbuf-2.0 librsvg2-common webp-pixbuf-loader
+      - name: Run source and resource update tests
+        run: |
+          make check
+          python3 scripts/package-source.py --check
+          git diff --exit-code
+      - name: Package desktop update without rebuilding engines or ISO
+        run: python3 scripts/package-desktop-update.py
+      - name: Test previous release upgrade and launcher ownership
+        run: |
+          set -euo pipefail
+          mkdir -p .build/update-baseline
+          # This is the source revision of the last published live preview.
+          git archive 093dd528b10e03e51915acf128cba67768ec1d85 | tar -x -C .build/update-baseline
+          bash .build/update-baseline/packaging/build-deb.sh "$PWD/.build/update-baseline-output"
+          docker run --rm --network none -e LIVARA_DISPOSABLE_PACKAGE_TEST=1 \
+            --mount "type=bind,src=$PWD/dist/update,dst=/update,readonly" \
+            --mount "type=bind,src=$PWD/.build/update-baseline-output,dst=/old,readonly" \
+            --mount "type=bind,src=$PWD/scripts/test-desktop-update.sh,dst=/test.sh,readonly" \
+            ubuntu:24.04 bash -c 'bash /test.sh /old/*.deb /update/*.deb'
+          docker run --rm --network none -e LIVARA_DISPOSABLE_PACKAGE_TEST=1 \
+            --mount "type=bind,src=$PWD/dist/update,dst=/update,readonly" \
+            --mount "type=bind,src=$PWD/scripts/test-launcher-diversions.sh,dst=/test.sh,readonly" \
+            ubuntu:24.04 bash -c 'bash /test.sh /update/*.deb'
+      - name: Retain desktop update artifacts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: livara-desktop-update
+          path: dist/update/
+
+  publish:
+    needs: [desktop-update, code-build]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: livara-desktop-update
+          path: dist/update
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: livara-code-update
+          path: dist/update-code
+      - name: Assemble the tested desktop and compiled Code updates
+        run: |
+          set -euo pipefail
+          python3 scripts/package-desktop-update.py --code-package dist/update-code/livara-code_*_amd64.deb
+          (cd dist/update && sha256sum --check SHA256SUMS)
+          git diff --exit-code
+      - name: Attest both packages and release manifest
+        uses: actions/attest-build-provenance@8beda2b7ed98355c0e97c0a63bec38ae472e66c4 # v4
+        with:
+          subject-path: |
+            dist/update/*.deb
+            dist/update/update-manifest.json
+      - name: Publish update assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          gh release create "$RELEASE_TAG" --verify-tag --draft --target "$GITHUB_SHA" \
+            --title "Livara desktop update ${RELEASE_TAG#desktop-v}" --notes-file dist/update/README.txt
+          gh release upload "$RELEASE_TAG" dist/update/*
+          gh release edit "$RELEASE_TAG" --draft=false

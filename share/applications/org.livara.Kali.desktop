@@ -2,7 +2,7 @@
 Name=Livara Kali Toolbox
 Comment=Open the isolated Kali Linux workbench
 Exec=gnome-terminal -- livara toolbox run -- bash
-Icon=utilities-terminal
+Icon=org.livara.Toolbox
 Terminal=false
 Type=Application
 Categories=System;Security;
