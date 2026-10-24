@@ -37,4 +37,9 @@ a running GNOME desktop or a booted ISO.
 ![Studio](screenshots/desktop-update-studio-dark.png)
 ![Essentials, light](screenshots/desktop-update-essentials-light.png)
 ![Task Manager](screenshots/desktop-update-monitor-dark.png)
+![Compiled Code with tested native traffic lights](screenshots/desktop-update-code.png)
 ![All thirteen application icons at two sizes](screenshots/desktop-update-icons.png)
+
+The [desktop update qualification](desktop-update-qualification.json) records
+the exact released source, successful hosted build, real runtime checks,
+published package hashes and remaining test limits.

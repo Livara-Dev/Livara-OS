@@ -1,5 +1,9 @@
 # Update Livara without downloading another ISO
 
+Desktop update 0.1.1 is [published and qualified](desktop-update-qualification.json).
+Its desktop package is 14.4 MB and its separate Code package is 254.7 MB.
+Both public downloads were checked against the published release hashes.
+
 The desktop update upgrades an existing installed Livara system using a small
 `livara-desktop` DEB and a separate `livara-code` application DEB. The small
 package replaces Livara apps, icons, desktop schemas, the Shell extension and

@@ -26,3 +26,9 @@ release gate tests the real default window and native button behavior.
 Code's Linux default also selects custom controls in the shared platform accessor before Electron creates the first window. Registering this default only in the renderer was too late: a fresh profile could launch with native overlay controls, which the Livara controller intentionally leaves alone. The source patch changes the Linux startup default and matching configuration schema together; an explicit native/hidden control choice or native titlebar remains respected. The release runtime test starts with a fresh profile and checks the actual controls, native actions and rebinding behavior.
 
 The native GTK4 implementation was exercised with GTK 4.14.5 and libadwaita 1.5, including actual fullscreen, F11, maximize/restore, live preferences, RTL placement and close guards. The GTK3 stylesheet parsed without errors in GTK 3.24.49 at the minimum, default and maximum sizes. Livara Code's emitted controller/contribution and CSS were exercised in the already source-built Electron app, including the real fullscreen command, live preferences and native button actions; the complete workbench was not rebuilt after those changes. GTK CSS/storage helpers and browser control actions/preferences have automated checks. The normal Gecko source fork has not been compiled in this authoring environment; its controls are source-validated and require the local full browser build for runtime qualification.
+
+For desktop update 0.1.1, the complete Code workbench was subsequently rebuilt
+from source. Its real default controls, fullscreen/F11, recreated-node keyboard
+bindings, maximize/restore and minimize all passed under Xvfb/Openbox with the
+sandbox enabled. See the [current qualification](desktop-update-qualification.json)
+and its linked hosted build for this newer evidence.
