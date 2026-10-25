@@ -55,6 +55,7 @@ export default class Probe extends Extension {
         Main.uiGroup.add_child(surface); this.actors.push(surface);
         await this.pause(); await this.pause();
         const production = Main.extensionManager.lookup('livara-glass@livara.local')?.stateObj;
+        this.production = production;
         const manager = production?._liquid;
         const entry = manager?._entries.get(surface);
         check(entry, 'No production GPU backplate on mapped shell popup');
@@ -96,10 +97,9 @@ export default class Probe extends Extension {
         Main.overview.show(); await this.pause(); await this.pause();
         check(!manager._entries.size, 'Overview retained live glass');
         Main.overview.hide(); await this.pause(); await this.pause();
-        const theme = production._interfaceSettings.get_string('gtk-theme');
-        production._interfaceSettings.set_string('gtk-theme', 'HighContrast'); await this.pause();
+        production._accessibilitySettings.set_boolean('high-contrast', true); await this.pause(); await this.pause();
         check(!manager._entries.size, 'High contrast retained live glass');
-        production._interfaceSettings.set_string('gtk-theme', theme); await this.pause();
+        production._accessibilitySettings.set_boolean('high-contrast', false); await this.pause(); await this.pause();
         production._interfaceSettings.set_boolean('enable-animations', false); await this.pause();
         check(manager._entries.has(surface), 'Reduced motion lost static glass');
 
@@ -134,6 +134,15 @@ export default class Probe extends Extension {
     }
 
     finish(data) {
+        if (data.status === 'failed' && this.production) {
+            data.settings = {
+                material:this.production._material,
+                gtkTheme:this.production._interfaceSettings.get_string('gtk-theme'),
+                highContrast:this.production._accessibilitySettings.get_boolean('high-contrast'),
+                writable:this.production._accessibilitySettings.is_writable('high-contrast'),
+                liveKinds:[...this.production._liquid._entries.values()].map(e => e.kind),
+            };
+        }
         Gio.File.new_for_path(`${OUTPUT}/production.json`).replace_contents(
             new TextEncoder().encode(JSON.stringify(data, null, 2)), null, false,
             Gio.FileCreateFlags.REPLACE_DESTINATION, null);

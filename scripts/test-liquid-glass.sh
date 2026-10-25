@@ -11,14 +11,19 @@ export LIVARA_GLASS_TEST_OUTPUT=${LIVARA_GLASS_TEST_OUTPUT:-/out}
 shell_profile=$(mktemp -d /tmp/livara-optics-profile.XXXXXX)
 export XDG_RUNTIME_DIR="$shell_profile/runtime"
 export XDG_DATA_HOME="$shell_profile/data"
+export XDG_CONFIG_HOME="$shell_profile/config"
 export GSETTINGS_SCHEMA_DIR="$shell_profile/schemas"
 export LIBGL_ALWAYS_SOFTWARE=1 NO_AT_BRIDGE=1 GTK_A11Y=none
 mkdir -p /run/dbus
 dbus-daemon --system --fork
 # With no logind, Mutter must select its built-in non-systemd login manager.
 if [[ -d /run/systemd/seats ]]; then rmdir /run/systemd/seats; fi
-mkdir -p "$XDG_RUNTIME_DIR" "$XDG_DATA_HOME/gnome-shell/extensions" "$GSETTINGS_SCHEMA_DIR" "$LIVARA_GLASS_TEST_OUTPUT"
+mkdir -p "$XDG_RUNTIME_DIR" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME/gnome-shell/extensions" "$GSETTINGS_SCHEMA_DIR" "$LIVARA_GLASS_TEST_OUTPUT"
 chmod 700 "$XDG_RUNTIME_DIR"
+# The private bus was started by the entrypoint before these paths existed.
+# Its activated dconf service must use the same profile/runtime as Shell;
+# otherwise optimistic settings writes revert when its shared cache disagrees.
+dbus-update-activation-environment XDG_RUNTIME_DIR XDG_CONFIG_HOME XDG_DATA_HOME GSETTINGS_SCHEMA_DIR
 rm -f "$LIVARA_GLASS_TEST_OUTPUT/production.json" "$LIVARA_GLASS_TEST_OUTPUT/verified.json"
 cp "$project/share/livara/org.livara.desktop.gschema.xml" "$GSETTINGS_SCHEMA_DIR/"
 glib-compile-schemas "$GSETTINGS_SCHEMA_DIR"

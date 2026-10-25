@@ -8,8 +8,8 @@ RUN --mount=type=secret,id=proxy_ca,mode=0444 \
     fi; \
     apt-get -o APT::Update::Error-Mode=any -o Acquire::Retries=2 -o Acquire::http::Timeout=20 update; \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    gnome-shell gjs python3 python3-gi python3-cairo python3-gi-cairo python3-pil \
-    gir1.2-gtk-4.0 gsettings-desktop-schemas adwaita-icon-theme dbus-x11 xvfb xauth fonts-dejavu-core \
+    gnome-shell gnome-settings-daemon gjs python3 python3-gi python3-cairo python3-gi-cairo python3-pil \
+    gir1.2-gtk-4.0 gsettings-desktop-schemas adwaita-icon-theme librsvg2-common dbus-x11 xvfb xauth fonts-dejavu-core \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /etc/apt/apt.conf.d/99livara-test-ca
 WORKDIR /project
 ENTRYPOINT ["xvfb-run", "-a", "-s", "-screen 0 1280x900x24", "dbus-run-session", "--"]

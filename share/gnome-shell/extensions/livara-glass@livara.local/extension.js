@@ -30,7 +30,9 @@ export default class LivaraGlass extends Extension {
         }); }
         catch (error) { console.warn(`Livara: live refraction unavailable; using background blur: ${error.message}`); }
         this._interfaceSettings = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'});
+        this._accessibilitySettings = new Gio.Settings({schema_id: 'org.gnome.desktop.a11y.interface'});
         this._connect(this._settings, 'changed', () => this._refresh());
+        this._connect(this._accessibilitySettings, 'changed::high-contrast', () => this._refresh());
         this._connect(this._interfaceSettings, 'changed::gtk-theme', () => this._refresh());
         this._connect(this._interfaceSettings, 'changed::enable-animations', () => {
             if (!this._animations()) {
@@ -77,7 +79,8 @@ export default class LivaraGlass extends Extension {
 
     _refresh() {
         this._radius = Math.max(0, Math.min(60, this._settings.get_int('blur-radius')));
-        const highContrast = this._interfaceSettings.get_string('gtk-theme').toLowerCase().includes('highcontrast');
+        const highContrast = this._accessibilitySettings.get_boolean('high-contrast') ||
+            this._interfaceSettings.get_string('gtk-theme').toLowerCase().includes('highcontrast');
         this._material = this._settings.get_boolean('glass-enabled') && !highContrast &&
             !Main.sessionMode.isLocked && !Main.sessionMode.isGreeter &&
             Main.sessionMode.hasWindows !== false &&
@@ -419,5 +422,6 @@ export default class LivaraGlass extends Extension {
         this._panelBackground = null;
         this._settings = null;
         this._interfaceSettings = null;
+        this._accessibilitySettings = null;
     }
 }
