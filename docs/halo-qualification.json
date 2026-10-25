@@ -1,0 +1,53 @@
+{
+  "release": "https://github.com/Livara-Dev/Livara-OS/releases/tag/desktop-v0.1.2",
+  "source_commit": "5a6a69917bef07503484b0a877f2feec673a3156",
+  "zip_bytes": 270928419,
+  "zip_sha256": "512237e77ec76af691308c600069a31b3005d4589a8b573ab07382f67cb6bec7",
+  "checksums": {
+    "livara-desktop_0.1.2_all.deb": "ec39d88e233252de44c0495d93d64cb166852ea822cefebedb588fb4f3b921de",
+    "update-manifest.json": "6dff1e4fada0f71e135341451692e2738e8e24f6c3242e11edca252be8f7fc9f",
+    "Install-Livara-Update.sh": "dbf6231fc7ddcf8f78bf9f3d581bf78803602bbda7425e3fedf716b29c936988",
+    "README.txt": "8970e03a885044f2cb6efcd08fc485d2907fbab0479e9e16eaf8d084ad20f66b",
+    "livara-code_0.1.2_amd64.deb": "12d93466c48606dba2f3681661237795cb023eed800d972a3f4ce91da6a97ed9"
+  },
+  "status": "all public ZIP and package digests verified",
+  "workflow": "https://github.com/Livara-Dev/Livara-OS/actions/runs/40209803258",
+  "version": "0.1.2",
+  "source_tests": {
+    "run": 262,
+    "passed": 261,
+    "optional_skip": 1,
+    "node_passed": 16
+  },
+  "native_validation": {
+    "apps_dark_and_live_light": 7,
+    "settings_controls": 94,
+    "settings_responsive_categories": 8,
+    "control_action_checks": 26,
+    "gtk_material_variants": 8,
+    "distinct_launch_button_routes": 6,
+    "halo_preset_native_wallpaper_and_dock": "passed"
+  },
+  "compositor": {
+    "runtime": "GNOME Shell 46 software rendering",
+    "computed_materials": 6,
+    "mapped_blur_and_lens_surfaces": 4,
+    "hidden_cleanup": "passed"
+  },
+  "compiled_code": {
+    "fresh_source_build": "passed",
+    "default_controls_fullscreen_F11_keyboard_rebinding_maximize_minimize": "passed"
+  },
+  "installer": {
+    "missing_package_feedback": "passed",
+    "missing_checksums_feedback": "passed",
+    "corrupt_package_fail_closed": "passed",
+    "bundle_extraction_and_inner_checksums": "passed"
+  },
+  "provenance": "GitHub release workflow provenance generation passed; public download and checksum verification performed separately.",
+  "scope_limits": [
+    "Native UI checks used isolated Ubuntu24 GTK/Xvfb environments.",
+    "Chat WebKit sandbox namespaces are unavailable on this cloud host; sandbox was not disabled.",
+    "No new physical GPU frame-rate benchmark, ISO boot or disk-install test."
+  ]
+}

@@ -25,3 +25,6 @@ These are actual GTK window captures, with shipped fonts and artwork:
 
 Install using the [desktop update instructions](updates.md). Download both
 packages, SHA256SUMS and the installer into one folder. No ISO is needed.
+
+The [release qualification](halo-qualification.json) records the immutable source,
+public ZIP and package hashes, native checks and remaining test limits.
