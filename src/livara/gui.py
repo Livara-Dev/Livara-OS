@@ -8,7 +8,7 @@ import sys
 import threading
 from pathlib import Path
 
-from . import __version__, core, desktop, window_style
+from . import __version__, core, desktop, window_style, halo
 
 
 def main(mode="center") -> int:
@@ -74,7 +74,7 @@ def main(mode="center") -> int:
             brand_icon = Gtk.Image.new_from_icon_name("org.livara.Settings" if mode == "settings" else "org.livara.Center")
             brand_icon.set_pixel_size(36)
             brand.append(brand_icon)
-            brand.append(self.label("LIVARA", "brand"))
+            brand.append(self.label("Livara", "brand"))
             sidebar.append(brand)
             sidebar.append(self.label("Settings" if mode == "settings" else "Control Center", "brand-sub"))
             sidebar.append(Gtk.Box(height_request=16))
@@ -82,13 +82,13 @@ def main(mode="center") -> int:
             nav_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
             nav_scroll.set_child(nav_box)
             sidebar.append(nav_scroll)
-            self.stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.SLIDE_LEFT_RIGHT, transition_duration=240, hexpand=True, vexpand=True)
+            self.stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE, transition_duration=180, hexpand=True, vexpand=True)
             self.stack.set_hhomogeneous(False)
             self.stack.set_vhomogeneous(False)
             self.interface_settings = interface = desktop.settings_for("org.gnome.desktop.interface")
             if interface:
                 def motion(*args):
-                    self.stack.set_transition_duration(240 if interface.get_boolean("enable-animations") else 0)
+                    self.stack.set_transition_duration(180 if interface.get_boolean("enable-animations") else 0)
                 interface.connect("changed::enable-animations", motion)
                 motion()
             body.append(self.stack)
@@ -116,7 +116,7 @@ def main(mode="center") -> int:
             for name, title, icon, make_page in pages:
                 button = Gtk.ToggleButton(css_classes=["nav"])
                 row = Gtk.Box(spacing=12)
-                nav_icon = Gtk.Image.new_from_file(str(core.DATA_DIR / "icons" / f"{icon}.svg"))
+                nav_icon = Gtk.Image.new_from_icon_name({"grid": "view-grid-symbolic", "terminal": "utilities-terminal-symbolic", "folder": "folder-symbolic", "shield": "security-high-symbolic", "verify": "emblem-ok-symbolic", "customize": "preferences-desktop-symbolic"}[icon])
                 nav_icon.set_pixel_size(18)
                 row.append(nav_icon)
                 row.append(Gtk.Label(label=title, xalign=0))
@@ -136,7 +136,7 @@ def main(mode="center") -> int:
                 self.set_accels_for_action("app.page-" + name, ["<Primary>" + str(len(self.navigation) % 10)])
             group.set_active(True)
             self.stack.connect("notify::visible-child-name", lambda stack, spec: self.navigation[stack.get_visible_child_name()].set_active(True))
-            sidebar.append(self.label("YOUR DESKTOP.\nYOUR WORKBENCH.", "footer"))
+            sidebar.append(self.label("A little more possible.", "footer"))
             sidebar.append(self.label(f"PREVIEW  {__version__}  /  AMD64", "footer"))
             self.window.present()
 
@@ -249,16 +249,28 @@ def main(mode="center") -> int:
                 self.toast(error)
 
         def home_page(self):
-            scroll, box = self.page("WELCOME TO LIVARA", "Make room for what’s possible.", "Your glass desktop, creative tools, and security workbench.")
-            hero = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=13, css_classes=["hero"])
-            hero.append(self.label("LIVARA GLASS  /  YOUR NEXT PERSPECTIVE", "eyebrow"))
-            hero.append(self.label("Fluid by design.\nYours by choice.", "hero-title"))
-            hero.append(self.label("Built for your ideas. Made to feel like Livara.\nYour tools and security workbench, one touch away.", "muted"))
+            scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+            box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
+            self.margins(box, 30)
+            scroll.set_child(box)
             hero_actions = Gtk.Box(spacing=10)
-            hero_actions.append(self.button("Make it yours  →", lambda b: self.stack.set_visible_child_name("customize"), True))
-            hero_actions.append(self.button("Explore tools", lambda b: self.stack.set_visible_child_name("toolbox")))
-            hero.append(hero_actions)
-            box.append(hero)
+            hero_actions.append(self.button("Find your look", lambda b: self.stack.set_visible_child_name("customize"), True))
+            hero_actions.append(self.button("Open Studio", lambda b: self.launch_app("livara-studio")))
+            box.append(halo.hero("LIVARA  /  HALO", "Beautifully\nin your element.",
+                "A space that feels as good as your next idea. Create, explore, and make it yours.", hero_actions))
+            box.append(self.label("YOUR EVERYDAY ESSENTIALS", "eyebrow"))
+            launchers = Gtk.FlowBox(selection_mode=Gtk.SelectionMode.NONE, min_children_per_line=3,
+                max_children_per_line=6, row_spacing=10, column_spacing=10, homogeneous=True)
+            for name, icon, command in (("Browser", "Browser", "livara-browser"), ("Studio", "Studio", "livara-studio"),
+                    ("Code", "Code", "livara-code"), ("Terminal", "Terminal", "livara-terminal"),
+                    ("Essentials", "Essentials", "livara-essentials"), ("Palette", "Palette", "livara-palette")):
+                tile = Gtk.Button(css_classes=["launch-tile"], tooltip_text="Open Livara " + name)
+                contents = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+                image = Gtk.Image.new_from_icon_name("org.livara." + icon); image.set_pixel_size(42)
+                contents.append(image); contents.append(self.label(name, "launch-label"))
+                tile.set_child(contents); tile.connect("clicked", lambda b, cmd=command: self.launch_app(cmd))
+                launchers.append(tile)
+            box.append(launchers)
             status = core.system_status()
             metrics = Gtk.Box(spacing=12, homogeneous=True)
             for value, title in ((f"{status['memory_available'] / 2**30:.1f} GB", "MEMORY AVAILABLE"), (f"{status['disk_free'] / 2**30:.1f} GB", "STORAGE FREE"), (str(status["native_tools_installed"]), "NATIVE SECURITY TOOLS")):

@@ -1,8 +1,15 @@
 # Update Livara without downloading another ISO
 
-Desktop update 0.1.1 is [published and qualified](desktop-update-qualification.json).
-Its desktop package is 14.4 MB and its separate Code package is 254.7 MB.
-Both public downloads were checked against the published release hashes.
+Desktop update **0.1.2 — Halo** adds the original glass-ribbon wallpaper,
+floating native navigation, image-backed Center/Studio workspaces, a responsive
+app-launch shelf, refreshed shell/browser/editor chrome, and shorter finite
+crossfades. Settings → Personalize → **Halo** applies the matching wallpaper
+and dock look. Existing saved customizations remain available.
+
+Download **Livara-Halo-0.1.2-Update.zip** from the release and extract it into a
+new folder. It contains both packages, checksums and the installer together.
+Alternatively, download every individual file listed below, not just the script.
+The installer prints progress and identifies missing downloads.
 
 The desktop update upgrades an existing installed Livara system using a small
 `livara-desktop` DEB and a separate `livara-code` application DEB. The small
@@ -13,9 +20,9 @@ rebuild or download the kernel, boot image, Gecko or the whole ISO.
 
 Download the DEB, `SHA256SUMS`, `update-manifest.json`, and
 `Install-Livara-Update.sh` from the official
-[desktop update release](https://github.com/Livara-Dev/Livara-OS/releases/tag/desktop-v0.1.1)
+[desktop update release](https://github.com/Livara-Dev/Livara-OS/releases/tag/desktop-v0.1.2)
 into one directory. If Code is installed, also download
-`livara-code_0.1.1_amd64.deb` into that directory. The installer requires the
+`livara-code_0.1.2_amd64.deb` into that directory. The installer requires the
 matching Code package when the app is already installed, preventing an update
 that leaves compiled controller fixes behind. Close Browser and Code, then run:
 
@@ -70,8 +77,8 @@ authentication. The tag-triggered workflow records GitHub artifact provenance.
 With GitHub CLI, verify the package's provenance before installation:
 
 ```sh
-gh attestation verify livara-desktop_0.1.1_all.deb --repo Livara-Dev/Livara-OS
-gh attestation verify livara-code_0.1.1_amd64.deb --repo Livara-Dev/Livara-OS
+gh attestation verify livara-desktop_0.1.2_all.deb --repo Livara-Dev/Livara-OS
+gh attestation verify livara-code_0.1.2_amd64.deb --repo Livara-Dev/Livara-OS
 sha256sum --check SHA256SUMS
 ```
 
@@ -82,7 +89,7 @@ dist/forks/livara-code-linux-x64.tar.xz`. The Code packager checks the pinned bu
 identity and requires compiled-controller/style source hashes to match the
 current fixes. Merge the tested Code package into the release with
 `python3 scripts/package-desktop-update.py --code-package
-dist/update-code/livara-code_0.1.1_amd64.deb`.
+dist/update-code/livara-code_0.1.2_amd64.deb`.
 
 The manifest records the source commit and whether source files
 were modified. A local working-tree package is a development artifact, not a

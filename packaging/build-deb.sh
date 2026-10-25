@@ -62,7 +62,7 @@ install -m 0644 "$project_dir/share/plymouth/"* "$staging_dir/usr/share/plymouth
 install -m 0644 "$project_dir/share/applications/"*.desktop "$staging_dir/usr/share/applications/"
 install -m 0644 "$project_dir"/artwork/org.livara.*.svg "$staging_dir/usr/share/icons/hicolor/scalable/apps/"
 install -m 0644 "$project_dir/artwork/"livara-*.svg "$staging_dir/usr/share/backgrounds/livara/"
-for wallpaper in glass aurora dusk verdant; do
+for wallpaper in halo glass aurora dusk verdant; do
   install -m 0644 "$project_dir/artwork/livara-$wallpaper.png" "$staging_dir/usr/share/backgrounds/livara/"
 done
 install -m 0644 "$project_dir/share/livara/90_livara.gschema.override" "$staging_dir/usr/share/glib-2.0/schemas/"

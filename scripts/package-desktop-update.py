@@ -10,44 +10,32 @@ import re
 import shutil
 import subprocess
 import sys
+import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'src'))
 from livara import __version__
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output-dir', type=Path, default=ROOT / 'dist/update')
-    parser.add_argument('--code-package', type=Path, help='Include the separately compiled and runtime-tested Code DEB')
-    args = parser.parse_args()
-    if not re.fullmatch(r'\d+\.\d+\.\d+', __version__):
-        parser.error('Expected a stable three-part desktop package version')
-    output = args.output_dir.resolve()
-    output.mkdir(parents=True, exist_ok=True)
-    subprocess.run(['bash', str(ROOT / 'packaging/build-deb.sh'), str(output)], check=True)
-    package = f'livara-desktop_{__version__}_all.deb'
-    code_package = f'livara-code_{__version__}_amd64.deb'
-    if args.code_package:
-        for field, expected in (('Package', 'livara-code'), ('Version', __version__), ('Architecture', 'amd64')):
-            actual = subprocess.check_output(['dpkg-deb', '-f', str(args.code_package), field], text=True).strip()
-            if actual != expected:
-                raise ValueError(f'Unexpected Code package {field}: {actual}')
-        if args.code_package.resolve() != output / code_package:
-            shutil.copy2(args.code_package, output / code_package)
-    revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
-    dirty = bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT))
-    manifest = {'package': package, 'version': __version__, 'source_commit': revision, 'source_dirty': dirty,
-                'scope': 'Desktop applications, icons, GNOME Shell material, matching Browser resources and separately source-compiled Code update. No Browser engine, kernel, boot image or ISO replacement.',
-                'sha256': hashlib.sha256((output / package).read_bytes()).hexdigest()}
-    if args.code_package:
-        manifest['code_package'] = code_package
-        manifest['code_sha256'] = hashlib.sha256((output / code_package).read_bytes()).hexdigest()
-    (output / 'update-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
-    installer = f'''#!/usr/bin/env bash
-set -euo pipefail
+def installer_script(package, code_package):
+    return f'''#!/usr/bin/env bash
+set -Eeuo pipefail
+trap 'status=$?; printf "Update stopped at line %s (exit %s). Read the error above, then retry.\\n" "$LINENO" "$status" >&2' ERR
+printf 'Livara desktop update {__version__} — checking downloaded files…\\n'
 cd -- "$(dirname -- "${{BASH_SOURCE[0]}}")"
-test -f {package!r}
+for required in {package!r} SHA256SUMS; do
+  if [[ ! -f "$required" || ! -r "$required" ]]; then
+    printf 'Missing or unreadable file: %s\\n' "$required" >&2
+    printf 'Download the DEB files and SHA256SUMS from the same release into this folder:\\n%s\\n' 'https://github.com/Livara-Dev/Livara-OS/releases/tag/desktop-v{__version__}' >&2
+    exit 1
+  fi
+done
+for program in dpkg dpkg-query dpkg-deb apt-get awk sha256sum; do
+  if ! command -v "$program" >/dev/null 2>&1; then
+    printf 'Required program is missing: %s. Run this installer inside Livara OS.\\n' "$program" >&2
+    exit 1
+  fi
+done
 verify_package() {{
   local filename=$1
   local -a entries
@@ -85,6 +73,7 @@ if [[ -f {code_package!r} ]]; then
   fi
   packages+=(./{code_package})
 fi
+echo 'Files verified. Installing the update; APT may request your administrator password or confirmation.'
 if ((EUID == 0)); then
   apt-get install -- "${{packages[@]}}"
 else
@@ -96,6 +85,54 @@ fi
 echo 'Update installed. Close and reopen Livara apps, then log out and back in for GNOME Shell changes.'
 echo 'Live ISO sessions are ephemeral: keep the update files on persistent storage for later sessions.'
 '''
+
+
+def bundle_update(output, names):
+    """Keep all required files together in one versioned download folder."""
+    destination = output / f'Livara-Halo-{__version__}-Update.zip'
+    temporary = destination.with_suffix('.zip.part')
+    try:
+        with zipfile.ZipFile(temporary, 'w', compression=zipfile.ZIP_STORED) as archive:
+            for name in (*names, 'SHA256SUMS'):
+                archive.write(output / name, f'Livara-Halo-{__version__}-Update/{name}')
+        with zipfile.ZipFile(temporary) as archive:
+            if archive.testzip() is not None:
+                raise ValueError('Update ZIP failed its CRC integrity check')
+        temporary.replace(destination)
+    finally:
+        temporary.unlink(missing_ok=True)
+    return destination
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output-dir', type=Path, default=ROOT / 'dist/update')
+    parser.add_argument('--code-package', type=Path, help='Include the separately compiled and runtime-tested Code DEB')
+    args = parser.parse_args()
+    if not re.fullmatch(r'\d+\.\d+\.\d+', __version__):
+        parser.error('Expected a stable three-part desktop package version')
+    output = args.output_dir.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    subprocess.run(['bash', str(ROOT / 'packaging/build-deb.sh'), str(output)], check=True)
+    package = f'livara-desktop_{__version__}_all.deb'
+    code_package = f'livara-code_{__version__}_amd64.deb'
+    if args.code_package:
+        for field, expected in (('Package', 'livara-code'), ('Version', __version__), ('Architecture', 'amd64')):
+            actual = subprocess.check_output(['dpkg-deb', '-f', str(args.code_package), field], text=True).strip()
+            if actual != expected:
+                raise ValueError(f'Unexpected Code package {field}: {actual}')
+        if args.code_package.resolve() != output / code_package:
+            shutil.copy2(args.code_package, output / code_package)
+    revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
+    dirty = bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT))
+    manifest = {'package': package, 'version': __version__, 'source_commit': revision, 'source_dirty': dirty,
+                'scope': 'Desktop applications, icons, GNOME Shell material, matching Browser resources and separately source-compiled Code update. No Browser engine, kernel, boot image or ISO replacement.',
+                'sha256': hashlib.sha256((output / package).read_bytes()).hexdigest()}
+    if args.code_package:
+        manifest['code_package'] = code_package
+        manifest['code_sha256'] = hashlib.sha256((output / code_package).read_bytes()).hexdigest()
+    (output / 'update-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
+    installer = installer_script(package, code_package)
     (output / 'Install-Livara-Update.sh').write_text(installer)
     (output / 'Install-Livara-Update.sh').chmod(0o755)
     (output / 'README.txt').write_text(f'''Livara desktop {__version__} — update an existing installation without an ISO
@@ -132,6 +169,8 @@ Source contains uncommitted changes: {dirty}
     if args.code_package:
         names.append(code_package)
     (output / 'SHA256SUMS').write_text(''.join(hashlib.sha256((output / name).read_bytes()).hexdigest() + '  ' + name + '\n' for name in names))
+    if args.code_package:
+        print('Complete update ZIP:', bundle_update(output, names))
     print(f'Desktop update created: {output / package} ({(output / package).stat().st_size:,} bytes)')
     return 0
 

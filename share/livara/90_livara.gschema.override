@@ -1,10 +1,10 @@
 [org.gnome.desktop.background]
-picture-uri='file:///usr/share/backgrounds/livara/livara-glass.png'
-picture-uri-dark='file:///usr/share/backgrounds/livara/livara-glass.png'
+picture-uri='file:///usr/share/backgrounds/livara/livara-halo.png'
+picture-uri-dark='file:///usr/share/backgrounds/livara/livara-halo.png'
 picture-options='zoom'
 
 [org.gnome.desktop.screensaver]
-picture-uri='file:///usr/share/backgrounds/livara/livara-glass.png'
+picture-uri='file:///usr/share/backgrounds/livara/livara-halo.png'
 
 [org.gnome.desktop.interface]
 color-scheme='prefer-dark'

@@ -59,15 +59,31 @@ jobs:
         run: |
           set -euo pipefail
           test "$RUNNER_ENVIRONMENT" = github-hosted
-          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc
+          cleanup_status=0
+          timeout --kill-after=15s 180s sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc || cleanup_status=$?
+          if ((cleanup_status != 0 && cleanup_status != 124)); then exit "$cleanup_status"; fi
+          if ((cleanup_status == 124)); then echo 'Cleanup time limit reached; continuing with the reclaimed space.'; fi
           if ! swapon --show | grep -q .; then
             sudo fallocate -l 8G /swapfile
             sudo chmod 600 /swapfile
             sudo mkswap /swapfile
             sudo swapon /swapfile
           fi
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends python3-fonttools libharfbuzz-bin libgtk-3-0t64 libnss3 libasound2t64 libxss1 libgbm1 xvfb xauth xdotool openbox x11-utils python3-pil python3-psutil
+          df -h
+      - name: Install signed Ubuntu build dependencies with bounded waits
+        run: |
+          set -euo pipefail
+          code_apt_dir=$(mktemp -d)
+          chmod 755 "$code_apt_dir"
+          trap 'rm -rf -- "$code_apt_dir"' EXIT
+          cat > "$code_apt_dir/ubuntu.list" <<'SOURCES'
+          deb [arch=amd64 signed-by=/usr/share/keyrings/ubuntu-archive-keyring.gpg] https://archive.ubuntu.com/ubuntu noble main universe
+          deb [arch=amd64 signed-by=/usr/share/keyrings/ubuntu-archive-keyring.gpg] https://archive.ubuntu.com/ubuntu noble-updates main universe
+          deb [arch=amd64 signed-by=/usr/share/keyrings/ubuntu-archive-keyring.gpg] https://security.ubuntu.com/ubuntu noble-security main universe
+          SOURCES
+          apt_options=(-o "Dir::Etc::SourceList=$code_apt_dir/ubuntu.list" -o Dir::Etc::SourceParts=- -o Acquire::Retries=2 -o Acquire::https::Timeout=20)
+          timeout --kill-after=15s 300s sudo apt-get "${apt_options[@]}" -o APT::Update::Error-Mode=any update
+          timeout --kill-after=15s 300s sudo apt-get "${apt_options[@]}" install -y --no-install-recommends python3-fonttools libharfbuzz-bin libgtk-3-0t64 libnss3 libasound2t64 libxss1 libgbm1 xvfb xauth xdotool openbox x11-utils python3-pil python3-psutil
           python3 scripts/build-fonts.py
           df -h
           free -h

@@ -3,8 +3,9 @@
  * and bounded cached highlights over real compositor background blur.
  * St supports two-stop gradients; the extension paints the compound lens.
  */
-#panel.livara-panel { background-color: transparent; box-shadow: none; }
+#panel.livara-panel { background-color: transparent; box-shadow: none; height: 36px; margin: 8px 14px 0; border-radius: 18px; }
 .livara-panel-background {
+  border-radius: 18px;
   background-color: rgba(21, 24, 34, 0.64);
   background-gradient-direction: vertical;
   background-gradient-start: rgba(112, 118, 139, 0.33);
@@ -20,7 +21,7 @@
   border: 1px solid rgba(223, 231, 255, 0.32) !important;
   border-top-color: rgba(255, 255, 255, 0.72) !important;
   border-bottom-color: rgba(197, 212, 255, 0.37) !important;
-  border-radius: 28px;
+  border-radius: 30px;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.32);
 }
 .livara-glass .popup-menu-content,
@@ -35,10 +36,10 @@
   border: 1px solid rgba(221, 230, 255, 0.30);
   border-top-color: rgba(255, 255, 255, 0.65);
   border-bottom-color: rgba(178, 196, 240, 0.26);
-  border-radius: 28px;
+  border-radius: 30px;
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.34);
 }
-.livara-glass .quick-settings { border-radius: 28px; padding: 20px; }
+.livara-glass .quick-settings { border-radius: 30px; padding: 20px; }
 .livara-glass .quick-toggle {
   border-radius: 20px;
   background-color: rgba(242, 245, 255, 0.095);
@@ -69,3 +70,11 @@
 }
 .livara-glass .slider { -barlevel-active-background-color: #d1bcff; }
 .livara-launcher { icon-shadow: 0 2px 6px rgba(184, 132, 255, 0.30); }
+
+/* Halo shell furniture: precise spacing, pill focus and finite interaction. */
+.livara-glass .dash-item-container { padding: 3px; }
+.livara-glass .dash-background { border-radius: 30px; padding: 8px; }
+#panel.livara-panel .panel-button { border-radius: 16px; margin: 2px 3px; transition-duration: 140ms; }
+#panel.livara-panel .panel-button:hover { background-color: rgba(236,229,255,.16); }
+#panel.livara-panel .clock { border-radius: 16px; background-color: rgba(224,220,255,.10); padding: 4px 16px; }
+.livara-glass .quick-toggle { transition-duration: 140ms; }

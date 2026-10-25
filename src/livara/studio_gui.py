@@ -10,7 +10,7 @@ import stat
 from pathlib import Path
 from datetime import datetime, timezone
 
-from . import desktop, materials, studio, window_style
+from . import desktop, materials, studio, window_style, halo
 
 
 def main() -> int:
@@ -302,15 +302,11 @@ def main() -> int:
             page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=23)
             self.margin(page, 30)
             scroll.set_child(page)
-            hero = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14, css_classes=["studio-hero"])
-            hero.append(self.label("YOUR PERSONAL CREATIVE WORKSPACE", "eyebrow"))
-            hero.append(self.label("Make room for your next idea.", "home-title"))
-            hero.append(self.label("Useful tools. A quiet notebook. A little time to focus.", "muted"))
             actions = Gtk.Box(spacing=10)
-            actions.append(self.button("Open the workbench", lambda button: self.open_tool("json"), True))
+            actions.append(self.button("Start creating", lambda button: self.open_tool("json"), True))
             actions.append(self.button("New note", lambda button: self.new_note_template("blank")))
-            hero.append(actions)
-            page.append(hero)
+            page.append(halo.hero("STUDIO  /  MADE FOR THE MOMENT", "Less friction.\nMore flow.",
+                "Thirty thoughtful tools. One quiet notebook. A little space to focus.", actions))
             self.home_metrics = Gtk.Box(spacing=14, homogeneous=True)
             page.append(self.home_metrics)
             journeys = Gtk.FlowBox(selection_mode=Gtk.SelectionMode.NONE, min_children_per_line=1, max_children_per_line=3,

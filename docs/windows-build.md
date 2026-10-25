@@ -23,7 +23,7 @@ The result appears in the source folder's `dist` directory:
 dist\livara-os-0.1.0-amd64.iso
 dist\livara-os-0.1.0-amd64.iso.sha256
 dist\livara-os-0.1.0-packages.txt
-dist\livara-desktop_0.1.1_all.deb
+dist\livara-desktop_0.1.2_all.deb
 dist\build-<time>-<run>.log
 ```
 
