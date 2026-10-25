@@ -69,6 +69,15 @@ jobs:
           git diff --exit-code
       - name: Package desktop update without rebuilding engines or ISO
         run: python3 scripts/package-desktop-update.py
+      - name: Test live refraction in a real disposable Wayland compositor
+        run: |
+          set -euo pipefail
+          docker build -f build/Dockerfile.glass-test -t livara-glass-validation .
+          mkdir -p .build/liquid-test
+          docker run --rm --init --network none -e LIVARA_DISPOSABLE_GLASS_TEST=1 \
+            --mount "type=bind,src=$PWD,dst=/project,readonly" \
+            --mount "type=bind,src=$PWD/.build/liquid-test,dst=/out" \
+            livara-glass-validation 2>&1 | tee dist/logs/liquid-glass-runtime.log
       - name: Test previous release upgrade and launcher ownership
         run: |
           set -euo pipefail
@@ -97,6 +106,12 @@ jobs:
         with:
           name: desktop-update-check-logs
           path: dist/logs/
+      - name: Retain optical renderer evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: liquid-glass-renderer
+          path: .build/liquid-test/
 
   publish:
     needs: [desktop-update, code-build]

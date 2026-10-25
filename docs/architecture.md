@@ -46,13 +46,33 @@ Settings and Center share an original Python GTK application shell; Settings has
 
 ## Liquid appearance and rendering
 
-GNOME’s compositor can blur the backdrop of selected shell actors through Shell.BlurEffect. Blur stays on selected shell surfaces. Window motion uses bounded, finite compositor transitions on ordinary window actors, respecting native completion and reduced-motion settings. Highlights, curved borders and gradients provide the Livara visual treatment. GTK app card gradients do not implement desktop backdrop refraction. Apple’s iOS Liquid Glass material and its exact optical renderer are not part of Linux/GNOME; this source does not claim pixel-identical behavior.
+The GNOME 46 extension builds a separate live compositor scene behind each
+eligible shell surface. Allocated wallpaper and visible current-workspace
+window actors are cloned in stacking order, softened with Shell.BlurEffect in
+ACTOR mode, then sampled by a Shell.GLSLEffect fragment shader. Rounded-distance
+normals bend UV coordinates at the bevel, with bounded RGB dispersion, interior
+magnification, a Fresnel rim and pointer-oriented highlights. Text/icons remain
+in their original foreground actors and never enter the shader texture.
 
-The current material separates three layers: a blurred scene, a neutral dark content plate, and a curved luminous lens with a diagonal highlight and lower caustic. The panel, dock, menus, notifications, on-screen indicators and modal dialogs share this language. Text stays on readable content plates; the accent belongs to selected controls. Highlights are cached static SVG textures with a maximum 512-pixel edge, rasterized after layout settles. At most 24 shell surfaces receive blur. Hidden surfaces, Overview and the lock screen release their effects; high-contrast themes keep GNOME's standard material. There is no per-frame pointer shader or sampled-pixel displacement.
+Up to eight live lenses share a six-million device-pixel render-target budget;
+there are at most 64 visible sources and 256 candidate actors. Oversized or
+unsupported surfaces retain the existing compositor blur and cached static rim,
+with a maximum 512-pixel texture edge. Clear CSS is applied only after a live
+backplate binds successfully. Window motion/content updates use Clutter.Clone
+and compositor damage, without CPU screenshots or a frame timer. Hidden,
+minimized and other-workspace windows leave the live scene. Hidden surfaces,
+Overview, lock/greeter sessions and high-contrast themes release live lenses.
+Reduced motion stops pointer lighting and Livara transitions.
+
+Native GTK application cards remain readable CSS surfaces; they do not sample
+the desktop behind their windows. This is Livara's original Linux optical
+renderer, with actual sampled-pixel refraction on the named shell surfaces;
+Apple's proprietary implementation and pixel-identical iOS behavior are not
+claimed. [Renderer test and screenshots](liquid-glass.md).
 
 Browser chrome and its offline dashboard use the same lens/plate separation in dark and light appearances. Their glass-off and increased-contrast paths use opaque surfaces. Code's lens is scoped to workbench chrome; editors retain the selected theme's opaque canvas and extension views retain VS Code color tokens. Browser popup windows keep styled native titlebar controls when there is no visible navigation toolbar to host the custom controls.
 
-Disabling glass removes blur effects. Reduced-motion preferences turn off Livara transitions. Pre-rendered wallpapers avoid startup SVG filters. No cross-device FPS, memory, battery, or thermal benchmark has been established. GPU driver/kernel integration is described separately in graphics.md and needs hardware qualification.
+Disabling glass releases live scenes, shader and blur effects. Reduced-motion preferences turn off Livara transitions. Pre-rendered wallpapers avoid startup SVG filters. No cross-device FPS, memory, battery, or thermal benchmark has been established. GPU driver/kernel integration is described separately in graphics.md and needs hardware qualification.
 
 ## Windows source builder
 

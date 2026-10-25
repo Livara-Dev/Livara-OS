@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "sourceCount": 2,
+  "liveGPU": true,
+  "nativeWayland": true,
+  "activeKinds": [
+    "dialog",
+    "dock",
+    "menu",
+    "notification",
+    "osd",
+    "panel"
+  ],
+  "boundedLenses": 8,
+  "accessibility": "overview and high contrast release scenes; reduced motion keeps static glass",
+  "windowPrivacy": "minimize removes source; restore reconnects",
+  "cleanup": "hide, toggle and full extension disable release scenes; reenable rebuilds",
+  "pixels": {
+    "flat_to_refracted_changed_pixels": 6676,
+    "refracted_to_live_changed_pixels": 41166,
+    "live_to_updated_changed_pixels": 31170,
+    "unchanged_white_glyph_pixels": 382
+  }
+}

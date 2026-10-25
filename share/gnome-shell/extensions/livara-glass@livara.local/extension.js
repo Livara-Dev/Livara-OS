@@ -10,6 +10,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 import WindowEffects from './windowEffects.js';
 import DesktopTools from './desktopTools.js';
+import {LiquidBackdrops} from './liquidGlass.js';
 
 const MAX_DEPTH = 8;
 const MAX_WATCHED = 1600;
@@ -24,11 +25,18 @@ export default class LivaraGlass extends Extension {
         this._watched = new Map();
         this._pending = new Map();
         this._signals = [];
+        try { this._liquid = new LiquidBackdrops(() => this._animations(), () => {
+            if (this._material) for (const actor of this._surfaces.keys()) this._syncSurface(actor);
+        }); }
+        catch (error) { console.warn(`Livara: live refraction unavailable; using background blur: ${error.message}`); }
         this._interfaceSettings = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'});
+        this._accessibilitySettings = new Gio.Settings({schema_id: 'org.gnome.desktop.a11y.interface'});
         this._connect(this._settings, 'changed', () => this._refresh());
+        this._connect(this._accessibilitySettings, 'changed::high-contrast', () => this._refresh());
         this._connect(this._interfaceSettings, 'changed::gtk-theme', () => this._refresh());
         this._connect(this._interfaceSettings, 'changed::enable-animations', () => {
             if (!this._animations()) {
+                this._liquid?.resetLight();
                 this._panelBackground.remove_all_transitions();
                 this._panelBackground.opacity = 255;
                 for (const actor of this._brands.keys()) {
@@ -51,6 +59,8 @@ export default class LivaraGlass extends Extension {
             source: Main.layoutManager.panelBox, coordinate: Clutter.BindCoordinate.ALL,
         }));
         this._addSurface(this._panelBackground, 'panel');
+        this._connect(Main.panel, 'notify::mapped', () => this._refresh());
+        this._connect(Main.layoutManager.panelBox, 'notify::visible', () => this._refresh());
         this._windowEffects = new WindowEffects(this._settings, this._interfaceSettings);
         this._windowEffects.enable();
         this._desktopTools = new DesktopTools(this._settings);
@@ -69,15 +79,17 @@ export default class LivaraGlass extends Extension {
 
     _refresh() {
         this._radius = Math.max(0, Math.min(60, this._settings.get_int('blur-radius')));
-        const highContrast = this._interfaceSettings.get_string('gtk-theme').toLowerCase().includes('highcontrast');
+        const highContrast = this._accessibilitySettings.get_boolean('high-contrast') ||
+            this._interfaceSettings.get_string('gtk-theme').toLowerCase().includes('highcontrast');
         this._material = this._settings.get_boolean('glass-enabled') && !highContrast &&
             !Main.sessionMode.isLocked && !Main.sessionMode.isGreeter &&
             Main.sessionMode.hasWindows !== false &&
             !Main.overview.visible && !Main.overview.visibleTarget;
         Main.panel[this._material ? 'add_style_class_name' : 'remove_style_class_name']('livara-panel');
         Main.uiGroup[this._material ? 'add_style_class_name' : 'remove_style_class_name']('livara-glass');
-        const reveal = this._material && !this._panelBackground.visible;
-        this._panelBackground.visible = this._material;
+        const panelVisible = this._material && Main.panel.mapped && Main.layoutManager.panelBox.visible;
+        const reveal = panelVisible && !this._panelBackground.visible;
+        this._panelBackground.visible = panelVisible;
         if (reveal && this._animations()) {
             this._panelBackground.opacity = 0;
             this._panelBackground.ease({opacity: 255, duration: 220,
@@ -91,7 +103,7 @@ export default class LivaraGlass extends Extension {
     }
 
     _queue(actor, depth) {
-        if (!actor || actor === this._panelBackground || depth > MAX_DEPTH)
+        if (!actor || actor._livaraLiquidInternal || actor === this._panelBackground || depth > MAX_DEPTH)
             return;
         this._pending.set(actor, depth);
         if (this._idle)
@@ -109,7 +121,7 @@ export default class LivaraGlass extends Extension {
     }
 
     _observe(actor, depth) {
-        if (actor === this._panelBackground || depth > MAX_DEPTH ||
+        if (actor._livaraLiquidInternal || actor === this._panelBackground || depth > MAX_DEPTH ||
             actor === global.window_group || actor === global.top_window_group)
             return;
         this._brandLauncher(actor);
@@ -228,8 +240,12 @@ export default class LivaraGlass extends Extension {
         this._surfaces.set(actor, state);
         state.signals.push(actor.connect('notify::mapped', () => this._syncSurface(actor)));
         state.signals.push(actor.connect('notify::allocation', () => {
-            if (!this._material || !actor.mapped || !state.rim)
-                return;
+            if (!this._material || !actor.mapped) return;
+            if (this._liquid) {
+                this._syncSurface(actor);
+                if (state.liquid) return;
+            }
+            if (!state.rim) return;
             const width = Math.round(actor.width), height = Math.round(actor.height);
             if (width === state.width && height === state.height)
                 return;
@@ -253,6 +269,18 @@ export default class LivaraGlass extends Extension {
         if (!state)
             return;
         const visible = this._material && actor.mapped;
+        if (visible && !state.content && this._liquid) {
+            try { state.liquid = this._liquid.sync(actor, state.kind, this._radius); }
+            catch (error) {
+                console.warn(`Livara: liquid surface fallback: ${error.message}`);
+                this._liquid.remove(actor); state.liquid = false;
+            }
+            if (state.liquid) {
+                if (state.effect) { actor.remove_effect(state.effect); state.effect = null; }
+                this._clearRim(actor, state);
+                return;
+            }
+        } else { this._liquid?.remove(actor); state.liquid = false; }
         if (visible && this._radius > 0) {
             if (!state.effect) {
                 state.effect = new Shell.BlurEffect({mode: Shell.BlurMode.BACKGROUND});
@@ -357,6 +385,7 @@ export default class LivaraGlass extends Extension {
         const state = this._surfaces.get(actor);
         if (!state)
             return;
+        this._liquid?.remove(actor);
         for (const id of state.signals)
             actor.disconnect(id);
         if (restore && state.effect)
@@ -387,10 +416,12 @@ export default class LivaraGlass extends Extension {
             this._unbrand(actor);
         Main.panel.remove_style_class_name('livara-panel');
         Main.uiGroup.remove_style_class_name('livara-glass');
+        this._liquid?.destroy(); this._liquid = null;
         this._panelBackground.remove_all_transitions();
         this._panelBackground.destroy();
         this._panelBackground = null;
         this._settings = null;
         this._interfaceSettings = null;
+        this._accessibilitySettings = null;
     }
 }

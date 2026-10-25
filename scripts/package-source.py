@@ -52,6 +52,7 @@ REQUIRED_FILES = (
     "tests/test_preferences.py", "tests/test_settings_ui.py", "tests/test_studio.py", "tests/test_studio_workspace.py",
     "share/livara/org.livara.desktop.gschema.xml",
     "share/gnome-shell/extensions/livara-glass@livara.local/extension.js",
+    "share/gnome-shell/extensions/livara-glass@livara.local/liquidGlass.js",
     "share/gnome-shell/extensions/livara-glass@livara.local/windowEffects.js",
     "build/Dockerfile.code", "build/Dockerfile.browser",
     "scripts/build-code.sh", "scripts/build-browser.sh",

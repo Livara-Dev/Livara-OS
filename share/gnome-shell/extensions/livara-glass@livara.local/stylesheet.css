@@ -78,3 +78,21 @@
 #panel.livara-panel .panel-button:hover { background-color: rgba(236,229,255,.16); }
 #panel.livara-panel .clock { border-radius: 16px; background-color: rgba(224,220,255,.10); padding: 4px 16px; }
 .livara-glass .quick-toggle { transition-duration: 140ms; }
+
+/* Real refraction has its own live scene underneath sharp shell controls.
+ * Apply clear tint ONLY after a live GPU backplate was successfully bound. */
+.livara-panel-background.livara-liquid-surface {
+ background-color: transparent; background-gradient-start: transparent;
+ background-gradient-end: transparent; border-width: 0; box-shadow: none;
+}
+.livara-glass .livara-liquid-surface.popup-menu-content,
+.livara-glass .livara-liquid-surface.notification-banner,
+.livara-glass .livara-liquid-surface.osd-window,
+.livara-glass .livara-liquid-surface.modal-dialog,
+.livara-glass .livara-liquid-surface.dash-background {
+ background-color: rgba(14,20,34,.10) !important;
+ background-gradient-start: rgba(220,230,255,.07);
+ background-gradient-end: rgba(12,18,30,.12);
+ border-top-color: rgba(255,255,255,.27) !important;
+ border-bottom-color: rgba(170,205,255,.16) !important;
+}

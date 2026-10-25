@@ -1,8 +1,8 @@
 {
   "uuid": "livara-glass@livara.local",
   "name": "Livara Glass",
-  "description": "Original Livara glass panels, floating dock surfaces, and adjustable shell background blur.",
+  "description": "Live compositor refraction, adaptive glass surfaces and adjustable background softening.",
   "shell-version": ["46"],
   "settings-schema": "org.livara.desktop",
-  "version": 1
+  "version": 2
 }
