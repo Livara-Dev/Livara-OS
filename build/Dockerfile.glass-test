@@ -1,0 +1,16 @@
+# syntax=docker/dockerfile:1
+FROM ubuntu:24.04@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac
+RUN --mount=type=secret,id=proxy_ca,mode=0444 \
+    set -eu; \
+    if [ -s /run/secrets/proxy_ca ]; then \
+      sed -i 's|http://|https://|g' /etc/apt/sources.list.d/ubuntu.sources; \
+      printf 'Acquire::https::CaInfo "/run/secrets/proxy_ca";\n' > /etc/apt/apt.conf.d/99livara-test-ca; \
+    fi; \
+    apt-get -o APT::Update::Error-Mode=any -o Acquire::Retries=2 -o Acquire::http::Timeout=20 update; \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    gnome-shell gjs python3 python3-gi python3-cairo python3-gi-cairo python3-pil \
+    gir1.2-gtk-4.0 gsettings-desktop-schemas adwaita-icon-theme dbus-x11 xvfb xauth fonts-dejavu-core \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /etc/apt/apt.conf.d/99livara-test-ca
+WORKDIR /project
+ENTRYPOINT ["xvfb-run", "-a", "-s", "-screen 0 1280x900x24", "dbus-run-session", "--"]
+CMD ["bash", "scripts/test-liquid-glass.sh"]

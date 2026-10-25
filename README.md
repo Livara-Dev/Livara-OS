@@ -4,7 +4,7 @@ Livara is a **64-bit x86-64 (`amd64`)** live Linux desktop for Intel and AMD pro
 
 [Hosted builds](https://github.com/Livara-Dev/Livara-OS/actions) · [ISO releases](https://github.com/Livara-Dev/Livara-OS/releases) · [Dependency policy](docs/dependency-updates.md)
 
-**Meet [Halo](docs/halo-design.md), the 0.1.2 desktop design update:** original optical artwork, floating navigation, clearer workspaces and responsive motion.
+**[Live Liquid Glass 0.1.3](docs/liquid-glass.md)** brings real GPU refraction to shell surfaces, with sharp foreground text and live background updates. It builds on [Halo](docs/halo-design.md)'s original artwork, floating navigation and refreshed workspaces.
 
 **Already running Livara?** The [desktop update workflow](docs/updates.md) upgrades the desktop package, app interfaces, icons and matching browser/editor UI resources without downloading another ISO. It preserves personal files and preferences. Kernel and driver updates continue through Ubuntu's signed APT sources. Nonpersistent live sessions still lose installed updates after reboot; keep the small update package on persistent storage.
 
@@ -69,7 +69,7 @@ The normal Browser and Code use the Livara multilingual font stack. The official
 
 Livara Glass uses real GNOME background blur on selected shell surfaces, cached reflective highlights, rounded surfaces and finite animations. Discovery responds to desktop changes; hidden surfaces, Overview and the lock screen release effects. **Efficient rendering** removes blur and transitions; **Full Livara Glass** restores moderate blur and motion. Reduced-motion preferences are respected.
 
-Settings organizes Look, Windows, Dock, Type, Spaces, Focus, Input and Display into searchable sections. Save and rename your own looks, choose a local wallpaper, preview fonts and window controls, or reset one section. Mouse/touchpad, keyboard repeat and Night Light controls use the desktop's real settings; unavailable controls stay disabled. Tweaks, Extension Manager and dconf Editor provide deeper controls. This is Livara's Linux implementation inspired by liquid glass; Apple's proprietary optical renderer and pixel-identical iOS behavior are not implemented. [Architecture](docs/architecture.md).
+Settings organizes Look, Windows, Dock, Type, Spaces, Focus, Input and Display into searchable sections. Save and rename your own looks, choose a local wallpaper, preview fonts and window controls, or reset one section. Mouse/touchpad, keyboard repeat and Night Light controls use the desktop's real settings; unavailable controls stay disabled. Tweaks, Extension Manager and dconf Editor provide deeper controls. Shell surfaces use live GPU pixel refraction, edge dispersion and adaptive lighting while foreground text stays sharp. Native GTK content retains readable CSS surfaces. [Rendered proof](docs/liquid-glass.md). [Architecture](docs/architecture.md).
 
 Livara also adds macOS-style red/yellow/green window controls. Settings customizes their side, size, colors and symbols. Livara's native apps let the green button enter fullscreen or maximize; F11 toggles fullscreen, and Shift+green maximizes/restores. Other applications can retain their own window actions and decoration rules.
 
