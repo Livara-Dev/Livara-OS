@@ -4,6 +4,8 @@ Livara is a **64-bit x86-64 (`amd64`)** live Linux desktop for Intel and AMD pro
 
 [Hosted builds](https://github.com/Livara-Dev/Livara-OS/actions) · [ISO releases](https://github.com/Livara-Dev/Livara-OS/releases) · [Dependency policy](docs/dependency-updates.md)
 
+**Meet [Halo](docs/halo-design.md), the 0.1.2 desktop design update:** original optical artwork, floating navigation, clearer workspaces and responsive motion.
+
 **Already running Livara?** The [desktop update workflow](docs/updates.md) upgrades the desktop package, app interfaces, icons and matching browser/editor UI resources without downloading another ISO. It preserves personal files and preferences. Kernel and driver updates continue through Ubuntu's signed APT sources. Nonpersistent live sessions still lose installed updates after reboot; keep the small update package on persistent storage.
 
 **[Download the boot-tested ISO preview](https://github.com/Livara-Dev/Livara-OS/releases/tag/v0.1.0-preview.15.1).** The 3.57 GB x86-64 image passed complete BIOS and UEFI QEMU live-system checks, including the GNOME desktop, Livara Glass, AppArmor and offline rootless Kali. Download both numbered ISO parts and `Join-Livara-ISO.bat` into one folder; run the BAT to reconstruct and verify the `.iso`. The preview uses an unsigned boot chain and requires Secure Boot disabled. [Build proof](https://github.com/Livara-Dev/Livara-OS/actions/runs/39989050633) · [Qualification record](docs/iso-qualification.json)

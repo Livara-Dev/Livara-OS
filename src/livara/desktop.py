@@ -21,8 +21,9 @@ ACCENTS = {
     "olive": ("Olive", "#d7df8b"),
     "magenta": ("Orchid", "#efa7ff"),
 }
-WALLPAPERS = {"glass": "Prism", "aurora": "Aurora", "dusk": "Dusk", "verdant": "Verdant"}
+WALLPAPERS = {"halo": "Halo", "glass": "Prism", "aurora": "Aurora", "dusk": "Dusk", "verdant": "Verdant"}
 PRESETS = {
+    "Halo": {"accent": "purple", "appearance": "dark", "wallpaper": "halo", "glass-enabled": True, "dock-position": "BOTTOM", "dock-size": 52, "dock-extended": False},
     "Prism": {"accent": "purple", "appearance": "dark", "wallpaper": "glass", "glass-enabled": True, "dock-position": "BOTTOM", "dock-size": 48, "dock-extended": False},
     "Aurora": {"accent": "sage", "appearance": "dark", "wallpaper": "aurora", "glass-enabled": True, "dock-position": "BOTTOM", "dock-size": 44, "dock-extended": False},
     "Sunrise": {"accent": "orange", "appearance": "light", "wallpaper": "dusk", "glass-enabled": True, "dock-position": "BOTTOM", "dock-size": 48, "dock-extended": False},

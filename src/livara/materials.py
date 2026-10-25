@@ -16,14 +16,14 @@ def css(*, dark=True, accent="#c5a3ff", glass=True, motion=True):
     if not isinstance(accent, str) or not re.fullmatch(r"#[0-9a-fA-F]{6}", accent):
         raise ValueError("A material accent must be a six-digit color")
     base, surface, ink, muted, edge = (
-        ("#111019", "#211f2a", "#f5f2fc", "#bdb8cc", ".13") if dark else
+        ("#111019", "#1d2030", "#f5f2fc", "#bdb8cc", ".13") if dark else
         ("#f3f1f8", "#ffffff", "#242032", "#686174", ".11"))
     shade = "#000000" if dark else "#514361"
     border = "#ffffff" if dark else "#514361"
-    duration = "160ms" if motion else "0ms"
+    duration = "180ms" if motion else "0ms"
     # Use a solid base behind every gradient. There is no text/background alpha
     # multiplication and no reliance on wallpaper contrast for legibility.
-    layer = (f"linear-gradient(135deg, alpha(white,.09), alpha(white,.015) 40%, alpha({accent},.05))"
+    layer = (f"linear-gradient(135deg, alpha(white,.12), alpha(white,.02) 35%, alpha({accent},.09))"
              if glass else "none")
     sheen = (f"inset 0 1px alpha(white,{'.15' if dark else '.9'}), inset 0 -1px alpha({shade},.08), 0 8px 24px alpha({shade},.14)"
              if glass else "none")
@@ -53,11 +53,11 @@ headerbar .subtitle {{ font-size: 11px; color: {muted}; }}
   border-right: 1px solid alpha({border},{edge});
 }}
 .sidebar .navigation-sidebar, .studio-sidebar .navigation-sidebar {{ background: transparent; border: none; }}
-.brand {{ font-size: 20px; font-weight: 800; letter-spacing: 1px; color: {ink}; }}
+.brand {{ font-size: 23px; font-weight: 600; letter-spacing: -.7px; color: {ink}; }}
 .brand-sub, .footer {{ color: {muted}; font-size: 11px; letter-spacing: .4px; }}
 .muted, .livara-web .web-status {{ color: {muted}; }}
 .eyebrow, .lv-eyebrow, .metric-title {{ color: {label_accent}; font-size: 11px; font-weight: 600; letter-spacing: 1px; }}
-.hero-title, .home-title {{ font-size: 38px; font-weight: 700; letter-spacing: -1px; color: {ink}; }}
+.hero-title, .home-title {{ font-size: 40px; font-weight: 600; letter-spacing: -1px; color: {ink}; }}
 .page-title, .graphics-title {{ font-size: 30px; font-weight: 700; letter-spacing: -.7px; color: {ink}; }}
 .card-title {{ font-size: 17px; font-weight: 600; color: {ink}; }}
 .small {{ font-size: 12px; }}
@@ -112,6 +112,31 @@ textview, textview text, .text-frame, .zone-canvas {{ background-color: {base}; 
 .feature-nav-icon {{ color: {label_accent}; }}
 .navigation-sidebar .feature-nav-row {{ padding: 4px 2px; }}
 popover > contents {{ background-color: {surface}; color: {ink}; border: 1px solid alpha({border},{edge}); border-radius: 18px; box-shadow: 0 12px 32px alpha({shade},.22); }}
+/* Halo: floating navigation, a quieter canvas and luminous focal surfaces. */
+.sidebar, .studio-sidebar {{
+  margin: 12px 0 12px 12px; border: 1px solid alpha({border},{edge});
+  border-radius: 24px; box-shadow: inset 0 1px alpha(white,.12), 0 8px 24px alpha({shade},.07);
+}}
+.nav, .mode {{ padding: 12px 14px; font-weight: 500; }}
+.nav:checked, .mode:checked {{
+  background-image: linear-gradient(115deg,alpha({accent},.22),alpha({accent},.05));
+  border-color: alpha({accent},.3); box-shadow: inset 3px 0 {accent}, inset 0 1px alpha(white,.14);
+}}
+.launch-tile {{
+  background-color: {surface}; background-image: {layer}; border: 1px solid alpha({border},{edge});
+  border-radius: 22px; padding: 18px 12px; color: {ink};
+  box-shadow: inset 0 1px alpha(white,.12); transition: background-color {duration} ease, box-shadow {duration} ease;
+}}
+.launch-tile:hover {{ background-color: alpha({accent},.18); box-shadow: inset 0 1px alpha(white,.2), 0 6px 18px alpha({shade},.18); }}
+.launch-label {{ font-size: 12px; font-weight: 600; }}
+.halo-hero {{ background-color: #080d21; border-radius: 28px; border: 1px solid alpha({accent},.38); box-shadow: inset 0 1px alpha(white,.24),0 14px 34px alpha({shade},.19); }}
+.halo-copy {{ background-image: linear-gradient(to right,alpha(#080d21,.92),alpha(#080d21,.62) 52%,alpha(#080d21,0)); border-radius: 18px; padding: 6px; }}
+.halo-eyebrow {{ color: #d0c1ff; font-size: 11px; font-weight: 600; letter-spacing: 1.8px; }}
+.halo-title {{ color: #ffffff; font-size: 43px; font-weight: 600; letter-spacing: -1.5px; }}
+.halo-description {{ color: #d4dcf0; font-size: 13px; }}
+.halo-copy button.secondary {{ background: alpha(white,.1); color: #ffffff; border-color: alpha(white,.24); }}
+.halo-copy button.secondary:hover {{ background: alpha(white,.2); }}
+button:focus-visible {{ outline-color: {accent}; outline-width: 2px; outline-offset: 3px; }}
 separator {{ background-color: alpha({border},.08); min-height: 1px; }}
 scale highlight, progressbar progress {{ background-color: {accent}; }}
 switch:checked {{ background-color: {accent}; color: {accent_ink}; }}

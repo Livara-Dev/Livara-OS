@@ -15,6 +15,7 @@ import json
 import os
 import subprocess
 import tempfile
+import time
 from pathlib import Path
 test_home = tempfile.TemporaryDirectory(prefix='livara-settings-ui-')
 os.environ['XDG_CONFIG_HOME'] = str(Path(test_home.name) / 'config')
@@ -133,7 +134,14 @@ def workflow():
  # A chooser actually selects and returns a local image through its UI response.
  wallpaper=out/'local-wallpaper.png';Image.new('RGB',(48,36),(70,30,120)).save(wallpaper)
  ui.choose_wallpaper();ui._wallpaper_dialog.set_file(Gio.File.new_for_path(str(wallpaper)))
- GLib.timeout_add(700,wallpaper_selected)
+ app().wallpaper_deadline=time.monotonic()+8
+ GLib.timeout_add(100,wait_for_wallpaper)
+
+def wait_for_wallpaper():
+ if app().preferences_ui._wallpaper_dialog.get_file() is None and time.monotonic()<app().wallpaper_deadline:
+  return True
+ wallpaper_selected()
+ return False
 
 @guarded
 def wallpaper_selected():

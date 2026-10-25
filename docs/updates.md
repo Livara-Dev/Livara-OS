@@ -1,8 +1,13 @@
 # Update Livara without downloading another ISO
 
-Desktop update 0.1.1 is [published and qualified](desktop-update-qualification.json).
-Its desktop package is 14.4 MB and its separate Code package is 254.7 MB.
-Both public downloads were checked against the published release hashes.
+Desktop update **0.1.2 — Halo** adds the original glass-ribbon wallpaper,
+floating native navigation, image-backed Center/Studio workspaces, a responsive
+app-launch shelf, refreshed shell/browser/editor chrome, and shorter finite
+crossfades. Settings → Personalize → **Halo** applies the matching wallpaper
+and dock look. Existing saved customizations remain available.
+
+Download every file listed below, not just the installer. The installer now
+prints its progress and identifies missing downloads rather than exiting silently.
 
 The desktop update upgrades an existing installed Livara system using a small
 `livara-desktop` DEB and a separate `livara-code` application DEB. The small
@@ -13,7 +18,7 @@ rebuild or download the kernel, boot image, Gecko or the whole ISO.
 
 Download the DEB, `SHA256SUMS`, `update-manifest.json`, and
 `Install-Livara-Update.sh` from the official
-[desktop update release](https://github.com/Livara-Dev/Livara-OS/releases/tag/desktop-v0.1.1)
+[desktop update release](https://github.com/Livara-Dev/Livara-OS/releases/tag/desktop-v0.1.2)
 into one directory. If Code is installed, also download
 `livara-code_0.1.1_amd64.deb` into that directory. The installer requires the
 matching Code package when the app is already installed, preventing an update
@@ -70,7 +75,7 @@ authentication. The tag-triggered workflow records GitHub artifact provenance.
 With GitHub CLI, verify the package's provenance before installation:
 
 ```sh
-gh attestation verify livara-desktop_0.1.1_all.deb --repo Livara-Dev/Livara-OS
+gh attestation verify livara-desktop_0.1.2_all.deb --repo Livara-Dev/Livara-OS
 gh attestation verify livara-code_0.1.1_amd64.deb --repo Livara-Dev/Livara-OS
 sha256sum --check SHA256SUMS
 ```

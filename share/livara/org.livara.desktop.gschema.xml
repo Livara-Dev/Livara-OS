@@ -24,7 +24,7 @@
     <key name="blur-radius" type="i"><range min="0" max="60"/><default>24</default><summary>Shell background blur radius</summary></key>
     <key name="accent" type="s"><choices><choice value="blue"/><choice value="purple"/><choice value="sage"/><choice value="bark"/><choice value="orange"/><choice value="red"/><choice value="olive"/><choice value="magenta"/></choices><default>'purple'</default></key>
     <key name="appearance" type="s"><choices><choice value="dark"/><choice value="light"/></choices><default>'dark'</default></key>
-    <key name="wallpaper" type="s"><choices><choice value="glass"/><choice value="aurora"/><choice value="dusk"/><choice value="verdant"/></choices><default>'glass'</default></key>
+    <key name="wallpaper" type="s"><choices><choice value="halo"/><choice value="glass"/><choice value="aurora"/><choice value="dusk"/><choice value="verdant"/></choices><default>'halo'</default></key>
     <key name="window-button-style" type="s"><choices><choice value="traffic-lights"/><choice value="default"/></choices><default>'traffic-lights'</default><summary>Window control appearance</summary></key>
     <key name="window-button-size" type="i"><range min="10" max="22"/><default>14</default><summary>Traffic light diameter in pixels</summary></key>
     <key name="window-button-symbols" type="b"><default>false</default><summary>Show symbols inside traffic light controls</summary></key>
@@ -33,6 +33,6 @@
     <key name="window-maximize-color" type="s"><default>'#28c840'</default><summary>Green control color</summary></key>
     <key name="window-green-action" type="s"><choices><choice value="fullscreen"/><choice value="maximize"/></choices><default>'fullscreen'</default><summary>Green control action in Livara applications</summary></key>
     <key name="window-animation-style" type="s"><choices><choice value="zoom"/><choice value="lift"/><choice value="fade"/><choice value="off"/></choices><default>'zoom'</default><summary>Window opening and closing transition</summary></key>
-    <key name="window-animation-duration" type="i"><range min="80" max="600"/><default>220</default><summary>Window transition duration in milliseconds</summary></key>
+    <key name="window-animation-duration" type="i"><range min="80" max="600"/><default>180</default><summary>Window transition duration in milliseconds</summary></key>
   </schema>
 </schemalist>

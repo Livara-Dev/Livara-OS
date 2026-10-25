@@ -1,7 +1,7 @@
 {
   "status": "passed",
   "catalog_rows": 94,
-  "values_checked": 224,
+  "values_checked": 225,
   "schema_packages": [
     "gnome-settings-daemon-common\t46.0-1ubuntu1.24.04.1",
     "gsettings-desktop-schemas\t46.1-0ubuntu1",
@@ -47,9 +47,10 @@
       "key": "wallpaper",
       "kind": "choice",
       "type": "s",
-      "native_range": "('enum', <['glass', 'aurora', 'dusk', 'verdant']>)",
-      "default": "'glass'",
+      "native_range": "('enum', <['halo', 'glass', 'aurora', 'dusk', 'verdant']>)",
+      "default": "'halo'",
       "declared_values_checked": [
+        "halo",
         "glass",
         "aurora",
         "dusk",
@@ -252,7 +253,7 @@
       "kind": "int",
       "type": "i",
       "native_range": "('range', <(80, 600)>)",
-      "default": "220",
+      "default": "180",
       "declared_values_checked": [
         80,
         600
@@ -1270,5 +1271,6 @@
       ]
     }
   ],
-  "catalog_source_sha256": "3bf086b67986f2b402ae7644639bffa93abed2b01398e84acc2934741bde3ca5"
+  "catalog_source_sha256": "3bf086b67986f2b402ae7644639bffa93abed2b01398e84acc2934741bde3ca5",
+  "livara_schema_update": "0.1.2: Halo wallpaper enum/default validated against compiled Gio schema; window duration default 180 ms."
 }

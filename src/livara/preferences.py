@@ -42,7 +42,7 @@ def _add(section, name, title, description, kind, schema, key=None, *, choices=N
 
 _add("appearance", "appearance", "Appearance", "Dark or light desktop applications", "choice", "livara", choices=[("dark", "Dark"), ("light", "Light")])
 _add("appearance", "accent", "Accent color", "Eight coordinated application and desktop accents", "choice", "livara", choices=[("purple", "Iris"), ("blue", "Ocean"), ("sage", "Sage"), ("bark", "Cocoa"), ("orange", "Sunset"), ("red", "Ruby"), ("olive", "Olive"), ("magenta", "Orchid")])
-_add("appearance", "wallpaper", "Livara wallpaper", "Choose an original background; replaces a custom image", "choice", "livara", choices=[("glass", "Prism"), ("aurora", "Aurora"), ("dusk", "Dusk"), ("verdant", "Verdant")])
+_add("appearance", "wallpaper", "Livara wallpaper", "Choose an original background; replaces a custom image", "choice", "livara", choices=[("halo", "Halo"), ("glass", "Prism"), ("aurora", "Aurora"), ("dusk", "Dusk"), ("verdant", "Verdant")])
 _add("appearance", "wallpaper-image", "Your wallpaper", "Use a local PNG, JPEG or WebP image; presets keep its local path", "image", "background", "picture-uri")
 _add("appearance", "wallpaper-style", "Wallpaper fit", "Fit, fill, tile or span your desktop background", "choice", "background", "picture-options", choices=[("zoom", "Fill"), ("scaled", "Fit"), ("stretched", "Stretch"), ("centered", "Center"), ("spanned", "Span displays"), ("wallpaper", "Tile"), ("none", "No picture")])
 _add("appearance", "glass-enabled", "Liquid glass", "Translucent desktop surfaces and background blur", "bool", "livara")

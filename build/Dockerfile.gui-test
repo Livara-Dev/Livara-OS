@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 FROM ubuntu:24.04@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac
-ARG LIVARA_DESKTOP_VERSION=0.1.1
+ARG LIVARA_DESKTOP_VERSION=0.1.2
 RUN --mount=type=secret,id=proxy_ca \
     set -eux; \
     if [ -s /run/secrets/proxy_ca ]; then printf 'Acquire::https::CaInfo "/run/secrets/proxy_ca";\n' > /etc/apt/apt.conf.d/99livara-build-ca; fi; \

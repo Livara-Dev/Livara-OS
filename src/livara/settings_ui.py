@@ -249,7 +249,7 @@ class SettingsStudio:
         heading.append(Gtk.Box(hexpand=True))
         root.append(heading)
         gallery = Gtk.FlowBox(selection_mode=Gtk.SelectionMode.NONE, min_children_per_line=1, max_children_per_line=2, homogeneous=True, column_spacing=10, row_spacing=10)
-        details = {"Prism": ("Violet · dark · glass", "lv-prism"), "Aurora": ("Sage · dark · glass", "lv-aurora"), "Sunrise": ("Warm · light · glass", "lv-sunrise"), "Classic Desktop": ("A familiar side dock", "lv-classic")}
+        details = {"Halo": ("Luminous glass · floating dock", "lv-halo"), "Prism": ("Violet · dark · glass", "lv-prism"), "Aurora": ("Sage · dark · glass", "lv-aurora"), "Sunrise": ("Warm · light · glass", "lv-sunrise"), "Classic Desktop": ("A familiar side dock", "lv-classic")}
         for name in desktop.PRESETS:
             subtitle, style = details.get(name, ("Livara desktop preset", "lv-prism"))
             button = Gtk.Button(width_request=140, css_classes=["lv-preset", style])
@@ -713,18 +713,18 @@ class SettingsStudio:
         css = f'''
 .lv-settings {{ color: {text}; }}
 .lv-settings .lv-eyebrow {{ color: {label_accent}; font-size: 11px; font-weight: 600; letter-spacing: 1px; }}
-.lv-settings .lv-studio-title {{ font-size: 29px; font-weight: 800; letter-spacing: -.7px; }}
-.lv-settings .lv-section-title {{ font-size: 23px; font-weight: 800; letter-spacing: -.5px; }}
+.lv-settings .lv-studio-title {{ font-size: 33px; font-weight: 600; letter-spacing: -1px; }}
+.lv-settings .lv-section-title {{ font-size: 25px; font-weight: 600; letter-spacing: -.6px; }}
 .lv-settings .lv-muted {{ color: {muted}; }}
 .lv-settings .lv-small {{ font-size: 11px; }}
 .lv-settings .lv-card-title {{ font-size: 15px; font-weight: 600; }}
 .lv-settings .lv-button, .lv-settings .lv-icon-button {{ background: alpha({accent},.12); border: 1px solid {border}; border-radius: 12px; padding: 9px 12px; color: {text}; box-shadow: none; }}
 .lv-settings .lv-primary {{ background-color:{accent}; background-image:linear-gradient(to bottom,alpha(white,.16),transparent); color:#160822; font-weight:600; border-radius:12px; padding:10px 16px; box-shadow:0 3px 8px alpha(black,.12); }}
 .lv-settings .lv-tabs flowboxchild {{ padding: 0; }}
-.lv-settings .lv-tab {{ border:1px solid transparent; border-radius:12px; background:alpha({accent},.07); padding:9px 7px; color:{muted}; box-shadow:none; }}
+.lv-settings .lv-tab {{ border:1px solid transparent; border-radius:16px; background:alpha({accent},.07); padding:9px 7px; color:{muted}; box-shadow:none; }}
 .lv-settings .lv-tab:checked {{ background:alpha({accent},.17); border-color:alpha({accent},.25); color:{text}; }}
 .lv-settings .lv-search {{ border-radius:15px; border:1px solid {border}; background:{panel}; padding:8px 12px; }}
-.lv-settings .lv-control-list {{ background-color:{panel}; background-image:{sheen}; border:1px solid {border}; border-radius:20px; box-shadow:{elevation}; }}
+.lv-settings .lv-control-list {{ background-color:{panel}; background-image:{sheen}; border:1px solid {border}; border-radius:24px; box-shadow:{elevation}; }}
 .lv-settings .lv-control-row {{ background:transparent; padding:4px 3px; }}
 .lv-settings .lv-control-row label.subtitle {{ font-size:11px; color:{muted}; }}
 .lv-settings .lv-control-list > row:not(:last-child) {{ border-bottom:1px solid alpha(#ac87cc,.10); }}
@@ -742,6 +742,7 @@ class SettingsStudio:
 .lv-settings .lv-preset {{ border:1px solid {border}; border-radius:17px; background:{panel}; padding:0; box-shadow:none; }}
 .lv-settings .lv-preset:hover {{ border-color:{accent}; }}
 .lv-settings .lv-preset-caption {{ font-size:10px; color:{muted}; }}
+.lv-settings .lv-halo {{ background:linear-gradient(120deg,alpha(#a692f4,.42),alpha(#70cede,.13)); }}
 .lv-settings .lv-prism {{ background:linear-gradient(125deg,alpha(#a564e9,.28),{panel}); }}
 .lv-settings .lv-aurora {{ background:linear-gradient(125deg,alpha(#49c998,.23),{panel}); }}
 .lv-settings .lv-sunrise {{ background:linear-gradient(125deg,alpha(#ffac63,.25),{panel}); }}
