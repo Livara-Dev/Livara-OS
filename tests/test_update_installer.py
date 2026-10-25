@@ -5,6 +5,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("desktop_update_builder", ROOT / "scripts/package-desktop-update.py")
@@ -13,6 +14,23 @@ spec.loader.exec_module(builder)
 
 
 class InstallerFeedback(unittest.TestCase):
+    def test_bundle_extracts_all_required_files_into_one_versioned_folder(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            names = ["desktop.deb", "code.deb", "Install-Livara-Update.sh", "README.txt", "update-manifest.json"]
+            for name in names:
+                (root / name).write_bytes(("release payload " + name).encode())
+            (root / "SHA256SUMS").write_text("".join(hashlib.sha256((root / name).read_bytes()).hexdigest() + "  " + name + "\n" for name in names))
+            bundle = builder.bundle_update(root, names)
+            with zipfile.ZipFile(bundle) as archive:
+                self.assertIsNone(archive.testzip())
+                prefix = f"Livara-Halo-{builder.__version__}-Update/"
+                self.assertEqual(set(archive.namelist()), {prefix + name for name in (*names, "SHA256SUMS")})
+                archive.extractall(root / "extracted")
+            folder = root / "extracted" / prefix
+            result = subprocess.run(["sha256sum", "--check", "SHA256SUMS"], cwd=folder, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+
     def run_installer(self, files):
         with tempfile.TemporaryDirectory(prefix="livara installer ") as temporary:
             root = Path(temporary)

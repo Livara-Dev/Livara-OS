@@ -10,6 +10,7 @@ import re
 import shutil
 import subprocess
 import sys
+import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'src'))
@@ -86,6 +87,23 @@ echo 'Live ISO sessions are ephemeral: keep the update files on persistent stora
 '''
 
 
+def bundle_update(output, names):
+    """Keep all required files together in one versioned download folder."""
+    destination = output / f'Livara-Halo-{__version__}-Update.zip'
+    temporary = destination.with_suffix('.zip.part')
+    try:
+        with zipfile.ZipFile(temporary, 'w', compression=zipfile.ZIP_STORED) as archive:
+            for name in (*names, 'SHA256SUMS'):
+                archive.write(output / name, f'Livara-Halo-{__version__}-Update/{name}')
+        with zipfile.ZipFile(temporary) as archive:
+            if archive.testzip() is not None:
+                raise ValueError('Update ZIP failed its CRC integrity check')
+        temporary.replace(destination)
+    finally:
+        temporary.unlink(missing_ok=True)
+    return destination
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output-dir', type=Path, default=ROOT / 'dist/update')
@@ -151,6 +169,8 @@ Source contains uncommitted changes: {dirty}
     if args.code_package:
         names.append(code_package)
     (output / 'SHA256SUMS').write_text(''.join(hashlib.sha256((output / name).read_bytes()).hexdigest() + '  ' + name + '\n' for name in names))
+    if args.code_package:
+        print('Complete update ZIP:', bundle_update(output, names))
     print(f'Desktop update created: {output / package} ({(output / package).stat().st_size:,} bytes)')
     return 0
 
