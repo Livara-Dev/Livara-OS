@@ -9,6 +9,11 @@ on:
         type: string
         required: false
         default: ''
+      reuse_browser_run:
+        description: 'Same-repository source-compiled browser candidate for runtime qualification'
+        type: string
+        required: false
+        default: '39940428897'
 permissions:
   contents: read
   actions: read
@@ -94,6 +99,25 @@ jobs:
             --mount "type=bind,src=$PWD/dist/update,dst=/update,readonly" \
             --mount "type=bind,src=$PWD/scripts/test-launcher-diversions.sh,dst=/test.sh,readonly" \
             ubuntu:24.04 bash -c 'bash /test.sh /update/*.deb'
+      - name: Download the pinned source-compiled browser for update qualification
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.reuse_browser_run || '39940428897' }}
+          name: livara-browser-compiled-candidate
+          path: .build/browser-candidate
+      - name: Test the actual desktop DEB against the compiled browser
+        run: |
+          set -euo pipefail
+          version=$(PYTHONPATH=src python3 -c 'from livara import __version__; print(__version__)')
+          mkdir -p .build/browser-update-test
+          docker run --rm --init --network none -e LIVARA_DISPOSABLE_GLASS_TEST=1 \
+            --mount "type=bind,src=$PWD,dst=/project,readonly" \
+            --mount "type=bind,src=$PWD/.build/browser-update-test,dst=/out" \
+            livara-glass-validation bash scripts/test-browser-update.sh \
+            /project/.build/browser-candidate/livara-browser-linux-x64.tar.xz \
+            "/project/dist/update/livara-desktop_${version}_all.deb" \
+            2>&1 | tee dist/logs/browser-update-runtime.log
       - name: Retain desktop update artifacts
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -112,6 +136,12 @@ jobs:
         with:
           name: liquid-glass-renderer
           path: .build/liquid-test/
+      - name: Retain browser update evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: browser-update-runtime
+          path: .build/browser-update-test/
 
   publish:
     needs: [desktop-update, code-build]

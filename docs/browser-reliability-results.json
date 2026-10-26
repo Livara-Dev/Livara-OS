@@ -1,0 +1,134 @@
+{
+  "version": "0.1.4",
+  "native_browser": {
+    "status": "passed",
+    "checks": {
+      "geometry_1440x1000": {
+        "width": 1282,
+        "height": 925,
+        "x": 79,
+        "y": 37,
+        "availableWidth": 1440,
+        "availableHeight": 1000,
+        "scale": 1,
+        "glass": "true",
+        "appearance": "dark",
+        "scheme": "dark",
+        "contrast": false,
+        "delayed": true
+      },
+      "page": {
+        "title": "Livara browser reliability",
+        "storage": "yes",
+        "canvas": 255
+      },
+      "right_click": {
+        "state": "open",
+        "label": "Open Link in New Tab",
+        "rect": {
+          "x": 252,
+          "y": 103,
+          "width": 258.316650390625,
+          "height": 349.66668701171875,
+          "top": 103,
+          "right": 510.316650390625,
+          "bottom": 452.66668701171875,
+          "left": 252
+        }
+      },
+      "open_link_in_tab": true,
+      "written_settings": {
+        "appearance": "light",
+        "accent": "ocean",
+        "radius": 26,
+        "font": 16
+      },
+      "preferences": {
+        "uri": "about:preferences",
+        "title": "Settings",
+        "labels": [
+          "Settings",
+          "General\n      Look and Feel\n      Tab Management\n      Keyboard Shortcuts\n      Livara Browser Mods\n      Account and sync\n      Home and startup\n      Search\n      Privacy and security\n      Passwords and autofill\n      Appearance\n      Downloads\n      Tabs and browsing\n      \n      Accessibility\n      Languages\n      \n      Permissions and data\n      Firefox Labs\n      About Livara\n      \n\n      \n      \n      \n\n      \n      Extensions and themes\n      Livara support",
+          "General",
+          "Look and Feel",
+          "Tab Management",
+          "Keyboard Shortcuts",
+          "Livara Browser Mods",
+          "Account and sync"
+        ]
+      },
+      "new_tab": {
+        "title": "Livara \u00b7 Start",
+        "notes": "",
+        "clock": "05:59 AM"
+      },
+      "geometry_1280x720": {
+        "width": 1280,
+        "height": 720,
+        "x": 0,
+        "y": 0,
+        "availableWidth": 1280,
+        "availableHeight": 720,
+        "scale": 1,
+        "glass": "true",
+        "appearance": "light",
+        "scheme": "light",
+        "contrast": false,
+        "delayed": true
+      },
+      "settings_after_full_restart": {
+        "appearance": "light",
+        "accent": "ocean",
+        "radius": 26,
+        "font": 16
+      },
+      "storage_after_restart": "yes",
+      "dashboard_after_restart": {
+        "title": "Livara \u00b7 Start",
+        "notes": "Restart proof \u2014 \u0633\u0644\u0627\u0645",
+        "clock": "05:59 AM"
+      }
+    }
+  },
+  "wayland": {
+    "status": "passed",
+    "identity": {
+      "wmclass": "livara-browser",
+      "appId": "org.livara.Browser.desktop",
+      "icon": "org.livara.Browser"
+    },
+    "frame": {
+      "x": 0,
+      "y": 44,
+      "width": 1280,
+      "height": 676
+    },
+    "workArea": {
+      "x": 0,
+      "y": 44,
+      "width": 1280,
+      "height": 676
+    },
+    "clientType": 0,
+    "sandboxDisabled": false
+  },
+  "resource_update": {
+    "result": [
+      {
+        "app": "livara-browser",
+        "status": "updated",
+        "files": [
+          "/opt/livara-browser/browser/omni.ja"
+        ]
+      },
+      {
+        "app": "livara-code",
+        "status": "not-installed"
+      }
+    ],
+    "native_unchanged": {
+      "livara-browser": "f297245f4a6c4007e137db77ca16f393b881e2f47dc68837e079407dd61deaa2",
+      "libxul.so": "52825859498ba5e13b91b4eb3da2d41cc576ad9fd558eb407d069b2e5c0704b4"
+    }
+  }
+}

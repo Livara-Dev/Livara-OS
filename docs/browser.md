@@ -2,7 +2,7 @@
 
 Livara Browser is an actual source fork of Zen Browser and its Firefox/Gecko engine. The source kit includes pinned upstream metadata, source patches, browser chrome/dashboard source resources, branding/fonts, Tor runtime, tests and a native Docker build recipe. The local build packages these resources into `browser.jar`. See [browser build notes](../forks/browser/README.md) for the exact revision, prerequisites, steps and validation limits.
 
-The OS builder compiles the native browser locally and installs it under `/opt/livara-browser`. Its launcher never substitutes an upstream binary or the earlier WebKit prototype. The source-fork browser has not been compiled or boot-tested in the authoring environment; earlier WebKit screenshots do not represent its runtime.
+The OS builder compiles the native browser locally and installs it under `/opt/livara-browser`. Its launcher never substitutes an upstream binary or the earlier WebKit prototype. The pinned browser has been source-compiled and exercised with its actual Gecko engine. [Browser reliability qualification](browser-reliability.md) covers real menus, settings persistence, screen sizing and desktop association; earlier WebKit screenshots do not represent this browser.
 
 The appearance-panel source implements controls for glass, reduced motion, theme, accent color, text size, tab spacing and radius. It provides tab search, sidebar positioning, toolbar customization, browser settings, reader controls and a Tor action. The local start page has DuckDuckGo search, a clock, removable shortcuts, notes, a focus timer and quiet view. Private-window dashboard data stays in memory.
 

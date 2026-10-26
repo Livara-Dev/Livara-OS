@@ -1,38 +1,56 @@
+"""Verify fresh builds and incremental updates share the shipping planner."""
 import hashlib
-import importlib.util
+import json
 from pathlib import Path
 import tempfile
 import unittest
 import zipfile
 
-ROOT=Path(__file__).resolve().parents[1]
-spec=importlib.util.spec_from_file_location('resource_update',ROOT/'scripts/refresh-browser-chrome.py');update=importlib.util.module_from_spec(spec);spec.loader.exec_module(update)
+from livara.app_updates import BROWSER_RESOURCES, BROWSER_LOCALES, browser_source_plan, atomic_write
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class BrowserResourceUpdate(unittest.TestCase):
-    def test_only_livara_script_changes_and_generated_bytecode_is_dropped(self):
-        with tempfile.TemporaryDirectory() as folder:
-            root=Path(folder);jar=root/'omni.ja';resource=root/'LivaraUI.js';resource.write_bytes(b'new Livara source')
-            with zipfile.ZipFile(jar,'w') as z:
-                z.writestr('chrome/browser/content/browser/livara/LivaraUI.js',b'old Livara source')
-                z.writestr('chrome/browser/content/browser/browser.xhtml',b'unchanged browser entry')
-                z.writestr('jsloader/generated-cache',b'obsolete bytecode')
-            report=update.update_jar(jar,resource)
-            with zipfile.ZipFile(jar) as z:
-                self.assertEqual(z.read(report['path']),resource.read_bytes())
-                self.assertEqual(z.read('chrome/browser/content/browser/browser.xhtml'),b'unchanged browser entry')
-                self.assertNotIn('jsloader/generated-cache',z.namelist());self.assertIsNone(z.testzip())
-            before=jar.read_bytes();self.assertFalse(update.update_jar(jar,resource)['changed']);self.assertEqual(jar.read_bytes(),before)
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.app = Path(temporary.name) / 'livara-browser'
+        (self.app / 'browser').mkdir(parents=True)
+        self.binary = b'original native binary'
+        (self.app / 'livara-browser').write_bytes(self.binary)
+        pin = json.loads((ROOT / 'forks/browser/upstream.json').read_text())['commit']
+        (self.app / 'livara-build.json').write_text(json.dumps({
+            'upstream': {'commit': pin}, 'binary_sha256': hashlib.sha256(self.binary).hexdigest()}))
+        self.jar = self.app / 'browser/omni.ja'
+        with zipfile.ZipFile(self.jar, 'w') as archive:
+            for name in BROWSER_RESOURCES:
+                archive.writestr('chrome/browser/content/browser/livara/' + name, 'old resource')
+            archive.writestr('localization/en-US/browser/browserContext.ftl', 'upstream = Preserved')
+            archive.writestr('jsloader/stale-bytecode', 'obsolete')
 
-    def test_missing_or_ambiguous_resource_does_not_rewrite_archive(self):
-        with tempfile.TemporaryDirectory() as folder:
-            root=Path(folder);jar=root/'omni.ja';resource=root/'LivaraUI.js';resource.write_bytes(b'new')
-            with zipfile.ZipFile(jar,'w') as z:z.writestr('unrelated',b'preserved')
-            previous=jar.read_bytes();self.assertIsNone(update.update_jar(jar,resource));self.assertEqual(jar.read_bytes(),previous)
-            with zipfile.ZipFile(jar,'w') as z:
-                z.writestr('one/livara/LivaraUI.js',b'a');z.writestr('two/livara/LivaraUI.js',b'b')
-            previous=jar.read_bytes()
-            with self.assertRaisesRegex(ValueError,'Ambiguous'):update.update_jar(jar,resource)
-            self.assertEqual(jar.read_bytes(),previous)
+    def test_complete_resources_restore_localization_without_changing_native_files(self):
+        plans = browser_source_plan(self.app, ROOT)
+        self.assertEqual(len(plans), 1)
+        for path, _old, fresh in plans:
+            atomic_write(path, fresh)
+        with zipfile.ZipFile(self.jar) as archive:
+            for name in BROWSER_RESOURCES:
+                self.assertEqual(archive.read('chrome/browser/content/browser/livara/' + name),
+                                 (ROOT / 'forks/browser/overlay/src/livara' / name).read_bytes())
+            for name in BROWSER_LOCALES:
+                self.assertEqual(archive.read('localization/en-US/' + name),
+                                 (ROOT / 'forks/browser/locales/en-US' / name).read_bytes())
+            self.assertEqual(archive.read('localization/en-US/browser/browserContext.ftl'), b'upstream = Preserved')
+            self.assertNotIn('jsloader/stale-bytecode', archive.namelist())
+            self.assertIsNone(archive.testzip())
+        self.assertEqual((self.app / 'livara-browser').read_bytes(), self.binary)
+        self.assertEqual(browser_source_plan(self.app, ROOT), [])
 
-if __name__=='__main__':unittest.main()
+    def test_missing_resource_refuses_update_before_any_archive_write(self):
+        with zipfile.ZipFile(self.jar, 'w') as archive:
+            archive.writestr('unrelated', 'preserved')
+        original = self.jar.read_bytes()
+        with self.assertRaisesRegex(ValueError, 'exactly one copy'):
+            browser_source_plan(self.app, ROOT)
+        self.assertEqual(self.jar.read_bytes(), original)

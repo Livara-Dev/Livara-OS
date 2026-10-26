@@ -211,7 +211,10 @@ export class LiquidBackdrops {
             plane.add_effect_with_name('livara-scene-softening', blur);
             const effect = new LiquidLensEffect();
             plane.add_effect_with_name('livara-live-refraction', effect);
-            entry = {actor, target, plane, blur, effect, kind, sources:new Map(), signals:[], pixels:0};
+            entry = {actor, target, plane, blur, effect, kind, sources:new Map(), signals:[], pixels:0, planeDestroyed:false};
+            // During compositor shutdown uiGroup may destroy this sibling
+            // before the target emits its own mapped/destroy notifications.
+            plane.connect('destroy', () => { entry.planeDestroyed = true; });
             this._entries.set(actor, entry);
             Main.uiGroup.insert_child_below(plane, anchor);
             for (let ancestor = target, depth = 0; ancestor && ancestor !== Main.uiGroup && depth < 12;
@@ -236,7 +239,7 @@ export class LiquidBackdrops {
     }
 
     _geometry(entry) {
-        if (!this._entries.has(entry.actor) || !entry.target.mapped)
+        if (!this._entries.has(entry.actor) || entry.planeDestroyed || !entry.target.mapped)
             return false;
         const [x, y] = entry.target.get_transformed_position();
         const [width, height] = entry.target.get_transformed_size();
@@ -272,6 +275,7 @@ export class LiquidBackdrops {
     }
 
     _rebuildEntry(entry) {
+        if (entry.planeDestroyed) return;
         const sources = this._sources();
         for (const [source, state] of entry.sources) {
             if (!sources.includes(source)) {
@@ -299,7 +303,7 @@ export class LiquidBackdrops {
                 }
                 this._watch(source, 'destroy', () => {
                     this._disconnect(state.signals);
-                    state.clone.destroy();
+                    if (!entry.planeDestroyed) state.clone.destroy();
                     entry.sources.delete(source);
                 }, state.signals);
             }
@@ -333,10 +337,12 @@ export class LiquidBackdrops {
             this._disconnect(state.signals);
         entry.sources.clear();
         actor.remove_style_class_name('livara-liquid-surface');
-        entry.plane.remove_effect_by_name('livara-live-refraction');
-        entry.plane.remove_effect_by_name('livara-scene-softening');
+        if (!entry.planeDestroyed) {
+            entry.plane.remove_effect_by_name('livara-live-refraction');
+            entry.plane.remove_effect_by_name('livara-scene-softening');
+            entry.plane.destroy();
+        }
         entry.effect = entry.blur = null;
-        entry.plane.destroy();
     }
 
     destroy() {

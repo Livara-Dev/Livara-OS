@@ -4,5 +4,5 @@
   "description": "Live compositor refraction, adaptive glass surfaces and adjustable background softening.",
   "shell-version": ["46"],
   "settings-schema": "org.livara.desktop",
-  "version": 2
+  "version": 3
 }

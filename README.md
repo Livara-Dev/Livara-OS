@@ -4,7 +4,7 @@ Livara is a **64-bit x86-64 (`amd64`)** live Linux desktop for Intel and AMD pro
 
 [Hosted builds](https://github.com/Livara-Dev/Livara-OS/actions) · [ISO releases](https://github.com/Livara-Dev/Livara-OS/releases) · [Dependency policy](docs/dependency-updates.md)
 
-**[Live Liquid Glass 0.1.3](docs/liquid-glass.md)** brings real GPU refraction to shell surfaces, with sharp foreground text and live background updates. It builds on [Halo](docs/halo-design.md)'s original artwork, floating navigation and refreshed workspaces.
+**[Desktop update 0.1.4](docs/browser-reliability.md)** fixes Browser menus, icon association, appearance persistence and restored window sizing, and hides the installed boot menu by default. It includes [Live Liquid Glass](docs/liquid-glass.md) and [Halo](docs/halo-design.md).
 
 **Already running Livara?** The [desktop update workflow](docs/updates.md) upgrades the desktop package, app interfaces, icons and matching browser/editor UI resources without downloading another ISO. It preserves personal files and preferences. Kernel and driver updates continue through Ubuntu's signed APT sources. Nonpersistent live sessions still lose installed updates after reboot; keep the small update package on persistent storage.
 
