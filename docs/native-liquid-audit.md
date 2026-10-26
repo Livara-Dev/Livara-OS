@@ -60,7 +60,7 @@ The desktop audit additionally exercised:
 - Studio: home, tools, notes and focus navigation.
 - Essentials: native routes and theme editing; Palette: real search and bounded
   local file discovery; Monitor and Graphics: rendering and opaque fallback.
-- Source suite: 266 Python tests (one optional shaping-tool skip), plus Code
+- Source suite: 266 Python tests (one optional pinned-Zen-source check skipped), plus Code
   feature/window-control and shell desktop-tool tests.
 
 The audit found and fixed a stale-theme bug: removing an icon or sound theme
