@@ -77,7 +77,8 @@ jobs:
       - name: Test live refraction in a real disposable Wayland compositor
         run: |
           set -euo pipefail
-          docker build -f build/Dockerfile.glass-test -t livara-glass-validation .
+          trap 'tail -n 10 dist/logs/glass-image-build.log dist/logs/liquid-glass-runtime.log 2>/dev/null | sed "s/^/::error title=Shell renderer diagnostics::/"' ERR
+          docker build -f build/Dockerfile.glass-test -t livara-glass-validation . 2>&1 | tee dist/logs/glass-image-build.log
           mkdir -p .build/liquid-test
           docker run --rm --init --network none -e LIVARA_DISPOSABLE_GLASS_TEST=1 \
             --mount "type=bind,src=$PWD,dst=/project,readonly" \
@@ -86,6 +87,7 @@ jobs:
       - name: Test installed native apps and live glass together
         run: |
           set -euo pipefail
+          trap 'tail -n 10 dist/logs/native-liquid-runtime.log 2>/dev/null | sed "s/^/::error title=Native renderer diagnostics::/"' ERR
           version=$(PYTHONPATH=src python3 -c 'from livara import __version__; print(__version__)')
           mkdir -p .build/native-liquid-test
           docker run --rm --init --network none -e LIVARA_DISPOSABLE_GLASS_TEST=1 \

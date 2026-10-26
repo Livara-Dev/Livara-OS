@@ -15,7 +15,8 @@ window.lv-native-glass, window.lv-native-glass > contents {
  background-image: linear-gradient(to bottom,rgba(255,255,255,.10),rgba(255,255,255,.01));
  border-bottom: 1px solid rgba(230,240,255,.22);
 }
-.lv-native-glass .sidebar, .lv-native-glass .studio-sidebar {
+.lv-native-glass .sidebar, .lv-native-glass .studio-sidebar,
+.lv-native-glass .navigation-sidebar {
  background-color: rgba(28,34,50,.10); background-image: none;
  border-right: 1px solid rgba(230,240,255,.22);
 }
@@ -27,7 +28,8 @@ window.lv-native-glass.lv-native-glass-light {
  background-color: rgba(245,248,255,.70);
 }
 .lv-native-glass-light headerbar, .lv-native-glass-light .sidebar,
-.lv-native-glass-light .studio-sidebar { background-color: rgba(245,248,255,.28); }
+.lv-native-glass-light .studio-sidebar,
+.lv-native-glass-light .navigation-sidebar { background-color: rgba(245,248,255,.28); }
 .lv-native-glass-light .lv-content-canvas { background-color: rgba(250,251,255,.78); }
 """
 
