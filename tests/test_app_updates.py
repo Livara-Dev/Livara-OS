@@ -28,6 +28,10 @@ class AppResourceUpdates(unittest.TestCase):
         (self.app / 'livara-build.json').write_text(json.dumps({'upstream': {'commit': 'browser-pin'}, 'binary_sha256': hashlib.sha256(self.binary).hexdigest()}))
         for name in app_updates.BROWSER_RESOURCES:
             (self.payload / 'browser' / name).write_text('new ' + name)
+        for name in app_updates.BROWSER_LOCALES:
+            path = self.payload / 'browser/locales/en-US' / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text('label = Restored localization')
         self.jar = self.app / 'browser/omni.ja'
         with zipfile.ZipFile(self.jar, 'w') as jar:
             for name in app_updates.BROWSER_RESOURCES:
@@ -57,6 +61,8 @@ class AppResourceUpdates(unittest.TestCase):
             self.assertEqual(jar.read('engine-owned-resource'), b'preserve this')
             self.assertNotIn('jsloader/cache', jar.namelist())
             self.assertEqual(jar.read('chrome/browser/content/browser/livara/start.css'), b'new start.css')
+            for name in app_updates.BROWSER_LOCALES:
+                self.assertEqual(jar.read('localization/en-US/' + name), b'label = Restored localization')
         self.assertEqual((self.app / 'livara-browser').read_bytes(), self.binary)
         self.assertIn('/* original compiled CSS */', css.read_text())
         product = json.loads((css.parents[3] / 'product.json').read_text())

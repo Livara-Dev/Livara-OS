@@ -288,6 +288,8 @@
 }
 
 @media (forced-colors: none) {
+ #main-window[livara-appearance="dark"] { color-scheme: dark !important; }
+ #main-window[livara-appearance="light"] { color-scheme: light !important; }
  #urlbar .urlbar-background { border-radius: 18px !important; box-shadow: inset 0 1px rgba(255,255,255,.19), 0 3px 12px rgba(0,0,0,.09) !important; }
  #zen-main-app-wrapper { border-radius: 22px; }
  #TabsToolbar .tab-background { border-radius: 13px !important; }

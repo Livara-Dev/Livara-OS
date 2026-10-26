@@ -130,6 +130,8 @@ def prepare(checkout: Path, check_only: bool = False) -> dict:
                                for name in manifest["patches"]},
               "overlay_sha256": {str(path.relative_to(overlay)): hashlib.sha256(path.read_bytes()).hexdigest()
                                  for path in sorted(overlay.rglob("*")) if path.is_file()},
+              "locale_sha256": {str(path.relative_to(HERE / 'locales')): hashlib.sha256(path.read_bytes()).hexdigest()
+                                for path in sorted((HERE / 'locales').rglob('*.ftl'))},
               "source_inputs": {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
                                 for path in (ROOT / "artwork/livara-browser.png", ROOT / "fonts/ttf/LivaraSans-Regular.ttf", ROOT / "fonts/ttf/LivaraSans-SemiBold.ttf", ROOT / "fonts/ttf/LivaraPersian-Regular.ttf", ROOT / "fonts/ttf/LivaraPersian-SemiBold.ttf")}}
     (checkout / "livara-source-manifest.json").write_text(json.dumps(report, indent=2) + "\n")

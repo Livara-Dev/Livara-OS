@@ -1,0 +1,62 @@
+{
+  "upstream_commit": "541ee55196395ee8082862b83c84c90ab41d9f6d",
+  "license": "MPL-2.0",
+  "files": {
+    "locales/en-US/browser/browser/preferences/zen-preferences.ftl": {
+      "upstream_sha256": "a8fd47277c1e0fd704a0d35ecfddcee8770c13162832a8af183441d3a7e4a9d5",
+      "maintained_sha256": "86346325aa55fe2172a261c049a9344a839e7053dcd09927ef2f230776162df1"
+    },
+    "locales/en-US/browser/browser/zen-boosts.ftl": {
+      "upstream_sha256": "a421bbf95d558661a07f34428ae1ee06efb0fcc45ed120e2da99b833fbc86549",
+      "maintained_sha256": "a0b54ada72735abe4788027c12cbc6079d34bbb0385f6fc06a0556215c829bee"
+    },
+    "locales/en-US/browser/browser/zen-command-palette.ftl": {
+      "upstream_sha256": "9a2e372959568e62a9d513c30a3101dc3d61ef05e64acf7e15e92fbd1a198c23",
+      "maintained_sha256": "9a2e372959568e62a9d513c30a3101dc3d61ef05e64acf7e15e92fbd1a198c23"
+    },
+    "locales/en-US/browser/browser/zen-folders.ftl": {
+      "upstream_sha256": "76ada60f7d9dea851f609c81862c0a02e032f49aa0516cda04427686e2117362",
+      "maintained_sha256": "76ada60f7d9dea851f609c81862c0a02e032f49aa0516cda04427686e2117362"
+    },
+    "locales/en-US/browser/browser/zen-general.ftl": {
+      "upstream_sha256": "d80ba45ba51489575209ff4bccd7394645bf689f1df900095ef3760ed32c0f4e",
+      "maintained_sha256": "e5e30e1647fef7445cf8e21cdf339a669c456519061c0bb1ca29ae85a6f8d70f"
+    },
+    "locales/en-US/browser/browser/zen-library.ftl": {
+      "upstream_sha256": "dbd0c7a7013480828b2cdd83a1b3e098630a62b8b817bd2d150671675f301fb4",
+      "maintained_sha256": "e223e39a06961d76f82de0679ee0e6704e27c22d9804ec5c126995c95b292b63"
+    },
+    "locales/en-US/browser/browser/zen-live-folders.ftl": {
+      "upstream_sha256": "08cfd22f0cdfc96694f973b9beecd0c34eea0176727c909e9d07ed853633b4ad",
+      "maintained_sha256": "08cfd22f0cdfc96694f973b9beecd0c34eea0176727c909e9d07ed853633b4ad"
+    },
+    "locales/en-US/browser/browser/zen-menubar.ftl": {
+      "upstream_sha256": "a5c99adcd0f686def5b39e36262b9fadee02ad0f45465d1b8359edb0470cae10",
+      "maintained_sha256": "a5c99adcd0f686def5b39e36262b9fadee02ad0f45465d1b8359edb0470cae10"
+    },
+    "locales/en-US/browser/browser/zen-share.ftl": {
+      "upstream_sha256": "de9dfa96c637ff488cbbf7749965d7daa54e606184d12f4ea992275b818f72ec",
+      "maintained_sha256": "00b8325bc50b05cfae7171cbf273647dbf9be3c76c7adf88a149eed4d881e710"
+    },
+    "locales/en-US/browser/browser/zen-space-routing.ftl": {
+      "upstream_sha256": "d595f9a6ec69b3422f164627839c7f9ba52d6ec70058b35fc26f5e30ffe66017",
+      "maintained_sha256": "1cbfe058c9a7bec17ae4b13803a83cfc6910f27be8f6ed008271fd43e5c29b53"
+    },
+    "locales/en-US/browser/browser/zen-split-view.ftl": {
+      "upstream_sha256": "64c88c2eae5f21bc740bf8b3d0d2e8f21cd865a0eb4225660367ab07d3ad21c5",
+      "maintained_sha256": "64ed1197f36d0711770d80bf0d5b541186ae0cf5634bd367690d16188f7cce0e"
+    },
+    "locales/en-US/browser/browser/zen-vertical-tabs.ftl": {
+      "upstream_sha256": "3c5464bc1d3e238414f54e408b56d57f87f55254b2ab3bbab324bc029935304f",
+      "maintained_sha256": "3c5464bc1d3e238414f54e408b56d57f87f55254b2ab3bbab324bc029935304f"
+    },
+    "locales/en-US/browser/browser/zen-welcome.ftl": {
+      "upstream_sha256": "49bc4cf4941cb189ad235d469d8ec25ffb444e2156de76fbfde64fb6e45d9994",
+      "maintained_sha256": "49bc4cf4941cb189ad235d469d8ec25ffb444e2156de76fbfde64fb6e45d9994"
+    },
+    "locales/en-US/browser/browser/zen-workspaces.ftl": {
+      "upstream_sha256": "821239ad45c7194983881c9fca096b516b36cdd92a6e210b9170ff42b70b126a",
+      "maintained_sha256": "821239ad45c7194983881c9fca096b516b36cdd92a6e210b9170ff42b70b126a"
+    }
+  }
+}

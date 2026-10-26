@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update Livara JavaScript in an already source-compiled browser package.
+"""Update maintained UI and Fluent resources in a source-compiled browser package.
 
 The native executable/Gecko engine remain byte-identical. This is a resource
 packaging step, not a substitute binary download or another engine compilation.
@@ -14,35 +14,16 @@ import subprocess
 import tarfile
 import tempfile
 import zipfile
+import sys
 
 ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'src'))
+from livara.app_updates import browser_source_plan, atomic_write
 
 
 def digest(path):
     with path.open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
 
-
-def update_jar(path,resource):
-    if resource.name not in ('LivaraUI.js','start.js'):raise ValueError('Only maintained Livara UI scripts may be refreshed')
-    suffix='/livara/'+resource.name
-    with zipfile.ZipFile(path) as source:
-        matches=[n for n in source.namelist() if n.endswith(suffix)]
-        if not matches:return None
-        if len(matches)!=1:raise ValueError('Ambiguous Livara chrome entry')
-        name=matches[0];previous=source.read(name);fresh=resource.read_bytes()
-        if previous==fresh:return {'path':name,'before_sha256':hashlib.sha256(previous).hexdigest(),'after_sha256':hashlib.sha256(fresh).hexdigest(),'changed':False}
-        staged=path.with_suffix('.livara-update')
-        try:
-            with zipfile.ZipFile(staged,'w') as output:
-                for info in source.infolist():
-                    # Generated JS bytecode must be rebuilt from the updated JS.
-                    if info.filename.startswith(('jsloader/','jssubloader/')):continue
-                    output.writestr(info,fresh if info.filename==name else source.read(info.filename))
-            with zipfile.ZipFile(staged) as output:
-                if output.testzip() is not None or output.read(name)!=fresh:raise ValueError('Updated browser resource integrity failed')
-            os.replace(staged,path)
-        finally:staged.unlink(missing_ok=True)
-    return {'path':name,'before_sha256':hashlib.sha256(previous).hexdigest(),'after_sha256':hashlib.sha256(fresh).hexdigest(),'changed':True}
 
 
 def refresh(archive):
@@ -58,18 +39,19 @@ def refresh(archive):
         if identity['upstream']['commit']!=pin['commit'] or identity['binary_sha256']!=digest(binary):raise ValueError('Browser candidate identity does not match the pinned source build')
         native={path.name:digest(path) for path in (binary,engine)}
         changes=[]
-        for name in ('LivaraUI.js','start.js'):
-            resource=ROOT/'forks/browser/overlay/src/livara'/name
-            found=[]
-            for jar in (app/'browser/omni.ja',app/'omni.ja'):
-                if jar.is_file():
-                    change=update_jar(jar,resource)
-                    if change:found.append(change)
-            if len(found)!=1:raise ValueError('Expected exactly one source-built Livara resource: '+name)
-            changes.extend(found)
+        for jar, previous, fresh in browser_source_plan(app, ROOT):
+            import io
+            with zipfile.ZipFile(io.BytesIO(previous)) as archive_before, zipfile.ZipFile(io.BytesIO(fresh)) as archive_after:
+                for name in archive_after.namelist():
+                    old = archive_before.read(name) if name in archive_before.namelist() else None
+                    new = archive_after.read(name)
+                    if old != new:
+                        changes.append({'path':name, 'before_sha256':hashlib.sha256(old).hexdigest() if old is not None else None,
+                                        'after_sha256':hashlib.sha256(new).hexdigest(),'changed':True})
+            atomic_write(jar, fresh)
         if {path.name:digest(path) for path in (binary,engine)}!=native:raise ValueError('Native engine changed during resource packaging')
         commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
-        report={'input_archive_sha256':before,'chrome_source_commit':commit,'resources':changes,'native_hashes_unchanged':native,'scope':'Livara JS resource update of an existing full source build; native engine/executable unchanged.'}
+        report={'input_archive_sha256':before,'chrome_source_commit':commit,'resources':changes,'native_hashes_unchanged':native,'scope':'Maintained Livara chrome and restored pinned Zen localization resources; native engine/executable unchanged.'}
         (app/'livara-chrome-update.json').write_text(json.dumps(report,indent=2)+'\n')
         staged=temp/archive.name
         with tarfile.open(staged,'w:xz',preset=3) as output:

@@ -168,7 +168,8 @@ const fs = require("fs"), vm = require("vm"), assert = require("assert");
 function load(overrides) {
   let captured;
   const window={gBrowserInit:{delayedStartupFinished:true},
-    matchMedia:()=>({matches:false,addEventListener(){},removeEventListener(){}}),addEventListener(){}};
+    matchMedia:()=>({matches:false,addEventListener(){},removeEventListener(){}}),addEventListener(){},
+    setTimeout:()=>1,clearTimeout(){},removeEventListener(){}};
   const Services={prefs:{getBoolPref:(k,d)=>k.endsWith("toolbar-initialized")?true:(overrides[k]??d),
     getIntPref:(k,d)=>overrides[k]??d,getStringPref:(k,d)=>overrides[k]??d,addObserver(){}},
     obs:{addObserver(){}}};
@@ -200,7 +201,7 @@ const fs = require("fs"), vm = require("vm"), assert = require("assert");
 function load(mode) {
   const observers = new Map(), windowEvents = new Map();
   const window = { matchMedia: () => ({matches: false, addEventListener() {}, removeEventListener() {}}),
-    addEventListener: (name, fn) => windowEvents.set(name, fn) };
+    addEventListener: (name, fn) => windowEvents.set(name, fn), removeEventListener() {} };
   const Services = {env: {get: () => mode},
     obs: {addObserver: (o, t) => observers.set(t, o), removeObserver: (o, t) => {
       assert.equal(observers.get(t), o); observers.delete(t);

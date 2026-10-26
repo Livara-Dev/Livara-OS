@@ -19,6 +19,11 @@ import zipfile
 BEGIN = "/* BEGIN LIVARA DESKTOP UPDATE */"
 END = "/* END LIVARA DESKTOP UPDATE */"
 BROWSER_RESOURCES = ("LivaraUI.js", "LivaraWindowControls.js", "start.js", "livara-glass.css", "start.css")
+BROWSER_LOCALES = ("branding/brand.ftl", "browser/preferences/zen-preferences.ftl", *(
+    "browser/" + name + ".ftl" for name in (
+        "zen-boosts", "zen-command-palette", "zen-folders", "zen-general", "zen-library",
+        "zen-live-folders", "zen-menubar", "zen-share", "zen-space-routing", "zen-split-view",
+        "zen-vertical-tabs", "zen-welcome", "zen-workspaces")))
 
 
 def digest(data):
@@ -55,6 +60,8 @@ def browser_plan(app, payload, pin):
     if digest(regular(app / "livara-browser")) != identity.get("binary_sha256"):
         raise ValueError("Installed Browser executable does not match its build manifest")
     replacements = {name: regular(payload / "browser" / name) for name in BROWSER_RESOURCES}
+    locales = {"localization/en-US/" + name: regular(payload / "browser/locales/en-US" / name)
+               for name in BROWSER_LOCALES}
     counts = dict.fromkeys(replacements, 0)
     plans = []
     for path in (app / "browser/omni.ja", app / "omni.ja"):
@@ -71,13 +78,21 @@ def browser_plan(app, payload, pin):
                 matches = [entry for entry in entries if entry.endswith("/livara/" + name)]
                 counts[name] += len(matches)
                 changes.update({entry: fresh for entry in matches})
-            if not any(source.read(entry) != fresh for entry, fresh in changes.items()):
+            # Zen's registered Fluent resources were absent from the compiled
+            # package. One missing resource prevents the whole browser window's
+            # localization bundle from resolving, including native menu labels.
+            if any(entry.endswith("/livara/LivaraUI.js") for entry in entries):
+                changes.update(locales)
+            if not any(entry not in entries or source.read(entry) != fresh for entry, fresh in changes.items()):
                 continue
             with zipfile.ZipFile(output, "w") as target:
                 for info in source.infolist():
                     if info.filename.startswith(("jsloader/", "jssubloader/")):
                         continue
                     target.writestr(info, changes.get(info.filename, source.read(info.filename)))
+                for entry, fresh in changes.items():
+                    if entry not in entries:
+                        target.writestr(entry, fresh, compress_type=zipfile.ZIP_DEFLATED)
         with zipfile.ZipFile(io.BytesIO(output.getvalue())) as check:
             if check.testzip() is not None:
                 raise ValueError("Updated browser archive failed its integrity check")
@@ -85,6 +100,22 @@ def browser_plan(app, payload, pin):
     if any(count != 1 for count in counts.values()):
         raise ValueError("Expected exactly one copy of each maintained Browser resource")
     return plans
+
+
+def browser_source_plan(app, repository):
+    """Use the installed updater's exact planner for fresh builds and CI."""
+    pin = json.loads(regular(repository / 'forks/browser/upstream.json'))['commit']
+    with tempfile.TemporaryDirectory(prefix='livara-browser-payload-') as folder:
+        payload = Path(folder)
+        for name in BROWSER_RESOURCES:
+            target = payload / 'browser' / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(regular(repository / 'forks/browser/overlay/src/livara' / name))
+        for name in BROWSER_LOCALES:
+            target = payload / 'browser/locales/en-US' / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(regular(repository / 'forks/browser/locales/en-US' / name))
+        return browser_plan(app, payload, pin)
 
 
 def code_plan(app, payload, pin):

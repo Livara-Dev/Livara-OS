@@ -30,12 +30,30 @@ glib-compile-schemas "$GSETTINGS_SCHEMA_DIR"
 cp -a "$project/share/gnome-shell/extensions/livara-glass@livara.local" "$XDG_DATA_HOME/gnome-shell/extensions/"
 probe="$XDG_DATA_HOME/gnome-shell/extensions/livara-material-probe@livara.local"
 mkdir "$probe"
-cp "$project/scripts/liquid-glass-smoke.js" "$probe/extension.js"
+case ${LIVARA_COMPOSITOR_PROBE:-glass} in
+  glass) cp "$project/scripts/liquid-glass-smoke.js" "$probe/extension.js" ;;
+  browser) cp "$project/scripts/browser-wayland-smoke.js" "$probe/extension.js" ;;
+  *) echo 'Unknown compositor probe.' >&2; exit 1 ;;
+esac
 cat > "$probe/metadata.json" <<'META'
 {"uuid":"livara-material-probe@livara.local","name":"Livara optical test","description":"Disposable renderer probe","shell-version":["46"],"version":1}
 META
 gsettings set org.gnome.shell enabled-extensions "['livara-glass@livara.local', 'livara-material-probe@livara.local']"
 gsettings set org.gnome.shell disable-user-extensions false
-timeout --kill-after=5s 60s gnome-shell --headless --wayland --no-x11 --virtual-monitor 1280x900 --sm-disable \
+compositor_size=${LIVARA_COMPOSITOR_SIZE:-1280x900}
+[[ $compositor_size =~ ^[0-9]{3,4}x[0-9]{3,4}$ ]] || { echo 'Invalid virtual monitor size.' >&2; exit 1; }
+timeout --kill-after=5s 60s gnome-shell --headless --wayland --no-x11 --virtual-monitor "$compositor_size" --sm-disable \
   2>&1 | tee "$LIVARA_GLASS_TEST_OUTPUT/compositor.log"
-python3 "$project/scripts/check-liquid-glass-pixels.py" "$LIVARA_GLASS_TEST_OUTPUT"
+if [[ ${LIVARA_COMPOSITOR_PROBE:-glass} == browser ]]; then
+  python3 - "$LIVARA_GLASS_TEST_OUTPUT" <<'PY'
+import json,re,sys
+from pathlib import Path
+output=Path(sys.argv[1])
+report=json.loads((output/'browser.json').read_text())
+assert report['status']=='passed',report
+assert not re.search(r'(?:Gjs|Clutter|GLib-GObject)-CRITICAL|JS ERROR',(output/'compositor.log').read_text())
+print(json.dumps(report,indent=2))
+PY
+else
+  python3 "$project/scripts/check-liquid-glass-pixels.py" "$LIVARA_GLASS_TEST_OUTPUT"
+fi

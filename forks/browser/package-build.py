@@ -52,6 +52,13 @@ def package(dist: Path, output: Path) -> Path:
                     "binary_sha256": hashlib.sha256(binary.read_bytes()).hexdigest(),
                     "upstream": json.loads((HERE / "upstream.json").read_text())}
         (root / "livara-build.json").write_text(json.dumps(identity, indent=2) + "\n")
+        # Compile-time Jar manifests omitted the registered Zen Fluent files.
+        # Seal the same maintained resources used by incremental updates into
+        # every new browser package, before calculating its archive checksum.
+        sys.path.insert(0, str(HERE.parents[1] / "src"))
+        from livara.app_updates import browser_source_plan, atomic_write
+        for path, _previous, fresh in browser_source_plan(root, HERE.parents[1]):
+            atomic_write(path, fresh)
         artifact = output / "livara-browser-linux-x64.tar.xz"
         staged = Path(temporary) / artifact.name
         with tarfile.open(staged, "w:xz", preset=3) as archive:

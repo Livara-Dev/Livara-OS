@@ -29,6 +29,10 @@ install -d "$staging_dir/usr/share/livara/app-resources/browser" "$staging_dir/u
 for resource in LivaraUI.js LivaraWindowControls.js start.js livara-glass.css start.css; do
   install -m 0644 "$project_dir/forks/browser/overlay/src/livara/$resource" "$staging_dir/usr/share/livara/app-resources/browser/"
 done
+while IFS= read -r -d '' locale; do
+  relative=${locale#"$project_dir/forks/browser/locales/"}
+  install -D -m 0644 "$locale" "$staging_dir/usr/share/livara/app-resources/browser/locales/$relative"
+done < <(find "$project_dir/forks/browser/locales" -type f -print0)
 python3 - "$project_dir" "$staging_dir/usr/share/livara/app-resources" "$version" <<'PYRESOURCES'
 import base64, json, pathlib, sys
 root, output, version = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2]), sys.argv[3]
@@ -52,6 +56,13 @@ from livara.session import main
 raise SystemExit(main())
 PYSESSION
 chmod 0755 "$staging_dir/usr/bin/livara-session-refresh"
+install -D -m 0644 "$project_dir/share/grub/90-livara-auto-boot.cfg" "$staging_dir/etc/default/grub.d/90-livara-auto-boot.cfg"
+cat > "$staging_dir/usr/bin/livara-refresh-boot" <<'PYBOOT'
+#!/usr/bin/python3
+from livara.boot import main
+raise SystemExit(main())
+PYBOOT
+chmod 0755 "$staging_dir/usr/bin/livara-refresh-boot"
 install -m 0644 "$project_dir/share/livara/toolbox/Containerfile" "$staging_dir/usr/share/livara/toolbox/"
 install -m 0644 "$project_dir/share/livara/icons/"*.svg "$staging_dir/usr/share/livara/icons/"
 install -m 0644 "$project_dir/artwork/livara-logo.png" "$staging_dir/usr/share/livara/logo.png"
@@ -161,6 +172,9 @@ if [ "$1" = configure ]; then
     # resources are refreshed. A different/custom fork is left untouched.
     if ! /usr/bin/livara-refresh-app-resources; then
         echo 'Livara desktop updated; application resources need attention. Close Browser/Code and run sudo livara-refresh-app-resources.' >&2
+    fi
+    if ! /usr/bin/livara-refresh-boot; then
+        echo 'Boot defaults need attention: run sudo livara-refresh-boot on the installed system.' >&2
     fi
     if command -v update-desktop-database >/dev/null 2>&1; then
         update-desktop-database -q /usr/share/applications

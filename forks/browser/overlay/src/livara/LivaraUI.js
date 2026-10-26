@@ -28,6 +28,7 @@ var LivaraUI = (() => {
   let controls = [];
   let initialized = false;
   let waitingForStartup = false;
+  let geometryTimer = 0;
   const systemMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
   const bounds = name => name === "font-size" ? [12, 18] : name === "controls-size" ? [10, 22] : [8, 28];
@@ -69,10 +70,13 @@ var LivaraUI = (() => {
       } else if (validString(name, value)) {
         Services.prefs.setStringPref(PREFIX + name, value);
       }
+      // A confirmed settings change must survive closing/restarting the app;
+      // don't leave the only copy in the preference service's write buffer.
+      Services.prefs.savePrefFile(null);
     } catch (error) {
       console.error("Livara appearance preference could not be saved", error);
       if (status) {
-        status.textContent = "This preference is managed and cannot be changed.";
+        status.textContent = "This preference could not be saved. Check profile permissions or managed settings.";
       }
     }
   }
@@ -104,6 +108,27 @@ var LivaraUI = (() => {
   }
 
   const prefObserver = { observe: apply };
+  function fitWindow() {
+    // Chrome gets the current monitor's CSS-pixel work area, including scale
+    // and reserved panel/dock space. Preserve normal bounds that already fit,
+    // and let the compositor own maximized/fullscreen window geometry.
+    if (!window.screen || window.windowState !== window.STATE_NORMAL) return;
+    const {availLeft = 0, availTop = 0, availWidth, availHeight} = window.screen;
+    const {outerWidth, outerHeight, screenX, screenY} = window;
+    if (![availLeft, availTop, availWidth, availHeight, outerWidth, outerHeight, screenX, screenY]
+        .every(Number.isFinite) || Math.min(availWidth, availHeight, outerWidth, outerHeight) < 1) return;
+    const width = Math.min(outerWidth, availWidth);
+    const height = Math.min(outerHeight, availHeight);
+    if (width !== outerWidth || height !== outerHeight) window.resizeTo(width, height);
+    const x = Math.max(availLeft, Math.min(screenX, availLeft + availWidth - width));
+    const y = Math.max(availTop, Math.min(screenY, availTop + availHeight - height));
+    if (x !== screenX || y !== screenY) window.moveTo(x, y);
+  }
+
+  function scheduleFit() {
+    if (geometryTimer) window.clearTimeout(geometryTimer);
+    geometryTimer = window.setTimeout(() => { geometryTimer = 0; fitWindow(); }, 100);
+  }
   // Block before any direct HTTP(S) channel can connect. The DNS block is also
   // locked at process startup by Livara's autoconfig. No fallback to direct mode.
   const onionObserver = {
@@ -285,7 +310,10 @@ var LivaraUI = (() => {
     Services.prefs.addObserver(PREFIX, prefObserver);
     systemMotion.addEventListener("change", apply);
     systemDark.addEventListener("change", apply);
+    window.addEventListener("resize", scheduleFit);
+    window.addEventListener("sizemodechange", scheduleFit);
     apply();
+    scheduleFit();
   }
 
   const startupObserver = {
@@ -319,6 +347,9 @@ var LivaraUI = (() => {
     }
     systemMotion.removeEventListener("change", apply);
     systemDark.removeEventListener("change", apply);
+    window.removeEventListener("resize", scheduleFit);
+    window.removeEventListener("sizemodechange", scheduleFit);
+    if (geometryTimer) window.clearTimeout(geometryTimer);
   }, { once: true });
   return Object.freeze({ openPanel });
 })();

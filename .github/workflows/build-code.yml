@@ -56,6 +56,7 @@ jobs:
         with:
           node-version: '24.18.0'
       - name: Prepare ephemeral runner
+        if: steps.candidate.outputs.reuse != 'true'
         run: |
           set -euo pipefail
           test "$RUNNER_ENVIRONMENT" = github-hosted

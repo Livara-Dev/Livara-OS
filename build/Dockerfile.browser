@@ -16,6 +16,7 @@ RUN --mount=type=secret,id=livara_build_ca \
     && rm -rf /var/lib/apt/lists/* && rm -f /etc/apt/apt.conf.d/99livara-build-ca
 RUN groupadd --gid 1001 builder && useradd --create-home --uid 1001 --gid 1001 builder && mkdir -p /project /artifacts && chown builder:builder /project /artifacts
 COPY --chown=builder:builder forks/browser /project/forks/browser
+COPY --chown=builder:builder src/livara /project/src/livara
 COPY --chown=builder:builder LICENSE /project/LICENSE
 COPY --chown=builder:builder artwork/livara-browser.png /project/artwork/livara-browser.png
 COPY --chown=builder:builder fonts/ttf /project/fonts/ttf
