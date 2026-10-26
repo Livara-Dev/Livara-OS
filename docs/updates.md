@@ -1,13 +1,15 @@
 # Update Livara without downloading another ISO
 
-Desktop update **0.1.4 — Browser reliability and automatic boot** restores the
-browser's missing Zen language resources, fixes desktop icon matching, keeps
-confirmed appearance preferences across browser restarts, and fits restored
-windows to the current monitor work area. Normal installed boots start the main
-OS automatically with a hidden GRUB menu. Press Esc during the short startup
-interval to reveal recovery/other boot choices. See [runtime proof](browser-reliability.md).
+Desktop update **0.1.5 — Native Liquid Glass** adds live compositor refraction
+behind focused Livara GTK app windows. The header and sidebar have their own
+curved optical regions; widgets and text stay sharp. Light/dark appearances,
+window focus, high contrast, renderer loss and extension reload are checked
+against the actual packaged app. It also repairs applying a look when an old
+icon/sound theme is no longer installed. See [screenshots and audit](native-liquid-audit.md).
+The [Browser reliability and automatic boot fixes](browser-reliability.md) from
+0.1.4 remain included.
 
-Download **Livara-Halo-0.1.4-Update.zip** from the release and extract it into a
+Download **Livara-Halo-0.1.5-Update.zip** from the release and extract it into a
 new folder. It contains both packages, checksums and the installer together.
 Alternatively, download every individual file listed below, not just the script.
 The installer prints progress and identifies missing downloads.
@@ -16,16 +18,16 @@ The desktop update upgrades an existing installed Livara system using a small
 `livara-desktop` DEB and a separate `livara-code` application DEB. The small
 package replaces Livara apps, icons, desktop schemas, the Shell extension and
 maintained Browser UI and localization resources. The Code package retains the already source-compiled, runtime-tested Halo
-editor and window-control fixes; this release repairs Browser resources and installed boot defaults. It does not
+editor and window-control fixes; this release adds native window refraction and fixes theme snapshots. It does not
 rebuild or download the kernel, boot image, Gecko or the whole ISO.
 
 Download the DEB, `SHA256SUMS`, `update-manifest.json`, and
 `Install-Livara-Update.sh` from the official
-[desktop update release](https://github.com/Livara-Dev/Livara-OS/releases/tag/desktop-v0.1.4)
+[desktop update release](https://github.com/Livara-Dev/Livara-OS/releases/tag/desktop-v0.1.5)
 into one directory. If Code is installed, also download
-`livara-code_0.1.4_amd64.deb` into that directory. The installer requires the
+`livara-code_0.1.5_amd64.deb` into that directory. The installer requires the
 matching Code package when the app is already installed, preventing an update
-that leaves compiled controller fixes behind. Close Browser and Code, then run:
+that leaves compiled controller fixes behind. Close Livara apps, Browser and Code, then run:
 
 ```sh
 bash Install-Livara-Update.sh
@@ -78,8 +80,8 @@ authentication. The tag-triggered workflow records GitHub artifact provenance.
 With GitHub CLI, verify the package's provenance before installation:
 
 ```sh
-gh attestation verify livara-desktop_0.1.4_all.deb --repo Livara-Dev/Livara-OS
-gh attestation verify livara-code_0.1.4_amd64.deb --repo Livara-Dev/Livara-OS
+gh attestation verify livara-desktop_0.1.5_all.deb --repo Livara-Dev/Livara-OS
+gh attestation verify livara-code_0.1.5_amd64.deb --repo Livara-Dev/Livara-OS
 sha256sum --check SHA256SUMS
 ```
 
@@ -90,12 +92,13 @@ dist/forks/livara-code-linux-x64.tar.xz`. The Code packager checks the pinned bu
 identity and requires compiled-controller/style source hashes to match the
 current fixes. Merge the tested Code package into the release with
 `python3 scripts/package-desktop-update.py --code-package
-dist/update-code/livara-code_0.1.4_amd64.deb`.
+dist/update-code/livara-code_0.1.5_amd64.deb`.
 
 The manifest records the source commit and whether source files
 were modified. A local working-tree package is a development artifact, not a
 published release. The `desktop-vVERSION` tag workflow runs source tests, checks
-a real previous-to-new DEB unpack upgrade and launcher ownership, attests the
+real shell and installed-native-app Wayland refraction, compiled Browser behavior,
+a previous-to-new DEB unpack upgrade and launcher ownership, attests the
 packages, and publishes only after the matching Code artifact checks also succeed. An
 unchanged Code recipe may reuse a successful same-repository compiled candidate;
 the validator verifies the prior job and every relevant source input. The previous equivalent Code build took about

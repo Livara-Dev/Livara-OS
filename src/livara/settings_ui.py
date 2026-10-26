@@ -146,6 +146,7 @@ class SettingsStudio:
             if settings:
                 self.signals.append((settings, settings.connect("changed", self.changed)))
         self.owner.window.connect("unrealize", lambda *args: self.dispose())
+        self.signals.append((self.owner.window, self.owner.window.connect('notify::css-classes', self.changed)))
         self.refresh()
         return self.root
 
@@ -276,6 +277,8 @@ class SettingsStudio:
         return root
 
     def refresh_custom_presets(self):
+        if getattr(self, '_disposed', False):
+            return
         Gtk = self.Gtk
         if not hasattr(self, "custom_presets"):
             return
@@ -537,6 +540,8 @@ class SettingsStudio:
             self.owner.toast(error)
 
     def changed(self, *args):
+        if getattr(self, '_disposed', False):
+            return
         if self._refresh_source is None:
             self._refresh_source = self.GLib.idle_add(self._refresh_idle)
 
@@ -546,7 +551,7 @@ class SettingsStudio:
         return False
 
     def refresh(self):
-        if self._updating:
+        if self._updating or getattr(self, '_disposed', False):
             return
         self._updating = True
         try:
@@ -622,7 +627,9 @@ class SettingsStudio:
             if Path(wallpaper).is_file() and getattr(preview["picture"], "livara_filename", None) != wallpaper:
                 preview["picture"].set_filename(wallpaper)
                 preview["picture"].livara_filename = wallpaper
-            preview["detail"].set_text(f"{desktop.ACCENTS.get(accent, (accent, ''))[0]} · {appearance.title()} · " + (f"Glass {radius}px" if glass else "Solid surfaces"))
+            live = self.owner.window.has_css_class('lv-native-glass')
+            material = 'Live refraction' if glass and live else 'Opaque fallback' if glass else 'Solid surfaces'
+            preview["detail"].set_text(f"{desktop.ACCENTS.get(accent, (accent, ''))[0]} · {appearance.title()} · {material}")
             preview["mode"].set_text("Motion off" if desktop.read_option("animations") is False else "Motion on")
             if preview["section"] == "typography":
                 font = desktop.read_option("interface-font") or "Sans 11"
@@ -761,6 +768,9 @@ class SettingsStudio:
         self.css.load_from_data(css.encode())
 
     def dispose(self):
+        if getattr(self, '_disposed', False):
+            return
+        self._disposed = True
         if self._refresh_source is not None:
             self.GLib.source_remove(self._refresh_source)
             self._refresh_source = None

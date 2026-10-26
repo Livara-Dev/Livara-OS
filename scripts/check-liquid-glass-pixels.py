@@ -39,7 +39,14 @@ if white < 100:
     raise SystemExit('Foreground label missing or unreadable')
 for name, mask in masks.items():
     if mask != masks['flat']:
-        raise SystemExit(f'Foreground glyphs moved or warped in {name}')
+        # A changing underlayer can move an antialiased edge by one RGB level
+        # across the white threshold. Reject displaced glyphs, while allowing
+        # only that bounded rounding at threshold-crossing pixels.
+        pixels = zip(images['flat'].crop(text_crop).getdata(),
+                     images[name].crop(text_crop).getdata(), masks['flat'], mask)
+        if any(a != b and max(abs(x-y) for x,y in zip(p,q)) > 1
+               for p,q,a,b in pixels):
+            raise SystemExit(f'Foreground glyphs moved or warped in {name}')
 metrics['unchanged_white_glyph_pixels'] = white
 report['pixels'] = metrics
 (args.output / 'verified.json').write_text(json.dumps(report, indent=2) + '\n')

@@ -9,9 +9,26 @@ uniform vec2 lv_surface;
 uniform vec2 lv_light;
 uniform float lv_radius;
 uniform float lv_strength;
+uniform vec4 lv_region0;
+uniform vec4 lv_region1;
 float lv_distance(vec2 p, vec2 halfSize, float r) {
     vec2 q = abs(p) - halfSize + vec2(r);
     return length(max(q, vec2(0.0))) + min(max(q.x, q.y), 0.0) - r;
+}
+vec2 lv_normal(vec2 p, vec2 halfSize, float r) {
+    vec2 q = abs(p) - halfSize + vec2(r);
+    if (max(q.x, q.y) > 0.0)
+        return normalize(max(q, vec2(0.0)) + vec2(0.0001)) * sign(p);
+    return q.x > q.y ? vec2(sign(p.x), 0.0) : vec2(0.0, sign(p.y));
+}
+vec3 lv_region(vec2 point, vec4 region) {
+    if (min(region.z, region.w) < 2.0) return vec3(0.0);
+    vec2 local = point - region.xy - region.zw * 0.5;
+    float r = min(24.0, min(region.z, region.w) * 0.5);
+    float d = lv_distance(local, region.zw * 0.5, r);
+    float edge = (1.0 - smoothstep(0.0, 16.0, -d)) * (1.0 - smoothstep(-0.5, 0.5, d));
+    return vec3(lv_normal(local, region.zw * 0.5, r) * edge * edge,
+        exp(-abs(d + 1.2)) * step(d, 0.0));
 }
 `;
 
@@ -31,6 +48,9 @@ float bevel = min(22.0, min(halfSize.x, halfSize.y) * 0.65);
 float edge = 1.0 - smoothstep(0.0, bevel, -distance);
 vec2 offset = n * lv_strength * edge * edge / lv_size;
 offset += (uv - vec2(0.5)) * 0.022 * (lv_strength / 14.0) * (1.0 - edge);
+vec3 region0 = lv_region(p + halfSize, lv_region0);
+vec3 region1 = lv_region(p + halfSize, lv_region1);
+offset += (region0.xy + region1.xy) * lv_strength * 0.72 / lv_size;
 vec2 refracted = clamp(uv - offset, vec2(0.001), vec2(0.999));
 vec2 dispersion = n * min(0.65, lv_strength * 0.045) * edge * edge / lv_size;
 vec3 scene;
@@ -38,13 +58,14 @@ scene.r = texture2D(cogl_sampler0, clamp(refracted + dispersion, vec2(0.001), ve
 scene.g = texture2D(cogl_sampler0, refracted).g;
 scene.b = texture2D(cogl_sampler0, clamp(refracted - dispersion, vec2(0.001), vec2(0.999))).b;
 float luminance = dot(scene, vec3(0.2126, 0.7152, 0.0722));
-scene *= min(1.0, 0.30 / max(luminance, 0.001));
-scene = mix(scene, vec3(0.04, 0.05, 0.08), 0.12);
+scene *= min(1.0, 0.40 / max(luminance, 0.001));
+scene = mix(scene, vec3(0.04, 0.05, 0.08), 0.055);
 vec2 light = normalize(vec2(-0.65, -0.85) + (lv_light - vec2(0.5)) * 0.5);
 float rim = exp(-abs(distance + 1.1) * 1.15);
 float specular = pow(max(dot(n, light), 0.0), 8.0) * rim * 0.72;
 float caustic = pow(max(dot(-n, light), 0.0), 4.0) * edge * edge * 0.12;
 vec3 color = scene + vec3(specular) + vec3(0.68, 0.80, 1.0) * caustic;
+color += vec3(0.72, 0.84, 1.0) * (region0.z + region1.z) * 0.14;
 float mask = 1.0 - smoothstep(-0.8, 0.3, distance);
 cogl_color_out = vec4(color * mask, mask) * cogl_color_in;
 `;
@@ -54,10 +75,11 @@ class LiquidLensEffect extends Shell.GLSLEffect {
     _init() {
         super._init();
         this._locations = {};
-        for (const name of ['size', 'surface', 'light', 'radius', 'strength'])
+        for (const name of ['size', 'surface', 'light', 'radius', 'strength', 'region0', 'region1'])
             this._locations[name] = this.get_uniform_location('lv_' + name);
         this.configure(400, 160, 400, 160, 28, 14);
         this.light(0.5, 0.5);
+        this.regions([]);
     }
 
     vfunc_build_pipeline() {
@@ -74,6 +96,11 @@ class LiquidLensEffect extends Shell.GLSLEffect {
     light(x, y) {
         this.set_uniform_float(this._locations.light, 2, [x, y]);
     }
+
+    regions(rectangles) {
+        for (let i = 0; i < 2; i++)
+            this.set_uniform_float(this._locations['region' + i], 4, rectangles[i] || [0, 0, 0, 0]);
+    }
 });
 
 
@@ -85,7 +112,7 @@ import GLib from 'gi://GLib';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 const MAX_LENSES = 8;
-const MAX_PIXELS = 6000000;
+const MAX_PIXELS = 24000000;
 const PAD = 24;
 const INTERNAL = '_livaraLiquidInternal';
 
@@ -140,11 +167,15 @@ export class LiquidBackdrops {
         return result;
     }
 
-    _sources() {
+    _sources(entry = null) {
         const active = global.workspace_manager.get_active_workspace();
         const sources = this._potentialSources();
         if (sources.length > 256) return [];
-        const visible = sources.filter(source => {
+        const owner = entry?.kind === 'native' ? sources.indexOf(entry.target) : -1;
+        const visible = sources.filter((source, index) => {
+            // Native windows sample only actors BELOW their own window. Never
+            // capture the window itself, another optical plane, or its text.
+            if (entry?.kind === 'native' && (owner < 0 || index >= owner)) return false;
             if (!source.mapped || !source.visible || source.width < 1 || source.height < 1) return false;
             const window = source.meta_window ?? source.get_meta_window?.();
             return !window || (!window.minimized && window.located_on_workspace(active));
@@ -192,7 +223,7 @@ export class LiquidBackdrops {
 
     sync(actor, kind, blurRadius) {
         const target = kind === 'panel' ? Main.panel : actor;
-        if (!target.mapped || !this._sources().length) {
+        if (!target.mapped || !this._sources({kind, target}).length) {
             this.remove(actor);
             return false;
         }
@@ -203,7 +234,9 @@ export class LiquidBackdrops {
             let anchor = target;
             while (anchor.get_parent() && anchor.get_parent() !== Main.uiGroup)
                 anchor = anchor.get_parent();
-            if (anchor.get_parent() !== Main.uiGroup)
+            const parent = kind === 'native' ? global.window_group : Main.uiGroup;
+            if (kind === 'native') anchor = target;
+            if (anchor.get_parent() !== parent)
                 return false;
             const plane = new Clutter.Actor({name:'livara-liquid-scene', reactive:false, clip_to_allocation:true});
             plane[INTERNAL] = true;
@@ -216,7 +249,7 @@ export class LiquidBackdrops {
             // before the target emits its own mapped/destroy notifications.
             plane.connect('destroy', () => { entry.planeDestroyed = true; });
             this._entries.set(actor, entry);
-            Main.uiGroup.insert_child_below(plane, anchor);
+            parent.insert_child_below(plane, anchor);
             for (let ancestor = target, depth = 0; ancestor && ancestor !== Main.uiGroup && depth < 12;
                 ancestor = ancestor.get_parent(), depth++) {
                 for (const prop of ['allocation','translation-x','translation-y','scale-x','scale-y','opacity','mapped'])
@@ -227,13 +260,13 @@ export class LiquidBackdrops {
             }
             this._rebuildEntry(entry);
         }
-        entry.blur.radius = Math.max(0, Math.min(20, blurRadius / 2));
+        entry.blur.radius = Math.max(0, Math.min(8, blurRadius / 5));
         entry.blur.brightness = 1;
         if (!this._geometry(entry)) {
             this.remove(actor);
             return false;
         }
-        if (!actor.has_style_class_name('livara-liquid-surface'))
+        if (kind !== 'native' && !actor.has_style_class_name('livara-liquid-surface'))
             actor.add_style_class_name('livara-liquid-surface');
         return true;
     }
@@ -241,8 +274,15 @@ export class LiquidBackdrops {
     _geometry(entry) {
         if (!this._entries.has(entry.actor) || entry.planeDestroyed || !entry.target.mapped)
             return false;
-        const [x, y] = entry.target.get_transformed_position();
-        const [width, height] = entry.target.get_transformed_size();
+        let [x, y] = entry.target.get_transformed_position();
+        let [width, height] = entry.target.get_transformed_size();
+        if (entry.kind === 'native') {
+            const window = entry.target.meta_window;
+            const frame = window.get_frame_rect(), buffer = window.get_buffer_rect();
+            const sx = width / entry.target.width, sy = height / entry.target.height;
+            x += (frame.x - buffer.x) * sx; y += (frame.y - buffer.y) * sy;
+            width = frame.width * sx; height = frame.height * sy;
+        }
         const scale = Math.max(1, entry.target.get_resource_scale?.() ?? 1, global.stage.get_resource_scale?.() ?? 1);
         const pixels = Math.ceil(width + PAD * 2) * Math.ceil(height + PAD * 2) * scale * scale;
         const used = [...this._entries.values()].reduce((sum, item) => sum + (item === entry ? 0 : item.pixels), 0);
@@ -255,7 +295,14 @@ export class LiquidBackdrops {
         entry.plane.set_size(width + PAD * 2, height + PAD * 2);
         entry.plane.opacity = entry.target.get_paint_opacity();
         entry.effect.configure(width + PAD * 2, height + PAD * 2, width, height,
-            entry.kind === 'panel' ? Math.min(18, height / 2) : 30, Math.min(14, height * 0.19));
+            entry.kind === 'panel' ? Math.min(18, height / 2) : entry.kind === 'native' ? 24 : 30,
+            Math.min(entry.kind === 'native' ? 18 : 14, height * 0.19));
+        if (entry.kind === 'native' && entry.regions) {
+            const frame = entry.target.meta_window.get_frame_rect();
+            entry.effect.regions(entry.regions.map(([rx, ry, rw, rh]) =>
+                [rx * width / frame.width, ry * height / frame.height,
+                    rw * width / frame.width, rh * height / frame.height]));
+        }
         for (const [source, state] of entry.sources)
             this._place(entry, source, state.clone);
         entry.plane.queue_redraw();
@@ -276,7 +323,7 @@ export class LiquidBackdrops {
 
     _rebuildEntry(entry) {
         if (entry.planeDestroyed) return;
-        const sources = this._sources();
+        const sources = this._sources(entry);
         for (const [source, state] of entry.sources) {
             if (!sources.includes(source)) {
                 this._disconnect(state.signals);
@@ -336,7 +383,7 @@ export class LiquidBackdrops {
         for (const state of entry.sources.values())
             this._disconnect(state.signals);
         entry.sources.clear();
-        actor.remove_style_class_name('livara-liquid-surface');
+        actor.remove_style_class_name?.('livara-liquid-surface');
         if (!entry.planeDestroyed) {
             entry.plane.remove_effect_by_name('livara-live-refraction');
             entry.plane.remove_effect_by_name('livara-scene-softening');

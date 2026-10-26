@@ -11,6 +11,7 @@ import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 import WindowEffects from './windowEffects.js';
 import DesktopTools from './desktopTools.js';
 import {LiquidBackdrops} from './liquidGlass.js';
+import NativeGlass from './nativeGlass.js';
 
 const MAX_DEPTH = 8;
 const MAX_WATCHED = 1600;
@@ -27,6 +28,7 @@ export default class LivaraGlass extends Extension {
         this._signals = [];
         try { this._liquid = new LiquidBackdrops(() => this._animations(), () => {
             if (this._material) for (const actor of this._surfaces.keys()) this._syncSurface(actor);
+            this._nativeGlass?.queue();
         }); }
         catch (error) { console.warn(`Livara: live refraction unavailable; using background blur: ${error.message}`); }
         this._interfaceSettings = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'});
@@ -65,6 +67,7 @@ export default class LivaraGlass extends Extension {
         this._windowEffects.enable();
         this._desktopTools = new DesktopTools(this._settings);
         this._desktopTools.enable();
+        if (this._liquid) this._nativeGlass = new NativeGlass(this._liquid, () => this._material, () => this._radius);
         this._refresh();
         this._queue(Main.uiGroup, 0);
     }
@@ -100,6 +103,7 @@ export default class LivaraGlass extends Extension {
         }
         for (const actor of this._surfaces.keys())
             this._syncSurface(actor);
+        this._nativeGlass?.queue();
     }
 
     _queue(actor, depth) {
@@ -395,6 +399,7 @@ export default class LivaraGlass extends Extension {
     }
 
     disable() {
+        this._nativeGlass?.destroy(); this._nativeGlass = null;
         this._desktopTools?.disable();this._desktopTools = null;
         this._windowEffects?.disable();
         this._windowEffects = null;

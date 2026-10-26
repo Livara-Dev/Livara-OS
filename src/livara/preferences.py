@@ -45,7 +45,7 @@ _add("appearance", "accent", "Accent color", "Eight coordinated application and 
 _add("appearance", "wallpaper", "Livara wallpaper", "Choose an original background; replaces a custom image", "choice", "livara", choices=[("halo", "Halo"), ("glass", "Prism"), ("aurora", "Aurora"), ("dusk", "Dusk"), ("verdant", "Verdant")])
 _add("appearance", "wallpaper-image", "Your wallpaper", "Use a local PNG, JPEG or WebP image; presets keep its local path", "image", "background", "picture-uri")
 _add("appearance", "wallpaper-style", "Wallpaper fit", "Fit, fill, tile or span your desktop background", "choice", "background", "picture-options", choices=[("zoom", "Fill"), ("scaled", "Fit"), ("stretched", "Stretch"), ("centered", "Center"), ("spanned", "Span displays"), ("wallpaper", "Tile"), ("none", "No picture")])
-_add("appearance", "glass-enabled", "Liquid glass", "Translucent desktop surfaces and background blur", "bool", "livara")
+_add("appearance", "glass-enabled", "Liquid glass", "Live refraction behind focused Livara windows and shell surfaces; opaque fallback when the renderer is unavailable", "bool", "livara")
 _add("appearance", "blur-radius", "Glass blur", "Adjust background blur; zero keeps the background sharp", "int", "livara", bounds=(0, 60, 1), unit="px")
 
 _add("windows", "animations", "Desktop animations", "Disable motion across the desktop when preferred", "bool", "interface", "enable-animations")
