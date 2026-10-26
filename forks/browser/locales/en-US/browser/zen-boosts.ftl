@@ -2,13 +2,13 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-zen-boost-edit-rename = 
+zen-boost-edit-rename =
     .label = Rename Boost
-zen-boost-edit-shuffle = 
+zen-boost-edit-shuffle =
     .label = Shuffle Vibes
-zen-boost-edit-reset = 
+zen-boost-edit-reset =
     .label = Reset All Edits
-zen-boost-edit-delete = 
+zen-boost-edit-delete =
     .label = Delete Boost
 zen-boost-size = Size
 zen-boost-case = Case
@@ -42,9 +42,9 @@ zen-zap-related = Zap all related elements
 zen-zap-cancel = Cancel
 zen-zap-done = Done
 zen-boost-focus = Focus
-zen-unzap-tooltip = 
+zen-unzap-tooltip =
     {
-        $elementCount -> 
+        $elementCount ->
             [0] No elements zapped
             [1] { $elementCount } element zapped
             *[other] { $elementCount } elements zapped

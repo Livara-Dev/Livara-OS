@@ -8,7 +8,7 @@
     },
     "locales/en-US/browser/browser/zen-boosts.ftl": {
       "upstream_sha256": "a421bbf95d558661a07f34428ae1ee06efb0fcc45ed120e2da99b833fbc86549",
-      "maintained_sha256": "a421bbf95d558661a07f34428ae1ee06efb0fcc45ed120e2da99b833fbc86549"
+      "maintained_sha256": "a0b54ada72735abe4788027c12cbc6079d34bbb0385f6fc06a0556215c829bee"
     },
     "locales/en-US/browser/browser/zen-command-palette.ftl": {
       "upstream_sha256": "9a2e372959568e62a9d513c30a3101dc3d61ef05e64acf7e15e92fbd1a198c23",
@@ -20,7 +20,7 @@
     },
     "locales/en-US/browser/browser/zen-general.ftl": {
       "upstream_sha256": "d80ba45ba51489575209ff4bccd7394645bf689f1df900095ef3760ed32c0f4e",
-      "maintained_sha256": "8b147ae4ea14c90294b60d32757816f930c8b76eecb608c7d47f89fbcc90efaf"
+      "maintained_sha256": "e5e30e1647fef7445cf8e21cdf339a669c456519061c0bb1ca29ae85a6f8d70f"
     },
     "locales/en-US/browser/browser/zen-library.ftl": {
       "upstream_sha256": "dbd0c7a7013480828b2cdd83a1b3e098630a62b8b817bd2d150671675f301fb4",
@@ -40,11 +40,11 @@
     },
     "locales/en-US/browser/browser/zen-space-routing.ftl": {
       "upstream_sha256": "d595f9a6ec69b3422f164627839c7f9ba52d6ec70058b35fc26f5e30ffe66017",
-      "maintained_sha256": "b7a3a64a0ef2af27f942e01759c79421ba9aa484b939e64f2b6c433d71059328"
+      "maintained_sha256": "1cbfe058c9a7bec17ae4b13803a83cfc6910f27be8f6ed008271fd43e5c29b53"
     },
     "locales/en-US/browser/browser/zen-split-view.ftl": {
       "upstream_sha256": "64c88c2eae5f21bc740bf8b3d0d2e8f21cd865a0eb4225660367ab07d3ad21c5",
-      "maintained_sha256": "64c88c2eae5f21bc740bf8b3d0d2e8f21cd865a0eb4225660367ab07d3ad21c5"
+      "maintained_sha256": "64ed1197f36d0711770d80bf0d5b541186ae0cf5634bd367690d16188f7cce0e"
     },
     "locales/en-US/browser/browser/zen-vertical-tabs.ftl": {
       "upstream_sha256": "3c5464bc1d3e238414f54e408b56d57f87f55254b2ab3bbab324bc029935304f",

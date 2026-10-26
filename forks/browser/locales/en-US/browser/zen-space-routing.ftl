@@ -10,7 +10,7 @@ zen-space-routing-external-default = Default route for external links
 zen-space-routing-new-route = New Route
 zen-space-routing-open-in-space = Open in Space
 zen-space-routing-most-recent-space = Most recent Space
-zen-space-routing-close-button = 
+zen-space-routing-close-button =
     .aria-label = Close
     .tooltiptext = Close
 
@@ -25,8 +25,8 @@ zen-space-routing-open-in = Open In
 zen-space-routing-url = URL
 
 zen-space-routing-tab-routed-toast = New tab opened in { $targetWorkspace }
-tab-context-zen-add-domain-to-sr = 
-    .label = 
+tab-context-zen-add-domain-to-sr =
+    .label =
         { $tabCount ->
             [one] Add Route for Domain
             *[other] Add Route for Domains
