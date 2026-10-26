@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "frame": {
+    "x": 170,
+    "y": 150,
+    "width": 900,
+    "height": 620
+  },
+  "sources": 2,
+  "chromeRegions": 2,
+  "selfExcluded": true,
+  "handshake": true,
+  "opaqueFallback": true,
+  "perWindowFocus": true,
+  "highContrast": true,
+  "lightAppearance": true,
+  "reload": true,
+  "pixels": {
+    "flat_to_refracted": 159946,
+    "refracted_to_live": 296987,
+    "live_to_updated": 285451,
+    "glyph_changes_flat": 0,
+    "glyph_changes_refracted": 0,
+    "glyph_changes_live": 0,
+    "glyph_changes_updated": 0,
+    "foreground_pixels": 907
+  }
+}

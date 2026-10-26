@@ -1,8 +1,8 @@
 """Shared native materials, hierarchy and live desktop appearance.
 
-GTK does not expose compositor backdrop refraction. These materials use opaque
-content surfaces, layered tint, specular edges and elevation rather than making
-text and entire windows transparent. Shell blur remains the compositor's job.
+GTK's opaque base remains the fallback. The native_glass bridge opts window
+chrome into compositor refraction only after GNOME confirms a live backplate;
+content cards and widgets keep their own readable surfaces.
 """
 from __future__ import annotations
 

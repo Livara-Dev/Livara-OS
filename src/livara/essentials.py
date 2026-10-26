@@ -297,7 +297,13 @@ def current_theme_bundle(tokens=None):
     extras={}
     for name,schema,key in [('icons','org.gnome.desktop.interface','icon-theme'),('sounds','org.gnome.desktop.sound','theme-name'),('event-sounds','org.gnome.desktop.sound','event-sounds')]:
         settings=desktop.settings_for(schema)
-        if settings and settings.props.settings_schema.has_key(key):extras[name]=settings.get_value(key).unpack()
+        if settings and settings.props.settings_schema.has_key(key):
+            value = settings.get_value(key).unpack()
+            # A removed icon/sound theme may remain in dconf while GTK uses
+            # its fallback. Do not make an unrelated accent edit re-apply an
+            # unavailable theme from that snapshot. Imported choices stay strict.
+            if name not in ('icons', 'sounds') or value in installed_theme_names(name):
+                extras[name] = value
     return validate_theme_bundle({'tokens':tokens or theme.read_values(),'preferences':prefs,'extras':extras})
 
 

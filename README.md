@@ -4,7 +4,7 @@ Livara is a **64-bit x86-64 (`amd64`)** live Linux desktop for Intel and AMD pro
 
 [Hosted builds](https://github.com/Livara-Dev/Livara-OS/actions) · [ISO releases](https://github.com/Livara-Dev/Livara-OS/releases) · [Dependency policy](docs/dependency-updates.md)
 
-**[Desktop update 0.1.4](docs/browser-reliability.md)** fixes Browser menus, icon association, appearance persistence and restored window sizing, and hides the installed boot menu by default. It includes [Live Liquid Glass](docs/liquid-glass.md) and [Halo](docs/halo-design.md).
+**[Desktop update 0.1.5](docs/native-liquid-audit.md)** brings live compositor refraction into focused native Livara app windows, with curved header/sidebar optics, sharp text, light/dark appearances and a verified opaque fallback. It also fixes applying a look after an old icon or sound theme has been removed. Includes the [Browser and boot fixes](docs/browser-reliability.md), [shell glass](docs/liquid-glass.md) and [Halo](docs/halo-design.md).
 
 **Already running Livara?** The [desktop update workflow](docs/updates.md) upgrades the desktop package, app interfaces, icons and matching browser/editor UI resources without downloading another ISO. It preserves personal files and preferences. Kernel and driver updates continue through Ubuntu's signed APT sources. Nonpersistent live sessions still lose installed updates after reboot; keep the small update package on persistent storage.
 
@@ -67,9 +67,9 @@ The normal Browser and Code use the Livara multilingual font stack. The official
 
 ## Glass and customization
 
-Livara Glass uses real GNOME background blur on selected shell surfaces, cached reflective highlights, rounded surfaces and finite animations. Discovery responds to desktop changes; hidden surfaces, Overview and the lock screen release effects. **Efficient rendering** removes blur and transitions; **Full Livara Glass** restores moderate blur and motion. Reduced-motion preferences are respected.
+Livara Glass samples live compositor scenes through curved GPU lenses on selected shell surfaces and focused native Livara windows, with rounded highlights and finite animations. Discovery responds to desktop changes; hidden surfaces, Overview and the lock screen release effects. **Efficient rendering** removes blur and transitions; **Full Livara Glass** restores moderate blur and motion. Reduced-motion preferences are respected.
 
-Settings organizes Look, Windows, Dock, Type, Spaces, Focus, Input and Display into searchable sections. Save and rename your own looks, choose a local wallpaper, preview fonts and window controls, or reset one section. Mouse/touchpad, keyboard repeat and Night Light controls use the desktop's real settings; unavailable controls stay disabled. Tweaks, Extension Manager and dconf Editor provide deeper controls. Shell surfaces use live GPU pixel refraction, edge dispersion and adaptive lighting while foreground text stays sharp. Native GTK content retains readable CSS surfaces. [Rendered proof](docs/liquid-glass.md). [Architecture](docs/architecture.md).
+Settings organizes Look, Windows, Dock, Type, Spaces, Focus, Input and Display into searchable sections. Save and rename your own looks, choose a local wallpaper, preview fonts and window controls, or reset one section. Mouse/touchpad, keyboard repeat and Night Light controls use the desktop's real settings; unavailable controls stay disabled. Tweaks, Extension Manager and dconf Editor provide deeper controls. Shell surfaces use live GPU pixel refraction, edge dispersion and adaptive lighting while foreground text stays sharp. Focused native Livara windows now receive their own live backplates; foreground widgets stay sharp and readable. [Installed-package proof](docs/native-liquid-audit.md). [Architecture](docs/architecture.md).
 
 Livara also adds macOS-style red/yellow/green window controls. Settings customizes their side, size, colors and symbols. Livara's native apps let the green button enter fullscreen or maximize; F11 toggles fullscreen, and Shift+green maximizes/restores. Other applications can retain their own window actions and decoration rules.
 

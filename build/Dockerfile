@@ -21,7 +21,7 @@ RUN --mount=type=secret,id=proxy_ca \
     rm -f /etc/apt/apt.conf.d/99livara-build-ca /usr/sbin/policy-rc.d
 
 FROM desktop AS rootfs
-ARG LIVARA_DESKTOP_VERSION=0.1.4
+ARG LIVARA_DESKTOP_VERSION=0.1.5
 COPY dist/forks/livara-code-linux-x64.tar.xz dist/forks/livara-browser-linux-x64.tar.xz dist/forks/livara-tor-browser-linux-x64.tar.xz /tmp/livara-forks/
 COPY build/install-forks.py /tmp/livara-install-forks.py
 RUN python3 /tmp/livara-install-forks.py /tmp/livara-forks \

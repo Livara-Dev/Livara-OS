@@ -21,7 +21,7 @@ GRUB BIOS / UEFI → kernel + Casper initramfs
 
 The live root filesystem is assembled from signed Ubuntu APT packages in an Ubuntu OCI base and compressed with Zstandard. Casper creates the live user and writable overlay at boot. `grub-mkrescue` creates the bootable image from `build/grub.cfg`. A standalone `livara-desktop` package contains the original application, settings, artwork, and toolbox definition.
 
-The desktop keeps Ubuntu's GNOME session, dock, settings, accessibility infrastructure, and package manager. Livara defaults to a purple Yaru theme and floating bottom dock. Its original GNOME 46 extension adds translucent shell surfaces and background blur through `Shell.BlurEffect`, with sharp foreground text and icons. A separate finite-transition engine animates ordinary window opening and closing. Native applications use customizable traffic-light controls. Settings exposes 94 validated preferences in eight searchable sections, four bundled looks, private user presets and live previews. Missing desktop schemas disable their corresponding controls. The supplied logo is integrated into the application icon, four wallpapers, and a Plymouth script theme.
+The desktop keeps Ubuntu's GNOME session, dock, settings, accessibility infrastructure, and package manager. Livara defaults to a purple Yaru theme and floating bottom dock. Its original GNOME 46 extension builds live scene backplates for shell surfaces and focused Livara GTK windows, with GPU refraction and sharp foreground text and icons. A separate finite-transition engine animates ordinary window opening and closing. Native applications use customizable traffic-light controls. Settings exposes 94 validated preferences in eight searchable sections, four bundled looks, private user presets and live previews. Missing desktop schemas disable their corresponding controls. The supplied logo is integrated into the application icon, four wallpapers, and a Plymouth script theme.
 
 The Kali container starts from the official `kalilinux/kali-rolling` image. Tool dependencies resolve inside Kali's package repository. The host's Ubuntu libraries and APT sources are untouched. Profile additions use explicit Kali metapackages rather than a mutable host installer downloaded at runtime. The full profile requests `kali-linux-everything` with recommended packages; category profiles request Kali's corresponding tool metapackages. The core profile remains a small explicit package list, bundled when the user builds an ISO. Full and category builds require network access and have not all been runtime-qualified.
 
@@ -47,14 +47,14 @@ Settings and Center share an original Python GTK application shell; Settings has
 ## Liquid appearance and rendering
 
 The GNOME 46 extension builds a separate live compositor scene behind each
-eligible shell surface. Allocated wallpaper and visible current-workspace
+eligible shell surface and focused native Livara window. Allocated wallpaper and visible current-workspace
 window actors are cloned in stacking order, softened with Shell.BlurEffect in
 ACTOR mode, then sampled by a Shell.GLSLEffect fragment shader. Rounded-distance
 normals bend UV coordinates at the bevel, with bounded RGB dispersion, interior
 magnification, a Fresnel rim and pointer-oriented highlights. Text/icons remain
 in their original foreground actors and never enter the shader texture.
 
-Up to eight live lenses share a six-million device-pixel render-target budget;
+Up to eight live lenses share a 24-million device-pixel render-target budget;
 there are at most 64 visible sources and 256 candidate actors. Oversized or
 unsupported surfaces retain the existing compositor blur and cached static rim,
 with a maximum 512-pixel texture edge. Clear CSS is applied only after a live
@@ -64,11 +64,21 @@ minimized and other-workspace windows leave the live scene. Hidden surfaces,
 Overview, lock/greeter sessions and high-contrast themes release live lenses.
 Reduced motion stops pointer lighting and Livara transitions.
 
-Native GTK application cards remain readable CSS surfaces; they do not sample
-the desktop behind their windows. This is Livara's original Linux optical
-renderer, with actual sampled-pixel refraction on the named shell surfaces;
-Apple's proprietary implementation and pixel-identical iOS behavior are not
-claimed. [Renderer test and screenshots](liquid-glass.md).
+The native host opts in Center, Settings, Studio, Monitor, Graphics, Essentials,
+Palette and Chat. Only the focused native window receives a lens. Its source
+scene excludes that window and all windows above it. GTK foreground widgets
+are never sampled. The client supplies at most two bounded header/sidebar
+rectangles, authenticated against the owning GTK unique D-Bus name. These
+regions add separate rounded refraction and rims inside the full-window plate.
+
+The session service `org.livara.Glass` confirms readiness per GTK window object
+path before the app clears its chrome. Missing backplates, focus loss, renderer
+loss and high contrast restore opaque app surfaces. CSS alone never declares
+that live glass is active. The Settings preview reports the actual readiness.
+App layout signals update chrome geometry without a production polling timer.
+This is Livara's own Linux optical renderer; Apple's proprietary implementation
+and pixel-identical iOS behavior are not claimed. [Installed-package proof and
+audit](native-liquid-audit.md); [shell renderer proof](liquid-glass.md).
 
 Browser chrome and its offline dashboard use the same lens/plate separation in dark and light appearances. Their glass-off and increased-contrast paths use opaque surfaces. Code's lens is scoped to workbench chrome; editors retain the selected theme's opaque canvas and extension views retain VS Code color tokens. Browser popup windows keep styled native titlebar controls when there is no visible navigation toolbar to host the custom controls.
 

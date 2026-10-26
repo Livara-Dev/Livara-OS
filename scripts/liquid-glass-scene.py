@@ -20,7 +20,8 @@ def activate(application):
     def update(fd, condition):
         if condition & GLib.IO_HUP:
             return False
-        os.read(fd, 4096)
+        if not os.read(fd, 4096):
+            return False
         changed[0] = True
         area.queue_draw()
         return True

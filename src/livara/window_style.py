@@ -240,4 +240,6 @@ def install_live_style():
 
 def configure_native_headerbar(window, headerbar):
     from .native_controls import configure_native_headerbar as configure
+    from .native_glass import attach
+    attach(window, headerbar)
     return configure(window, headerbar)

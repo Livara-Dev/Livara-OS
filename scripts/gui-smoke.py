@@ -1,80 +1,73 @@
 #!/usr/bin/env python3
-"""Start the real GTK application under Xvfb and retain a screenshot."""
-
+"""Exercise actual Center/Settings widgets with private user data, no pixel coordinates."""
+import json
 import os
-import subprocess
-import sys
-import time
 from pathlib import Path
+import sys
+import tempfile
 
+import gi
+gi.require_version('Gtk', '4.0')
+gi.require_version('Adw', '1')
+from gi.repository import Gtk, Gio, GLib
 from PIL import ImageGrab
 
 
 def main():
-    settings_mode = "--settings" in sys.argv
-    output = Path(".build/settings-gui" if settings_mode else ".build/gui")
+    settings = '--settings' in sys.argv
+    output = Path('.build/settings-gui' if settings else '.build/gui')
     output.mkdir(parents=True, exist_ok=True)
-    with (output / "application.log").open("w") as log:
-        command = [sys.executable, "-c", "from livara.gui import main; raise SystemExit(main(mode='settings'))"] if settings_mode else [sys.executable, "-m", "livara.gui"]
-        process = subprocess.Popen(command, stdout=log, stderr=log)
+    home = tempfile.TemporaryDirectory(prefix='livara-center-audit-')
+    os.environ.update(HOME=home.name, XDG_CONFIG_HOME=home.name + '/config', GSETTINGS_BACKEND='memory')
+    from livara import gui, core, desktop
+    errors, checks = [], []
+    def walk(widget):
+        yield widget
+        child = widget.get_first_child()
+        while child:
+            yield from walk(child)
+            child = child.get_next_sibling()
+    pages = ['system', 'apps', 'shield'] if settings else ['toolbox', 'cases', 'shield', 'verify', 'customize', 'apps', 'system']
+    def step():
+        app = Gio.Application.get_default()
         try:
-            window = None
-            deadline = time.monotonic() + 20
-            while time.monotonic() < deadline:
-                if process.poll() is not None:
-                    raise RuntimeError("GTK application exited; inspect application.log")
-                result = subprocess.run(["xdotool", "search", "--onlyvisible", "--name", "Livara Settings" if settings_mode else "Livara Control Center"], capture_output=True, text=True)
-                if result.returncode == 0:
-                    window = result.stdout.splitlines()[0]
-                    break
-                time.sleep(0.2)
-            if not window:
-                raise RuntimeError("GTK application did not create its window")
-            time.sleep(2)
-            ImageGrab.grab(xdisplay=os.environ["DISPLAY"]).save(output / "overview.png")
-            print(f"GTK window {window} opened and rendered; screenshot: {output / 'overview.png'}", flush=True)
-            pages = ("system", "apps", "shield") if settings_mode else ("toolbox", "cases", "shield", "verify", "customize", "apps", "system")
-            for number, page in enumerate(pages, start=2):
-                subprocess.run(["xdotool", "key", "--window", window, f"ctrl+{number}"], check=True)
-                time.sleep(1)
-                if process.poll() is not None:
-                    raise RuntimeError(f"Application exited on {page}")
-                if page == "cases":
-                    subprocess.run(["xdotool", "mousemove", "--window", window, "550", "207", "click", "1", "type", "--clearmodifiers", "gui-smoke-case"], check=True)
-                    subprocess.run(["xdotool", "mousemove", "--window", window, "1000", "207", "click", "1"], check=True)
-                    time.sleep(0.4)
-                    if not (Path.home() / "Livara/Cases/gui-smoke-case/case.json").is_file():
-                        raise RuntimeError("The create-case button did not create its workspace")
-                ImageGrab.grab(xdisplay=os.environ["DISPLAY"]).save(output / f"{page}.png")
-                print(f"Rendered {page}", flush=True)
-                if page == "customize":
-                    for preset, horizontal, appearance, accent in (("sunrise", 730, "light", "orange"), ("prism", 340, "dark", "purple")):
-                        subprocess.run(["xdotool", "mousemove", "--window", window, str(horizontal), "205", "click", "1"], check=True)
-                        time.sleep(1)
-                        for key, value in (("appearance", appearance), ("accent", accent)):
-                            actual = subprocess.run(["gsettings", "get", "org.livara.desktop", key], check=True, capture_output=True, text=True).stdout.strip().strip("'")
-                            if actual != value:
-                                raise RuntimeError(f"Preset button did not apply {key}: {actual}")
-                        ImageGrab.grab(xdisplay=os.environ["DISPLAY"]).save(output / f"customize-{preset}.png")
-                        print(f"Preset button applied {preset}", flush=True)
-                    for full, horizontal in ((False, 560), (True, 380)):
-                        subprocess.run(["xdotool", "mousemove", "--window", window, str(horizontal), "270", "click", "1"], check=True)
-                        time.sleep(.5)
-                        checks = (("org.livara.desktop", "glass-enabled", str(full).lower()), ("org.livara.desktop", "blur-radius", "24" if full else "0"), ("org.gnome.desktop.interface", "enable-animations", str(full).lower()))
-                        for schema, key, value in checks:
-                            actual = subprocess.run(["gsettings", "get", schema, key], check=True, capture_output=True, text=True).stdout.strip()
-                            if actual != value:
-                                raise RuntimeError(f"Rendering button did not apply {key}: {actual}")
-                        print("Applied full glass" if full else "Applied efficient rendering", flush=True)
-                    ImageGrab.grab(xdisplay=os.environ["DISPLAY"]).save(output / "customize-glass.png")
-            if "Traceback" in (output / "application.log").read_text():
-                raise RuntimeError("GTK callback raised an exception; inspect application.log")
-        finally:
-            process.terminate()
-            process.wait(timeout=10)
-    return 0
+            if not pages:
+                app.quit()
+                return False
+            page = pages.pop(0)
+            app.navigation[page].set_active(True)
+            assert app.stack.get_visible_child_name() == page
+            if page == 'cases':
+                entry = next(w for w in walk(app.stack.get_visible_child())
+                             if isinstance(w, Gtk.Entry) and (w.get_placeholder_text() or '').startswith('Case name'))
+                entry.set_text('native-smoke')
+                next(w for w in walk(app.stack.get_visible_child())
+                     if isinstance(w, Gtk.Button) and w.get_label() == 'Create case').emit('clicked')
+                assert (core.cases_root() / 'native-smoke/case.json').is_file()
+                checks.append('Actual Create case button created its private workspace')
+            if page == 'customize':
+                for name, appearance in [('Sunrise', 'light'), ('Prism', 'dark')]:
+                    app.preferences_ui.apply_builtin(name)
+                    assert desktop.read_option('appearance') == appearance
+                    checks.append('Applied ' + name + ' through the Settings workflow')
+            def shot():
+                ImageGrab.grab(xdisplay=os.environ['DISPLAY']).save(output / (page + '.png'))
+                checks.append('Rendered ' + page)
+                GLib.timeout_add(200, step)
+                return False
+            GLib.timeout_add(400, shot)
+        except Exception as error:
+            import traceback
+            traceback.print_exc()
+            errors.append(str(error))
+            app.quit()
+        return False
+    GLib.timeout_add(1500, step)
+    result = gui.main(mode='settings' if settings else 'center')
+    (output / 'audit.json').write_text(json.dumps({'checks':checks, 'errors':errors}, indent=2) + '\n')
+    home.cleanup()
+    return 1 if errors else result
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     raise SystemExit(main())
-

@@ -29,6 +29,7 @@ def main(mode="center") -> int:
             self.add_main_option("page", 0, GLib.OptionFlags.NONE, GLib.OptionArg.STRING, "Open a Livara page", "PAGE")
             self.connect("command-line", self.command_line)
             self.connect("activate", self.activate)
+            self.connect("shutdown", lambda app: self.preferences_ui.dispose() if hasattr(self, 'preferences_ui') else None)
 
         def command_line(self, app, request):
             self.activate(app)
@@ -83,6 +84,7 @@ def main(mode="center") -> int:
             nav_scroll.set_child(nav_box)
             sidebar.append(nav_scroll)
             self.stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE, transition_duration=180, hexpand=True, vexpand=True)
+            self.stack.add_css_class('lv-content-canvas')
             self.stack.set_hhomogeneous(False)
             self.stack.set_vhomogeneous(False)
             self.interface_settings = interface = desktop.settings_for("org.gnome.desktop.interface")

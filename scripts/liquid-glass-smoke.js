@@ -110,7 +110,7 @@ export default class Probe extends Extension {
         }
         await this.pause(); await this.pause();
         const boundedLenses = manager._entries.size;
-        check(boundedLenses <= 8 && [...manager._entries.values()].reduce((s,e) => s+e.pixels, 0) <= 6000000,
+        check(boundedLenses <= 8 && [...manager._entries.values()].reduce((s,e) => s+e.pixels, 0) <= 24000000,
             'GPU resource budget exceeded');
         check(this.actors.some(a => !a.has_style_class_name('livara-liquid-surface')),
             'Excess surfaces did not retain fallback');

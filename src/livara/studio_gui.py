@@ -154,6 +154,7 @@ def main() -> int:
             sidebar.append(self.catalog_empty)
             sidebar.append(self.label("LOCAL BY DESIGN\nCtrl+Enter to run · Ctrl+F to find", "muted", "small"))
             self.stack = Gtk.Stack(hexpand=True, vexpand=True, transition_duration=230)
+            self.stack.add_css_class('lv-content-canvas')
             self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE if self.animations else Gtk.StackTransitionType.NONE)
             body.set_end_child(self.stack)
             self.stack.add_named(self.build_home_page(), "home")

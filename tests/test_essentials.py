@@ -4,7 +4,7 @@ from pathlib import Path
 import stat
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from livara import essentials as features, theme, palette, install_config
 
 class EssentialsTests(unittest.TestCase):
@@ -65,6 +65,14 @@ class EssentialsTests(unittest.TestCase):
     def test_theme_snapshot_omits_foreign_values(self):
         with patch.object(features.desktop,'read_option',side_effect=lambda key: 'appmenu:close' if key=='window-buttons' else None):
             self.assertNotIn('window-buttons',features.appearance_snapshot())
+    def test_theme_snapshot_does_not_reapply_removed_themes(self):
+        settings=Mock()
+        settings.get_value.side_effect=lambda key: Mock(unpack=lambda: False if key=='event-sounds' else 'RemovedTheme')
+        with patch.object(features,'appearance_snapshot',return_value={}), \
+             patch.object(features.desktop,'settings_for',return_value=settings), \
+             patch.object(features,'installed_theme_names',return_value=['Adwaita']):
+            snapshot=features.current_theme_bundle(tokens={'theme-accent':'#be83ff'})
+        self.assertEqual(snapshot['extras'],{'event-sounds':False})
     def test_permissions_exact_safe_argv(self):
         self.assertEqual(features.permission_command('org.test.App','home',False),['flatpak','override','--user','--nofilesystem=home','org.test.App'])
         for app,permission,allowed in [('--bad','network',True),('org.App','camera',True),('org.App','network',1),('org.App\n','home',False)]:

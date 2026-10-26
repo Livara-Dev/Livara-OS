@@ -24,15 +24,26 @@ chmod 700 "$XDG_RUNTIME_DIR"
 # Its activated dconf service must use the same profile/runtime as Shell;
 # otherwise optimistic settings writes revert when its shared cache disagrees.
 dbus-update-activation-environment XDG_RUNTIME_DIR XDG_CONFIG_HOME XDG_DATA_HOME GSETTINGS_SCHEMA_DIR
-rm -f "$LIVARA_GLASS_TEST_OUTPUT/production.json" "$LIVARA_GLASS_TEST_OUTPUT/verified.json"
-cp "$project/share/livara/org.livara.desktop.gschema.xml" "$GSETTINGS_SCHEMA_DIR/"
+rm -f "$LIVARA_GLASS_TEST_OUTPUT/production.json" "$LIVARA_GLASS_TEST_OUTPUT/verified.json" \
+  "$LIVARA_GLASS_TEST_OUTPUT/native.json" "$LIVARA_GLASS_TEST_OUTPUT/native-verified.json" \
+  "$LIVARA_GLASS_TEST_OUTPUT/browser.json"
+schema_source="$project/share/livara/org.livara.desktop.gschema.xml"
+if [[ ${LIVARA_INSTALLED_PACKAGE_TEST:-0} == 1 ]]; then
+  schema_source=/usr/share/glib-2.0/schemas/org.livara.desktop.gschema.xml
+fi
+cp "$schema_source" "$GSETTINGS_SCHEMA_DIR/"
 glib-compile-schemas "$GSETTINGS_SCHEMA_DIR"
-cp -a "$project/share/gnome-shell/extensions/livara-glass@livara.local" "$XDG_DATA_HOME/gnome-shell/extensions/"
+extension_source="$project/share/gnome-shell/extensions/livara-glass@livara.local"
+if [[ ${LIVARA_INSTALLED_PACKAGE_TEST:-0} == 1 ]]; then
+  extension_source=/usr/share/gnome-shell/extensions/livara-glass@livara.local
+fi
+cp -a "$extension_source" "$XDG_DATA_HOME/gnome-shell/extensions/"
 probe="$XDG_DATA_HOME/gnome-shell/extensions/livara-material-probe@livara.local"
 mkdir "$probe"
 case ${LIVARA_COMPOSITOR_PROBE:-glass} in
   glass) cp "$project/scripts/liquid-glass-smoke.js" "$probe/extension.js" ;;
   browser) cp "$project/scripts/browser-wayland-smoke.js" "$probe/extension.js" ;;
+  native) cp "$project/scripts/native-liquid-smoke.js" "$probe/extension.js" ;;
   *) echo 'Unknown compositor probe.' >&2; exit 1 ;;
 esac
 cat > "$probe/metadata.json" <<'META'
@@ -44,7 +55,9 @@ compositor_size=${LIVARA_COMPOSITOR_SIZE:-1280x900}
 [[ $compositor_size =~ ^[0-9]{3,4}x[0-9]{3,4}$ ]] || { echo 'Invalid virtual monitor size.' >&2; exit 1; }
 timeout --kill-after=5s 60s gnome-shell --headless --wayland --no-x11 --virtual-monitor "$compositor_size" --sm-disable \
   2>&1 | tee "$LIVARA_GLASS_TEST_OUTPUT/compositor.log"
-if [[ ${LIVARA_COMPOSITOR_PROBE:-glass} == browser ]]; then
+if [[ ${LIVARA_COMPOSITOR_PROBE:-glass} == native ]]; then
+  python3 "$project/scripts/check-native-liquid.py" "$LIVARA_GLASS_TEST_OUTPUT"
+elif [[ ${LIVARA_COMPOSITOR_PROBE:-glass} == browser ]]; then
   python3 - "$LIVARA_GLASS_TEST_OUTPUT" <<'PY'
 import json,re,sys
 from pathlib import Path
